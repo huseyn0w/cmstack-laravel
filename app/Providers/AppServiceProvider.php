@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,17 @@ class AppServiceProvider extends ServiceProvider
         // paginator so ->links() (and the pretty_url()/pretty_search_url()
         // helpers that wrap it) emit Tailwind markup instead of Bootstrap.
         Paginator::useTailwind();
+
+        // The MCP server authenticates AI clients (e.g. Claude) over OAuth 2.1
+        // via Passport. This is the consent screen shown to a logged-in admin
+        // when an MCP client requests authorization — see resources/views/mcp/.
+        Passport::authorizationView(fn ($parameters) => view('mcp.authorize', $parameters));
+
+        // Access tokens issued to MCP clients are long-lived enough to be
+        // practical but still expire; refresh tokens keep the connection alive.
+        Passport::tokensExpireIn(now()->addDays(15));
+        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
         view()->composer('*', function ($view)
         {

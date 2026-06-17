@@ -22,6 +22,7 @@ Built and maintained by **[Elman Group](https://elman.group)**.
 - [Manual setup (no Docker)](#manual-setup-no-docker)
 - [Testing](#testing)
 - [SEO / GEO](#seo--geo)
+- [AI / MCP connector (manage your site from Claude)](#ai--mcp-connector-manage-your-site-from-claude)
 - [Multilingual configuration](#multilingual-configuration)
 - [Admin credentials](#admin-credentials)
 - [Deployment](#deployment)
@@ -44,7 +45,8 @@ Built and maintained by **[Elman Group](https://elman.group)**.
 * **Website search**
 * **Spam protection** via Google reCAPTCHA v3 (gracefully disabled when no keys are set)
 * **Database / model caching**
-* **158 automated tests** (PHPUnit) running on isolated in-memory SQLite
+* **AI / MCP connector** — manage the live site from Claude (posts, pages, users, settings, theme) over an authenticated MCP server (see [AI / MCP connector](#ai--mcp-connector-manage-your-site-from-claude))
+* **164 automated tests** (PHPUnit) running on isolated in-memory SQLite
 
 ### Why it's easy to extend
 
@@ -236,6 +238,45 @@ Configure global SEO defaults in the admin panel under **Settings → SEO** (tit
 default description, default OG image, social handles, Google/Bing verification tags, optional
 async GA4/GTM id, a global "discourage search engines" toggle, sitemap toggle, and extra
 `robots.txt` lines).
+
+---
+
+## AI / MCP connector (manage your site from Claude)
+
+LaraPress includes a built-in **Model Context Protocol (MCP) server**, so you can manage
+your **live** site from an AI client such as **Claude** (Claude Code CLI, the VS Code
+extension, or claude.ai) using natural language — *"create a draft post about X"*,
+*"update the SEO meta description"*, *"add a partial to the theme"*.
+
+It is built on the official [`laravel/mcp`](https://laravel.com/docs/12.x/mcp) package and
+runs **inside the Laravel app** (no separate service). Security is first-class:
+
+* **OAuth 2.1** authentication via Laravel Passport — endpoint `POST /mcp/larapress`.
+* Every tool runs as the authenticated admin and is **gated by the same `manage_*`
+  permissions** as the admin panel.
+* **No raw code execution.** The only code surface is editing theme Blade templates,
+  restricted to `*.blade.php` files inside the active theme with path allow-listing.
+
+Tool coverage: **posts, pages, categories** (full CRUD, multilingual), **users & roles**,
+**general + SEO settings**, and **theme templates** (list/read/write).
+
+Enable it on a deployment (Passport is already pulled in via `composer install`):
+
+```bash
+php artisan migrate          # adds Passport oauth_* tables
+php artisan passport:keys    # generate encryption keys (once per environment)
+# ensure APP_URL is your real https URL, then: php artisan config:clear
+```
+
+Connect from Claude Code:
+
+```bash
+claude mcp add --transport http larapress https://your-site.com/mcp/larapress
+# then run /mcp in Claude and authenticate in the browser
+```
+
+**Full guide:** [`docs/mcp.md`](docs/mcp.md) — complete tool list, VS Code / claude.ai
+setup, the OAuth consent flow, and how to extend the toolset.
 
 ---
 
