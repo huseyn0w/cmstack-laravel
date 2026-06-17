@@ -42,7 +42,7 @@
 
     {{-- Byline --}}
     <div class="flex items-center gap-3 border-b border-ink-100 pb-8">
-        <img src="{{$data->author->avatar}}" alt="{{$author}}" width="44" height="44" loading="lazy" class="h-11 w-11 rounded-full object-cover ring-1 ring-ink-100">
+        <img src="{{ image_src($data->author->avatar, true) }}" {!! image_fallback(true) !!} alt="{{$author}}" width="44" height="44" loading="lazy" class="h-11 w-11 rounded-full object-cover ring-1 ring-ink-100">
         <div>
             <a href="{{route('show_user',['username' => $data->author->username])}}" class="font-serif text-base font-medium text-ink-900 hover:text-brand-700">{{$author}}</a>
             <div class="text-sm text-ink-400">{{Carbon\Carbon::parse($data->updated_at)->format('d.m.Y')}}</div>
@@ -51,7 +51,7 @@
 
     @if(!empty($data->thumbnail))
         <figure class="mt-10 overflow-hidden rounded-2xl bg-ink-100 shadow-card">
-            <img src="{{$data->thumbnail}}" alt="{{$data->title}}" width="1280" height="720" loading="eager" class="aspect-[16/9] w-full object-cover">
+            <img src="{{$data->thumbnail}}" {!! image_fallback() !!} alt="{{$data->title}}" width="1280" height="720" loading="eager" class="aspect-[16/9] w-full object-cover">
         </figure>
     @endif
 

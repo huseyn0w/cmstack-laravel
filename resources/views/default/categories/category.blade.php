@@ -31,13 +31,12 @@
             @foreach($category_posts as $post)
                 @php
                     $comments_count = get_post_comments_count($post->id);
-                    $post_thumbnail = $post->thumbnail;
-                    if(!$post_thumbnail) $post_thumbnail = asset('front/'.config('app.template_name').'/img/asset/l2.jpg');
+                    $post_thumbnail = image_src($post->thumbnail);
                     $post_url = env('APP_URL').'/'.$current_lang.'posts/'.$post->slug;
                 @endphp
                 <article x-data="reveal({{ $loop->index * 60 }})" class="reveal-init group flex flex-col gap-6 py-8 sm:flex-row">
                     <a href="{{$post_url}}" class="relative block shrink-0 overflow-hidden rounded-2xl bg-ink-100 shadow-card sm:w-56">
-                        <img src="{{$post_thumbnail}}" alt="{{$post->title}}" width="448" height="280" loading="lazy"
+                        <img src="{{$post_thumbnail}}" {!! image_fallback() !!} alt="{{$post->title}}" width="448" height="280" loading="lazy"
                              class="aspect-[16/10] h-full w-full object-cover transition duration-700 ease-out-expo group-hover:scale-[1.04]">
                         <div class="absolute left-3 top-3 rounded-lg bg-paper/90 px-2.5 py-1.5 text-center shadow-card backdrop-blur">
                             <div class="font-serif text-lg font-medium leading-none text-ink-900">{{Carbon\Carbon::parse($post->updated_at)->format('d')}}</div>

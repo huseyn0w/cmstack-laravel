@@ -31,7 +31,7 @@
 <section class="relative overflow-hidden" id="home">
     @if($headline_background)
         <div class="absolute inset-0 -z-10 bg-ink-900">
-            <img src="{{$headline_background}}" alt="" class="h-full w-full object-cover opacity-60">
+            <img src="{{$headline_background}}" {!! image_fallback() !!} alt="" class="h-full w-full object-cover opacity-60">
             <div class="absolute inset-0 bg-gradient-to-b from-ink-950/55 via-ink-950/35 to-ink-950/80"></div>
         </div>
     @else
@@ -71,12 +71,11 @@
     <div class="grid gap-x-8 gap-y-12 sm:grid-cols-2">
         @foreach($category_posts as $post)
             @php
-                $post_thumbnail = $post->thumbnail;
-                if(!$post_thumbnail) $post_thumbnail = asset('front/'.config('app.template_name').'/img/asset/l2.jpg');
+                $post_thumbnail = image_src($post->thumbnail);
             @endphp
             <article x-data="reveal({{ $loop->index * 70 }})" class="reveal-init group">
                 <a href="{{env('APP_URL')}}/posts/{{$post->slug}}" class="block overflow-hidden rounded-2xl bg-ink-100 shadow-card">
-                    <img src="{{$post_thumbnail}}" alt="{{$post->title}}" width="640" height="400" loading="lazy"
+                    <img src="{{$post_thumbnail}}" {!! image_fallback() !!} alt="{{$post->title}}" width="640" height="400" loading="lazy"
                          class="aspect-[16/10] w-full object-cover transition duration-700 ease-out-expo group-hover:scale-[1.03]">
                 </a>
                 <div class="mt-5 flex items-start gap-5">
@@ -127,7 +126,7 @@
                     @endphp
                     <figure class="group text-center">
                         <div class="relative mx-auto aspect-square w-full max-w-[180px] overflow-hidden rounded-2xl bg-ink-100 shadow-card">
-                            <img src="{{$author_image}}" alt="{{$author_name}}"
+                            <img src="{{ image_src($author_image, true) }}" {!! image_fallback(true) !!} alt="{{$author_name}}"
                                  class="h-full w-full object-cover transition duration-700 ease-out-expo group-hover:scale-105">
                             @if(!empty($author_linkedin['url']))
                                 <a href="{{$author_linkedin['url']}}" target="{{$author_linkedin['target'] === "1" ? '_blank' : '_self'}}" rel="noopener"

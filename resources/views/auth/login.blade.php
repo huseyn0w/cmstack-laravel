@@ -3,100 +3,64 @@
 
 @section('content')
 
-<section class="top-section-area section-gap">
-    <div class="container">
-        <div class="row justify-content-between align-items-center d-flex">
-            <div class="col-lg-8 top-left">
-                <h1 class="text-white mb-20">@lang('login.login_page_headline')</h1>
-            </div>
-        </div>
+<section class="mx-auto max-w-md px-5 py-16 sm:py-20">
+    <div class="mb-8 text-center">
+        <h1 class="font-serif text-3xl font-semibold tracking-tight text-ink-900">@lang('login.login_page_headline')</h1>
+        <p class="mt-2 text-sm text-ink-400">@lang('login.login')</p>
     </div>
-</section>
-<section class="login-cover mb-30 mt-30">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">@lang('login.login')</div>
 
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
+    <div class="rounded-2xl border border-ink-100 bg-white p-6 shadow-card sm:p-8">
+        {{-- Social sign-in --}}
+        <p class="mb-3 text-center text-xs font-medium uppercase tracking-wider text-ink-400">@lang('login.login_with')</p>
+        @include('auth.social')
 
-                            <div class="form-group">
-                                <div class="col-12 text-center">@lang('login.login_with')</div>
-                                @include('auth.social')
-                                <div class="col-md-12 text-center">
-                                    <p>@lang('login.or')</p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">@lang('login.username_or_email')</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="text" class="form-control @error('username') is-invalid @enderror @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-
-                                    @error('username')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-
-
-                                </div>
-
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">@lang('login.password')</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row remember_checkbox">
-                                <div class="col-md-12 offset-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                        <label class="form-check-label" for="remember">
-                                            @lang('login.remember_me')
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-12 text-center login-actions">
-                                    <button type="submit" class="genric-btn primary e-large pull-right">
-                                        @lang('login.login')
-                                    </button>
-
-                                    @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            @lang('login.forgot_password')
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div class="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-ink-300">
+            <span class="h-px flex-1 bg-ink-100"></span>
+            <span>@lang('login.or')</span>
+            <span class="h-px flex-1 bg-ink-100"></span>
         </div>
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            @csrf
+
+            <div>
+                <label for="email" class="field-label">@lang('login.username_or_email')</label>
+                <input id="email" type="text"
+                       class="field-input @error('username') border-brand-400 @enderror @error('email') border-brand-400 @enderror"
+                       name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                @error('email')
+                    <p class="mt-1.5 text-sm text-brand-700" role="alert">{{ $message }}</p>
+                @enderror
+                @error('username')
+                    <p class="mt-1.5 text-sm text-brand-700" role="alert">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="password" class="field-label">@lang('login.password')</label>
+                <input id="password" type="password"
+                       class="field-input @error('password') border-brand-400 @enderror"
+                       name="password" required autocomplete="current-password">
+                @error('password')
+                    <p class="mt-1.5 text-sm text-brand-700" role="alert">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <label for="remember" class="flex cursor-pointer items-center gap-2.5 text-sm text-ink-600">
+                <input class="rounded border-ink-300 text-brand-600 focus:ring-brand-500"
+                       type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                @lang('login.remember_me')
+            </label>
+
+            <div class="flex items-center justify-between gap-4 pt-2">
+                <button type="submit" class="btn-primary">@lang('login.login')</button>
+
+                @if (Route::has('password.request'))
+                    <a class="text-sm font-medium text-ink-500 transition hover:text-brand-700"
+                       href="{{ route('password.request') }}">@lang('login.forgot_password')</a>
+                @endif
+            </div>
+        </form>
     </div>
 </section>
 @endsection

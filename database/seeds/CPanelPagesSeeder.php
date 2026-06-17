@@ -61,8 +61,7 @@ class CPanelPagesSeeder extends Seeder
                     ),
                 'about-big-text' =>
                     array (
-                        'value' => '<p><strong>Elman Hüseynov</strong> - Full Stack Web Developer with more than 3 years of experience at freelance/office/remote jobs, completed more than 50 of projects and websites from scratch, currently Remote Full Stack Wordpress Developer - located in Baku / Azerbaijan.</p>
-<p><strong>Ilkin Alibayli</strong> - Backend Developer with more than 10 years of experience, professsional trainer, owner of it\'s own local company called "DPI Creative Agency" in Baku / Azerbaijan, currently Senior Software Engineer - located in Berlin / Germany.</p>',
+                        'value' => '<p><strong>Elman Hüseynov</strong> - Full Stack Web Developer with more than 3 years of experience at freelance/office/remote jobs, completed more than 50 of projects and websites from scratch, currently Remote Full Stack Wordpress Developer - located in Baku / Azerbaijan.</p>',
                         'type' => 'textarea',
                         'admin_label' => 'About Full Description',
                     ),
@@ -98,38 +97,6 @@ class CPanelPagesSeeder extends Seeder
                                                     array (
                                                         'label' => '#',
                                                         'url' => 'https://linkedin.com/in/huseyn0w/',
-                                                        'target' => '1',
-                                                    ),
-                                                'type' => 'link',
-                                                'admin_label' => 'Author Linkedin',
-                                            ),
-                                    ),
-                                'row-1' =>
-                                    array (
-                                        'author-image' =>
-                                            array (
-                                                'value' => env('APP_URL').'/filemanager/images/5db367b4093af.jpg',
-                                                'type' => 'image',
-                                                'admin_label' => 'Author Image',
-                                            ),
-                                        'author-name' =>
-                                            array (
-                                                'value' => 'Ilkin Alibayli',
-                                                'type' => 'text',
-                                                'admin_label' => 'Author Name',
-                                            ),
-                                        'author-position' =>
-                                            array (
-                                                'value' => 'LaraPress CMS Contributor',
-                                                'type' => 'text',
-                                                'admin_label' => 'Author Position',
-                                            ),
-                                        'author-linkedin' =>
-                                            array (
-                                                'value' =>
-                                                    array (
-                                                        'label' => '#',
-                                                        'url' => 'https://www.linkedin.com/in/ilkin-alibayli/',
                                                         'target' => '1',
                                                     ),
                                                 'type' => 'link',
@@ -185,8 +152,7 @@ class CPanelPagesSeeder extends Seeder
                     ),
                 'about-big-text' =>
                     array (
-                        'value' => '<p><strong>Эльман Гусейнов</strong> - Full Stack Web Разработчик с опытом работы более 3 лет в различных сферах начиная от фрилансера, заканчивая удаленной разработкой проектов, создал более 50 проектов с нуля, в данный момент является удаленным разработчиком - находится в Баку / Азербайджан.</p>
-<p><strong>Илькин Алибейли</strong> - Backend Developer с опытом работы более 10 лет, преподователь, владелец своей небольшой компании "DPI Creative Agency" в Баку / Азербайджан, в данный момент Senior Software Engineer - находится в Берлин / Германия.</p>',
+                        'value' => '<p><strong>Эльман Гусейнов</strong> - Full Stack Web Разработчик с опытом работы более 3 лет в различных сферах начиная от фрилансера, заканчивая удаленной разработкой проектов, создал более 50 проектов с нуля, в данный момент является удаленным разработчиком - находится в Баку / Азербайджан.</p>',
                         'type' => 'textarea',
                         'admin_label' => 'Подробное описание раздела об авторах',
                     ),
@@ -222,38 +188,6 @@ class CPanelPagesSeeder extends Seeder
                                                     array (
                                                         'label' => '#',
                                                         'url' => 'https://linkedin.com/in/huseyn0w/',
-                                                        'target' => '1',
-                                                    ),
-                                                'type' => 'link',
-                                                'admin_label' => 'Linkedin',
-                                            ),
-                                    ),
-                                'row-1' =>
-                                    array (
-                                        'author-image' =>
-                                            array (
-                                                'value' => env('APP_URL').'/filemanager/images/5db367b4093af.jpg',
-                                                'type' => 'image',
-                                                'admin_label' => 'Изображение автора',
-                                            ),
-                                        'author-name' =>
-                                            array (
-                                                'value' => 'Ilkin Alibayli',
-                                                'type' => 'text',
-                                                'admin_label' => 'Имя автора',
-                                            ),
-                                        'author-position' =>
-                                            array (
-                                                'value' => 'Содействующий в создании LaraPress CMS',
-                                                'type' => 'text',
-                                                'admin_label' => 'Должность',
-                                            ),
-                                        'author-linkedin' =>
-                                            array (
-                                                'value' =>
-                                                    array (
-                                                        'label' => '#',
-                                                        'url' => 'https://www.linkedin.com/in/ilkin-alibayli/',
                                                         'target' => '1',
                                                     ),
                                                 'type' => 'link',

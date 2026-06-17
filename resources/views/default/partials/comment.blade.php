@@ -9,12 +9,10 @@
  * @param int|null $user_id   Current user id (null when guest).
  * @param bool     $is_reply  Whether this is a nested reply.
  */
-$avatar = !empty($comment->user->avatar)
-    ? $comment->user->avatar
-    : asset('front/'.config('app.template_name').'/img/noavatar.jpg');
+$avatar = image_src($comment->user->avatar ?? null, true);
 ?>
 <article data-comment-card class="flex gap-4">
-    <img src="{{$avatar}}" alt="{{$comment->user->name}}" class="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-ink-100">
+    <img src="{{$avatar}}" {!! image_fallback(true) !!} alt="{{$comment->user->name}}" class="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-ink-100">
     <div class="min-w-0 flex-1">
         <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <a href="{{route('show_user',['username' => $comment->user->username])}}" class="font-serif text-base font-medium text-ink-900 hover:text-brand-700">{{$comment->user->name}}</a>

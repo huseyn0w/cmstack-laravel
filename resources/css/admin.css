@@ -59,7 +59,13 @@
         text-wrap: balance;
     }
 
-    .theme-admin a {
+    /* `:where()` keeps this reset at zero specificity beyond `.theme-admin`, so
+       Tailwind text-color utilities (e.g. `text-ink-300`, `text-white` on the
+       dark sidebar links) still win. Without it, `.theme-admin a` (0,1,1) beats
+       the `.text-*` utilities (0,1,0) and every admin link inherits the dark body
+       colour — invisible on the dark rail. Links without a colour utility still
+       inherit, as before. */
+    .theme-admin :where(a) {
         color: inherit;
         text-decoration: none;
     }

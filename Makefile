@@ -38,7 +38,7 @@ setup: ## First-time bootstrap: bring up Docker, install deps, migrate+seed, bui
 	@echo ""
 	@echo "  LaraPress is up:  http://localhost:8080"
 	@echo "  Admin panel:      http://localhost:8080/larapress-admin"
-	@echo "  Login: admin / larapressdmin123"
+	@echo "  Login: admin / larapressadmin123"
 
 up: ## Start the Docker stack
 	$(DC) up -d

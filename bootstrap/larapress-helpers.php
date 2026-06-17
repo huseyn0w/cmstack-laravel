@@ -1075,3 +1075,60 @@ function uploadImage($file)
     return false;
 
 }
+
+if (! function_exists('placeholder_image')) {
+    /**
+     * Public URL of the generic "no image" placeholder (16:9).
+     */
+    function placeholder_image(): string
+    {
+        return asset('images/placeholder.svg');
+    }
+}
+
+if (! function_exists('placeholder_avatar')) {
+    /**
+     * Public URL of the avatar placeholder (square / round-friendly).
+     */
+    function placeholder_avatar(): string
+    {
+        return asset('images/avatar-placeholder.svg');
+    }
+}
+
+if (! function_exists('image_src')) {
+    /**
+     * Resolve an image URL for display, falling back to a placeholder when the
+     * value is empty/null. This covers the "no value" case; broken or 404ing
+     * URLs are caught at render time by the image_fallback() onerror handler.
+     *
+     * @param  string|null  $url     The stored image URL (may be empty).
+     * @param  bool         $avatar  Use the avatar placeholder instead of the generic one.
+     */
+    function image_src(?string $url, bool $avatar = false): string
+    {
+        $url = is_string($url) ? trim($url) : '';
+
+        if ($url !== '') {
+            return $url;
+        }
+
+        return $avatar ? placeholder_avatar() : placeholder_image();
+    }
+}
+
+if (! function_exists('image_fallback')) {
+    /**
+     * Ready-to-print `onerror` attribute that swaps a broken image for the
+     * placeholder (and clears the handler so it can't loop). Print it raw:
+     *   <img src="{{ image_src($url) }}" {!! image_fallback() !!}>
+     *
+     * @param  bool  $avatar  Use the avatar placeholder instead of the generic one.
+     */
+    function image_fallback(bool $avatar = false): string
+    {
+        $placeholder = $avatar ? placeholder_avatar() : placeholder_image();
+
+        return 'onerror="this.onerror=null;this.src=\''.e($placeholder).'\'"';
+    }
+}

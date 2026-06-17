@@ -44,20 +44,6 @@ class UsersTableSeeder extends Seeder
                     'about_me' => "ADMIN of CMS LaraPress",
                     'linkedin_url' => "",
                     'password' => bcrypt('larapressadmin123'),
-                ],
-                [
-                    'name' => "Ilkin",
-                    'surname' => "Alibayli",
-                    'email' => "ilkinalibeyli@gmail.com",
-                    'username' => "ilkin007",
-                    'city' => "Berlin",
-                    'country' => "Germany",
-                    'role_id' => 1,
-                    'gender'  => "male",
-                    'about_me' => "Contributor of CMS LaraPress",
-                    'avatar'  => env('APP_URL').'/filemanager/images/5db367b4093af.jpg',
-                    'linkedin_url' => "https://www.linkedin.com/in/ilkin-alibayli/",
-                    'password' => bcrypt('ilkin123'),
                 ]
             ]
         );

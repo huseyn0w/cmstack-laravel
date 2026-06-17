@@ -15,7 +15,7 @@
 @php
     $home_page_data = get_data(1, 'page', ['slug', 'title']);
     $countries = get_countries_array();
-    $avatar_src = !empty($user->avatar) ? $user->avatar : asset('admin').'/img/faces/noavatar.svg';
+    $avatar_src = image_src($user->avatar, true);
 @endphp
 
 @include(config('app.template_name').'.partials.banner', [

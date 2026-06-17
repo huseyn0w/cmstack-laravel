@@ -36,7 +36,7 @@
 <section class="mx-auto max-w-4xl px-5 py-16 sm:px-8 sm:py-20">
     <div class="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
         <img
-            src="{{ !empty($user->avatar) ? $user->avatar : asset('admin').'/img/faces/noavatar.svg' }}"
+            src="{{ image_src($user->avatar, true) }}" {!! image_fallback(true) !!}
             alt="{{$user->username}}"
             class="h-28 w-28 shrink-0 rounded-2xl object-cover shadow-card ring-1 ring-ink-100">
         <div class="min-w-0">
