@@ -32,6 +32,8 @@ class PageRepository extends BaseRepository
         'slug',
         'meta_description',
         'meta_keywords',
+        'canonical_url',
+        'meta_noindex',
         'status',
         'template',
         'created_at',

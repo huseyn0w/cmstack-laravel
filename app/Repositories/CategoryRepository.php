@@ -29,6 +29,8 @@ class CategoryRepository extends BaseRepository
         'title',
         'meta_description',
         'meta_keywords',
+        'canonical_url',
+        'meta_noindex',
         'description',
         'slug'
     ];

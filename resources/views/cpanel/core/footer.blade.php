@@ -11,6 +11,9 @@
         &copy; {{ now()->year }}
         @lang('cpanel/nav/bottom.made')
         <a href="https://www.linkedin.com/in/huseyn0w/" class="font-medium text-brand-700 hover:text-brand-800">Huseyn0w</a>
+        <span class="text-ink-300">&middot;</span>
+        Developed by
+        <a href="https://elman.group" target="_blank" rel="noopener" class="font-medium text-brand-700 hover:text-brand-800">Elman Group</a>
     </p>
 </footer>
 @include('cpanel.core.footer-scripts')

@@ -23,6 +23,8 @@ class CPanelPageRepository extends BaseRepository
         'author_id',
         'title',
         'slug',
+        'canonical_url',
+        'meta_noindex',
         'status',
         'created_at',
         'updated_at'

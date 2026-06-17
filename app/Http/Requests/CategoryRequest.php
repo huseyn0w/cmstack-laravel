@@ -24,6 +24,17 @@ class CategoryRequest extends LaravellaRequest
     }
 
     /**
+     * Phase 7: normalise the per-entity noindex checkbox to a real boolean so
+     * an unchecked box persists as false rather than being dropped.
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('meta_noindex')) {
+            $this->merge(['meta_noindex' => $this->boolean('meta_noindex')]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -35,6 +46,8 @@ class CategoryRequest extends LaravellaRequest
             'description'       => 'string|nullable',
             'meta_description'  => 'string|nullable',
             'meta_keywords'     => 'string|nullable',
+            'canonical_url'     => 'nullable|url|max:255',
+            'meta_noindex'      => 'sometimes|boolean',
             'title'             => ['required', 'string', 'max:30'],
             'slug'              => ['required', 'string', 'max:30'],
             'parent_category'   => ['nullable', 'numeric']

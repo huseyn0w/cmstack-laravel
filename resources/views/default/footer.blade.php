@@ -24,6 +24,11 @@ $languages = get_translation_links();
             <div class="max-w-md">
                 <a href="{{env('APP_URL')}}" class="font-serif text-2xl font-semibold tracking-tightest text-ink-900">Laravella</a>
                 <div class="mt-3 text-sm leading-relaxed text-ink-500">{!! $copyright !!}</div>
+                <p class="mt-2 text-xs text-ink-400">
+                    Developed by
+                    <a href="https://elman.group" target="_blank" rel="noopener"
+                       class="font-medium text-ink-600 underline-offset-2 transition hover:text-ink-900 hover:underline">Elman Group</a>
+                </p>
             </div>
 
             <div class="flex items-center gap-3">
