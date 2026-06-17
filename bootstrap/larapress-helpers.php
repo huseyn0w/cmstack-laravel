@@ -20,6 +20,7 @@ use App\Http\Models\Menu;
 use App\Http\Models\CPanel\CPanelSiteOptions;
 use App\Http\Models\CPanel\CPanelGeneralSettings;
 use App\Http\Models\CPanel\CPanelSeoSettings;
+use App\Http\Models\CPanel\CPanelGeoSettings;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\QueryException;
 use Doctrine\DBAL\Driver\PDOException;
@@ -644,6 +645,32 @@ function get_seo_settings($key = null)
     // static cache — that would leak stale state across requests in-process.
     try {
         $settings = CPanelSeoSettings::first();
+    } catch (\Throwable $e) {
+        $settings = null;
+    }
+
+    if (is_null($settings)) {
+        return null;
+    }
+
+    if (is_null($key)) {
+        return $settings;
+    }
+
+    return $settings->$key ?? null;
+}
+
+/**
+ * GEO settings singleton accessor. Returns the model, a single field, or null.
+ * Mirrors get_seo_settings(); reads go through model-caching.
+ *
+ * @param  string|null  $key
+ * @return \App\Http\Models\CPanel\CPanelGeoSettings|mixed|null
+ */
+function get_geo_settings($key = null)
+{
+    try {
+        $settings = CPanelGeoSettings::first();
     } catch (\Throwable $e) {
         $settings = null;
     }

@@ -21,6 +21,7 @@ return [
     'general_settings'  => 'Основные',
     'site_options'      => 'Опции сайта',
     'seo_settings'      => 'SEO',
+    'geo_settings'      => 'GEO (AI)',
     'menus'             => 'Меню',
     'user_roles'        => 'Статусы'
 

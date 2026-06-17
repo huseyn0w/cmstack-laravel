@@ -139,6 +139,9 @@ $settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_s
                             <a href="{{route('cpanel_seo_settings')}}" class="{{ $subBase }} {{ $isActive('cpanel_seo_settings') ? $subActive : $subIdle }}">
                                 <span class="h-1 w-1 rounded-full bg-current opacity-50"></span>@lang('cpanel/nav/left.seo_settings')
                             </a>
+                            <a href="{{route('cpanel_geo_settings')}}" class="{{ $subBase }} {{ $isActive('cpanel_geo_settings') ? $subActive : $subIdle }}">
+                                <span class="h-1 w-1 rounded-full bg-current opacity-50"></span>@lang('cpanel/nav/left.geo_settings')
+                            </a>
                         @endif
                         @if (Auth::user()->can('manage_menus', 'App\Http\Models\UserRoles'))
                             <a href="{{route('cpanel_menu_list')}}" class="{{ $subBase }} {{ $isActive('cpanel_menu_list') ? $subActive : $subIdle }}">

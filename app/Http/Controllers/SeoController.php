@@ -180,13 +180,52 @@ class SeoController extends Controller
         $name     = get_general_settings('website_name');
         $tagline  = get_general_settings('tagline');
 
+        $geo     = get_geo_settings();
+        $emitGeo = $geo && $geo->include_in_llms;
+
         $lines   = [];
-        $lines[] = '# ' . $name;
+        $lines[] = '# ' . (($emitGeo && !empty($geo->business_name)) ? $geo->business_name : $name);
         $lines[] = '';
         if (!empty($tagline)) {
             $lines[] = '> ' . $tagline;
             $lines[] = '';
         }
+
+        // GEO: machine-readable summary for generative engines.
+        if ($emitGeo) {
+            if (!empty($geo->description)) {
+                $lines[] = '## About';
+                $lines[] = '';
+                $lines[] = $geo->description;
+                $lines[] = '';
+            }
+
+            $services = $geo->servicesList();
+            if (!empty($services)) {
+                $lines[] = '## Services';
+                $lines[] = '';
+                foreach ($services as $service) {
+                    $lines[] = '- ' . $service;
+                }
+                if (!empty($geo->service_area)) {
+                    $lines[] = '';
+                    $lines[] = 'Service area: ' . $geo->service_area;
+                }
+                $lines[] = '';
+            }
+
+            $faq = $geo->faqList();
+            if (!empty($faq)) {
+                $lines[] = '## FAQ';
+                $lines[] = '';
+                foreach ($faq as $qa) {
+                    $lines[] = '### ' . $qa['question'];
+                    $lines[] = $qa['answer'];
+                    $lines[] = '';
+                }
+            }
+        }
+
         $lines[] = '## Key links';
         $lines[] = '';
         $lines[] = '- [Home](' . $base . ')';

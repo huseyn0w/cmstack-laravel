@@ -54,6 +54,11 @@ Route::prefix('larapress-admin')->middleware(['auth', 'see_admin_panel'])->names
         Route::post('/', 'CPanelSeoSettingsController@store')->name('cpanel_update_seo_settings');
     });
 
+    Route::prefix('geo-settings')->middleware('manage_general_settings')->group(function(){
+        Route::get('/', 'CPanelGeoSettingsController@index')->name('cpanel_geo_settings');
+        Route::post('/', 'CPanelGeoSettingsController@store')->name('cpanel_update_geo_settings');
+    });
+
     // The profile controller resolves the user from Auth when no id is
     // supplied (see CPanelUserController::editUser), so this route can only
     // ever surface the authenticated user's own profile.

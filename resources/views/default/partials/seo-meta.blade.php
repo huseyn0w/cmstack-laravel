@@ -165,12 +165,68 @@
                 'query-input' => 'required name=search_term_string',
             ],
         ];
-        $jsonLdBlocks[] = [
+        // Organization / LocalBusiness — enriched from the admin GEO settings so
+        // generative engines (ChatGPT, Perplexity, Gemini, Google AI) can read
+        // who you are, what you offer, where, and how to trust/cite you.
+        $geo     = get_geo_settings();
+        $emitGeo = $geo && $geo->emit_jsonld;
+
+        $org = [
             '@context' => 'https://schema.org',
-            '@type'    => 'Organization',
-            'name'     => $siteName,
+            '@type'    => ($emitGeo && !empty($geo->business_type)) ? $geo->business_type : 'Organization',
+            'name'     => ($emitGeo && !empty($geo->business_name)) ? $geo->business_name : $siteName,
             'url'      => $appUrl,
-        ] + (!empty($seo->default_og_image) ? ['logo' => $seo->default_og_image] : []);
+        ];
+
+        if (!empty($seo->default_og_image)) {
+            $org['logo'] = $seo->default_og_image;
+        }
+
+        if ($emitGeo) {
+            if (!empty($geo->description))   { $org['description'] = $geo->description; }
+            if (!empty($geo->service_area))  { $org['areaServed']  = $geo->service_area; }
+            if (!empty($geo->address))       { $org['address']     = $geo->address; }
+            if (!empty($geo->founder_name))  { $org['founder']     = ['@type' => 'Person', 'name' => $geo->founder_name]; }
+
+            $services = $geo->servicesList();
+            if (!empty($services)) {
+                $org['knowsAbout'] = $services;
+                $org['makesOffer'] = array_map(fn ($s) => [
+                    '@type'       => 'Offer',
+                    'itemOffered' => ['@type' => 'Service', 'name' => $s],
+                ], $services);
+            }
+
+            $sameAs = $geo->sameAsList();
+            if (!empty($sameAs)) {
+                $org['sameAs'] = $sameAs;
+            }
+
+            $contact = [];
+            if (!empty($geo->contact_email)) { $contact['email']     = $geo->contact_email; }
+            if (!empty($geo->contact_phone)) { $contact['telephone'] = $geo->contact_phone; }
+            if (!empty($contact)) {
+                $org['contactPoint'] = ['@type' => 'ContactPoint', 'contactType' => 'customer support'] + $contact;
+            }
+        }
+
+        $jsonLdBlocks[] = $org;
+
+        // FAQPage — generative engines quote these Q&A pairs directly.
+        if ($emitGeo) {
+            $faq = $geo->faqList();
+            if (!empty($faq)) {
+                $jsonLdBlocks[] = [
+                    '@context'   => 'https://schema.org',
+                    '@type'      => 'FAQPage',
+                    'mainEntity' => array_map(fn ($qa) => [
+                        '@type'          => 'Question',
+                        'name'           => $qa['question'],
+                        'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa['answer']],
+                    ], $faq),
+                ];
+            }
+        }
     }
 
     // Article / BlogPosting + BreadcrumbList on posts.

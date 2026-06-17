@@ -21,6 +21,7 @@ return [
     'general_settings'  => 'General',
     'site_options'      => 'Site Options',
     'seo_settings'      => 'SEO',
+    'geo_settings'      => 'GEO (AI)',
     'menus'             => 'Menus',
     'user_roles'        => 'User Roles'
 
