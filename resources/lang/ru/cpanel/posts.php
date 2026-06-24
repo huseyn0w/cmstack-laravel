@@ -23,6 +23,8 @@ return [
     'thumbnail_label' => 'Изменить изображение',
     'likes' => 'Лайки:',
     'category' => 'Категория:',
+    'tags' => 'Теги:',
+    'tags_hint' => 'Через запятую, напр. Laravel, PHP, Testing',
     'bulky_deleted_message' => 'Посты были перемещены в корзину',
     'bulky_destroyed_message' => 'Посты были удалены',
     'bulky_restored_message' => 'Посты были восстановлены',

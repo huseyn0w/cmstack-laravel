@@ -39,4 +39,16 @@ class TagArchiveTest extends TestCase
     {
         $this->get('/tag/does-not-exist')->assertNotFound();
     }
+
+    public function test_post_detail_shows_its_tags_linking_to_the_archive(): void
+    {
+        $post = Post::findOrFail(1);
+        app(TagRepository::class)->syncToPost($post, ['Laravel']);
+
+        $response = $this->get('/posts/'.$post->slug);
+
+        $response->assertStatus(200);
+        $response->assertSee('Laravel', false);
+        $response->assertSee('tag/laravel', false);
+    }
 }

@@ -19,6 +19,7 @@ return [
     'nobody_likes' => 'Nobody likes this post yet',
     'comments' => 'Comments',
     'comment' => 'Comment',
+    'tags' => 'Tags',
     'reply' => 'Reply',
     'edit' => 'Edit',
     'delete' => 'Delete',

@@ -17,6 +17,7 @@
     @php
         $categories_ids = [];
         foreach($entity->categories as $category) $categories_ids[] = $category->id;
+        $tags_value = $entity->tags->pluck('name')->implode(', ');
     @endphp
 
     <div class="mx-auto max-w-6xl">
@@ -74,6 +75,10 @@
                                         <option value="{{$category->category_id}}" {{ in_array($category->category_id, $categories_ids) ? 'selected': null}}>{{$category->title}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="field">
+                                <label class="field-label">@lang('cpanel/posts.tags')</label>
+                                <input type="text" name="tags" class="form-control" id="post_tags" value="{{ old('tags', $tags_value) }}" placeholder="@lang('cpanel/posts.tags_hint')">
                             </div>
                             <div class="field">
                                 <label class="field-label">@lang('cpanel/posts.author')</label>

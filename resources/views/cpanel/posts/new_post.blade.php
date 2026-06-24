@@ -73,6 +73,10 @@
                                 </select>
                             </div>
                             <div class="field">
+                                <label class="field-label">@lang('cpanel/posts.tags')</label>
+                                <input type="text" name="tags" class="form-control" id="post_tags" value="{{ old('tags') }}" placeholder="@lang('cpanel/posts.tags_hint')">
+                            </div>
+                            <div class="field">
                                 <label class="field-label">@lang('cpanel/posts.author')</label>
                                 <select name="author_id" id="author_id" class="form-control">
                                     @foreach($users_list as $user)

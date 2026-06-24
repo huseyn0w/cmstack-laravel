@@ -60,6 +60,17 @@
         {!! $data->content !!}
     </div>
 
+    {{-- Tags --}}
+    @if(!empty($data->tags) && count($data->tags) > 0)
+        <div class="mt-10 flex flex-wrap items-center gap-2">
+            <span class="mr-1 text-xs font-medium uppercase tracking-wider text-ink-400">@lang('default/post.tags')</span>
+            @foreach($data->tags as $tag)
+                <a href="{{ env('APP_URL').'/'.$current_lang.'tag/'.$tag->slug }}"
+                   class="inline-flex items-center rounded-full border border-ink-200 px-3 py-1 text-sm text-ink-600 transition hover:border-brand-300 hover:text-brand-700">{{ $tag->name }}</a>
+            @endforeach
+        </div>
+    @endif
+
     {{-- Like bar --}}
     <div class="mt-14 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-ink-100 bg-ink-50/60 px-6 py-5">
         @if(is_logged_in())

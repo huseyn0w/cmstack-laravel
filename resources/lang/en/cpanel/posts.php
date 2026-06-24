@@ -23,6 +23,8 @@ return [
     'thumbnail_label' => 'Choose Image',
     'likes' => 'Likes:',
     'category' => 'Category:',
+    'tags' => 'Tags:',
+    'tags_hint' => 'Comma-separated, e.g. Laravel, PHP, Testing',
     'bulky_deleted_message' => 'Posts has been deleted',
     'bulky_destroyed_message' => 'Posts has been destroyed',
     'bulky_restored_message' => 'Posts has been restored',
