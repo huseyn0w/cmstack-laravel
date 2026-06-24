@@ -37,18 +37,6 @@ parameters:
 			path: app/Http/Controllers/BaseController.php
 
 		-
-			message: '#^Access to an undefined property App\\Http\\Models\\Category\:\:\$slug\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/SeoController.php
-
-		-
-			message: '#^Access to an undefined property App\\Http\\Models\\Category\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/SeoController.php
-
-		-
 			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middleware is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middleware\.$#'
 			identifier: property.phpDocType
 			count: 1

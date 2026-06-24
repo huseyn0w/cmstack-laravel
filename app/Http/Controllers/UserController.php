@@ -4,23 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\FrontEndUserRequest;
-use App\Repositories\UserRepository;
-use Illuminate\Http\Request;
-use Hash;
+use App\Services\Front\ProfileService;
 
 class UserController extends BaseController
 {
-
-    public function __construct(UserRepository $repository)
+    public function __construct(ProfileService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     public function yourProfile()
     {
         $username = get_logged_user_username();
-        $user = $this->repository->getBy('username', $username);
+        $user = $this->service->byUsername($username);
 
         return view('default.users.yourprofile', compact('user'));
     }
@@ -28,9 +25,9 @@ class UserController extends BaseController
     public function update(FrontEndUserRequest $request)
     {
         $user_id = get_logged_user_id();
-        $this->repository->update($user_id, $request);
+        $this->service->update($user_id, $request);
 
-        return back()->with('message', " ");
+        return back()->with('message', ' ');
     }
 
     public function password()
@@ -40,16 +37,19 @@ class UserController extends BaseController
 
     public function changePassword(ChangePasswordRequest $request)
     {
-        $result = $this->repository->changePassword($request);
+        $result = $this->service->changePassword($request);
 
-        if(!$result) return redirect()->back()->withErrors(trans('cpanel/controller.password_match'));
+        if (! $result) {
+            return redirect()->back()->withErrors(trans('cpanel/controller.password_match'));
+        }
 
-        return back()->with('message', " ");
+        return back()->with('message', ' ');
     }
 
     public function show($username)
     {
-        $user = $this->repository->getBy('username', $username);
+        $user = $this->service->byUsername($username);
+
         return view('default.users.profile', compact('user'));
     }
 }

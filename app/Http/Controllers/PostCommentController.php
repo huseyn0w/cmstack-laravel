@@ -3,39 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostCommentsRequest;
-use App\Repositories\PostCommentsRepository;
-use Illuminate\Http\Request;
+use App\Services\Front\CommentService;
 
 class PostCommentController extends BaseController
 {
-    public function __construct(PostCommentsRepository $repository)
+    public function __construct(CommentService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
     }
-
 
     public function store(PostCommentsRequest $request)
     {
-        if($this->repository->create($request)) return back()->with('comment_added', true);
+        if ($this->service->create($request)) {
+            return back()->with('comment_added', true);
+        }
 
         return false;
-
     }
 
     public function delete(PostCommentsRequest $request)
     {
-        $result = $this->repository->delete($request);
+        $result = $this->service->delete($request);
+
         return json_encode($result);
     }
 
     public function update(PostCommentsRequest $request)
     {
-        $result = $this->repository->update($request);
-        if($result) return back()->with('comment_updated', true);
+        $result = $this->service->update($request);
+
+        if ($result) {
+            return back()->with('comment_updated', true);
+        }
 
         return false;
     }
-
-
 }

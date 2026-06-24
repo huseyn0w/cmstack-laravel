@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class BaseController extends Controller
 {
-    protected $repository;
+    /**
+     * Domain VIEW service (a App\Services\BaseCrudService subclass) that owns all
+     * data access for the front-end cluster. Controllers never call a repository
+     * directly — the chain is Controller -> Service -> Repository. Left untyped
+     * (like CPanelBaseController) so each subclass can assign its own concrete
+     * domain service and call domain-specific methods on it.
+     */
+    protected $service;
 
     protected $data;
 
@@ -17,25 +22,28 @@ class BaseController extends Controller
 
     protected function setLang($lang)
     {
-        \Session::put('locale',$lang);
+        \Session::put('locale', $lang);
 
         return redirect()->refresh();
     }
 
-    protected function index(string $slug, string $locale = null)
+    protected function index(string $slug, ?string $locale = null)
     {
-        if(is_null($locale)) $locale = get_current_lang();
+        if (is_null($locale)) {
+            $locale = get_current_lang();
+        }
 
         $modified_slug = $this->modifyTranslatedSlug($locale, $slug);
 
-        if(!is_string($modified_slug))
-        {
+        if (! is_string($modified_slug)) {
             return $modified_slug;
         }
 
-        $this->data = $this->repository->getBy('slug', $modified_slug);
+        $this->data = $this->service->resolveBySlug($modified_slug);
 
-        if(is_null($this->data)) throwNotFound();
+        if (is_null($this->data)) {
+            throwNotFound();
+        }
 
         \Session::put('slug', $slug);
 
@@ -44,12 +52,13 @@ class BaseController extends Controller
 
     protected function modifyTranslatedSlug($locale, $slug)
     {
-        if(in_array($locale, $this->lang_prefixes) && $locale !== get_current_lang())
-        {
+        if (in_array($locale, $this->lang_prefixes) && $locale !== get_current_lang()) {
             return $this->setLang($locale);
         }
 
-        if(!in_array($locale, $this->lang_prefixes) && $slug === "/") $slug = $locale;
+        if (! in_array($locale, $this->lang_prefixes) && $slug === '/') {
+            $slug = $locale;
+        }
 
         return $slug;
     }

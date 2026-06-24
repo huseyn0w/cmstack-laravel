@@ -37,6 +37,15 @@ class BaseCrudService
     }
 
     /**
+     * Resolve a single record by its (locale-aware) slug, for front-end
+     * slug-routed pages. Null when absent.
+     */
+    public function resolveBySlug($slug)
+    {
+        return $this->repository->getBy('slug', $slug);
+    }
+
+    /**
      * Persist a new record from validated/whitelisted input.
      */
     public function create($request)
