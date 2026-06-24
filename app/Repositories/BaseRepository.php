@@ -48,6 +48,15 @@ abstract class BaseRepository implements BaseRepositoryInterface
      */
     protected $non_persisted_fields = [];
 
+    /**
+     * Relations eager-loaded by the translatable read paths (getTranslatedBy /
+     * translatedOnly). Defaults to the author relation that content models
+     * (Post/Page/Category) carry; taxonomies without an author override this.
+     *
+     * @var array<int, string>
+     */
+    protected $eager_relations = ['author'];
+
     public function __construct() {}
 
     /**
@@ -241,7 +250,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
             $data = $this->model::join($translated_table_name, $main_table_name.'.id', '=', $translated_table_name.'.'.$parent_table_join_column)
                 ->select($this->select_fields_ready_array)
                 ->where($translated_table_name.'.locale', $this->locale)
-                ->with('author')->paginate($count, ['*'], 'page', $page);
+                ->with($this->eager_relations)->paginate($count, ['*'], 'page', $page);
 
         } catch (QueryException $e) {
             throwAbort();
@@ -304,7 +313,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
                 ->select($this->select_fields_ready_array)
                 ->where($this->translated_table.'.locale', $this->locale)
                 ->where($searchColumn.'.'.$param, $value)
-                ->with('author')->first();
+                ->with($this->eager_relations)->first();
 
         } catch (QueryException $e) {
             throwAbort();

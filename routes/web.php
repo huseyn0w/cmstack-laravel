@@ -181,6 +181,13 @@ Route::group([], function () {
         Route::get('/{slug}/page/{page?}', 'CategoryController@index')->name('categories_display_pages')->where('page', '[1-9]+[0-9]*');
     });
 
+    Route::get('/{locale?}/tag/{slug}', 'TagController@languageIndex')->name('tags_localized');
+
+    Route::prefix('/tag')->group(function () {
+        Route::get('/{slug}', 'TagController@index')->name('tags_first_page');
+        Route::get('/{slug}/page/{page?}', 'TagController@index')->name('tags_display_pages')->where('page', '[1-9]+[0-9]*');
+    });
+
     Route::prefix('profile')->middleware('auth')->group(function () {
         Route::get('/edit', 'UserController@yourProfile')->name('get_user_info');
         Route::put('/update', 'UserController@update')->name('update_user_info');

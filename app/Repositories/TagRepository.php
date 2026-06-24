@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Http\Models\Post;
 use App\Http\Models\Tag;
 use App\Http\Models\TagTranslation;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 /**
@@ -19,6 +20,9 @@ class TagRepository extends BaseRepository
     protected $translated_table = 'tag_translations';
 
     protected $translated_table_join_column = 'tag_id';
+
+    // Tags have no author relation, unlike content models.
+    protected $eager_relations = [];
 
     protected $select_fields = [
         'id',
@@ -74,5 +78,40 @@ class TagRepository extends BaseRepository
         }
 
         return $this->model->create(['name' => $name, 'slug' => $slug]);
+    }
+
+    /**
+     * Paginated list of posts carrying the given tag, for the public archive
+     * (locale-scoped, mirrors CategoryRepository::displayList).
+     */
+    public function postsForTag(int $tag_id, int $page = 1)
+    {
+        $locale = get_current_lang();
+
+        $main_table_name = 'posts';
+        $translated_table_name = 'post_translations';
+        $join_column = 'post_id';
+
+        $select = $this->generateSelectFieldsArray(
+            ['id', 'title', 'slug', 'thumbnail', 'preview', 'likes', 'created_at'],
+            $main_table_name,
+            $translated_table_name
+        );
+
+        $count = get_general_settings('posts_per_page');
+
+        try {
+            return Post::join($translated_table_name, $main_table_name.'.id', '=', $translated_table_name.'.'.$join_column)
+                ->select($select)
+                ->where($translated_table_name.'.locale', $locale)
+                ->whereHas('tags', function ($query) use ($tag_id) {
+                    $query->where('tags.id', $tag_id);
+                })
+                ->with('author')->paginate($count, ['*'], 'page', $page);
+        } catch (QueryException $e) {
+            throwAbort();
+        } catch (\Error $e) {
+            throwAbort();
+        }
     }
 }

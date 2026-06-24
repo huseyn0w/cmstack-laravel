@@ -337,6 +337,18 @@ parameters:
 			path: app/Repositories/PostRepository.php
 
 		-
+			message: '#^Relation ''author'' is not found in App\\Http\\Models\\Post model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/TagRepository.php
+
+		-
+			message: '#^Relation ''tags'' is not found in App\\Http\\Models\\Post model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/TagRepository.php
+
+		-
 			message: '#^Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable\:\:\$password\.$#'
 			identifier: property.notFound
 			count: 1

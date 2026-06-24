@@ -19,6 +19,7 @@ use App\Http\Models\Page;
 use App\Http\Models\PageTranslation;
 use App\Http\Models\Post;
 use App\Http\Models\PostTranslation;
+use App\Http\Models\TagTranslation;
 use App\Http\Models\User;
 use App\Http\Models\UserPermissions;
 use App\Http\Models\UserRoles;
@@ -969,6 +970,13 @@ function get_translation_links()
             $model = new CategoryTranslation;
             $field_name = 'category_id';
             $type = 'category/';
+            break;
+        case 'tags_first_page':
+        case 'tags_display_pages':
+        case 'tags_localized':
+            $model = new TagTranslation;
+            $field_name = 'tag_id';
+            $type = 'tag/';
             break;
         default:
             $model = new PageTranslation;
