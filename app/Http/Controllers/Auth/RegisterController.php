@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Services\Auth\UserRegistrationService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -35,7 +34,7 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(private UserRegistrationService $registrar)
     {
         $this->middleware('guest');
     }
@@ -60,15 +59,10 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return User
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'username' => $data['username'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return $this->registrar->register($data);
     }
 }
