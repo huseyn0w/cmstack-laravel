@@ -32,12 +32,12 @@ class PostCommentsRequest extends FormRequest
             $rules = [
                 'post_id' => 'required|integer',
                 'parent_id' => 'nullable|integer',
-                'comment' => 'required|string',
+                'comment' => 'required|string|max:5000',
             ];
         } elseif ($route_name === 'update_post_comment') {
             $rules = [
                 'updated_comment_id' => 'required|integer',
-                'comment' => 'required|string',
+                'comment' => 'required|string|max:5000',
             ];
         } elseif ($route_name === 'delete_post_comments') {
             $rules = [

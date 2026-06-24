@@ -19,11 +19,11 @@ class SendCommentNotification implements ShouldQueue
     {
         $recipients = $this->recipientsFor($event->comment);
 
-        if (empty($recipients)) {
-            return;
+        // Send one message per recipient so the post author and the moderation
+        // inbox never see each other's address.
+        foreach ($recipients as $recipient) {
+            Mail::to($recipient)->send(new CommentSubmittedMail($event->comment));
         }
-
-        Mail::to($recipients)->send(new CommentSubmittedMail($event->comment));
     }
 
     /**

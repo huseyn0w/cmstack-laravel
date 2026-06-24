@@ -166,9 +166,9 @@ Route::group([], function () {
 
         Route::get('/{slug}', 'PostController@index')->name('posts');
         Route::post('/handlelike/{id}', 'PostController@handleLike')->middleware('auth')->name('handle_post_likes')->where('id', '[1-9]+[0-9]*');
-        Route::put('/handlecomment/', 'PostCommentController@update')->middleware('auth')->name('update_post_comment');
-        Route::post('/handlecomment/{id}', 'PostCommentController@store')->middleware('auth')->name('store_post_comments')->where('id', '[1-9]+[0-9]*');
-        Route::delete('/deletecomment/{id}', 'PostCommentController@delete')->middleware('auth')->name('delete_post_comments')->where('id', '[1-9]+[0-9]*');
+        Route::put('/handlecomment/', 'PostCommentController@update')->middleware(['auth', 'throttle:8,1'])->name('update_post_comment');
+        Route::post('/handlecomment/{id}', 'PostCommentController@store')->middleware(['auth', 'throttle:8,1'])->name('store_post_comments')->where('id', '[1-9]+[0-9]*');
+        Route::delete('/deletecomment/{id}', 'PostCommentController@delete')->middleware(['auth', 'throttle:8,1'])->name('delete_post_comments')->where('id', '[1-9]+[0-9]*');
 
     });
 
