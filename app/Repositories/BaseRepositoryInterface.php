@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: BaseRepositoryInterface.php
@@ -8,8 +9,9 @@
 
 namespace App\Repositories;
 
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 /**
  * Contract for the application's Eloquent-backed repositories.
@@ -24,12 +26,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 interface BaseRepositoryInterface
 {
-
-
     /**
      * Persist a new record from validated/whitelisted data.
      *
-     * @param  \Illuminate\Foundation\Http\FormRequest|\Illuminate\Http\Request|array  $data
+     * @param  FormRequest|Request|array  $data
      */
     public function create($data);
 
@@ -38,10 +38,8 @@ interface BaseRepositoryInterface
      */
     public function all();
 
-
     /**
      * Get only limited amount of records
-     * @param $count
      */
     public function only($count, $page = 1);
 
@@ -50,46 +48,35 @@ interface BaseRepositoryInterface
      */
     public function first();
 
-
     /**
      * Get one record by $param
-     * @param $param
      */
     public function get($param);
 
-
     /**
      * Get one record by custom parameter
-     * @param $parameter
-     * @param $value
-     * @param array $fields
+     *
+     * @param  array  $fields
      */
     public function getBy($parameter, $value, $field = []);
 
     /**
      * Get record by ID
-     * @param $newData
-     * @param $id
      */
     public function update(int $id, $newData);
 
     /**
      * Update one record by custom parameter
-     * @param $newData
      */
     public function updateWhere($newData, $parameter);
 
     /**
      * Delete record by ID
-     * @param $id
      */
     public function delete($id);
 
     /**
      * Delete record by custom parameter
-     * @param $parameter
      */
     public function deleteWhere($parameter);
-
-
 }

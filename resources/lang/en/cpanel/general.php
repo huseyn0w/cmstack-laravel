@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: general.php
@@ -7,5 +8,5 @@
  */
 
 return [
-    'add_translation' => "Add translation for languages:"
+    'add_translation' => 'Add translation for languages:',
 ];

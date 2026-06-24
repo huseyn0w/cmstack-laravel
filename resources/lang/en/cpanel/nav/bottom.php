@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: bottom.php
@@ -7,5 +8,5 @@
  */
 
 return [
-    'made' => 'Made with love by '
+    'made' => 'Made with love by ',
 ];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: PageRepository.php
@@ -7,7 +8,6 @@
  */
 
 namespace App\Repositories;
-
 
 use App\Http\Models\Category;
 use App\Http\Models\CategoryTranslation;
@@ -29,7 +29,7 @@ class CPanelCategoryRepository extends BaseRepository
         'canonical_url',
         'meta_noindex',
         'description',
-        'slug'
+        'slug',
     ];
 
     public function __construct(Category $model)
@@ -38,6 +38,4 @@ class CPanelCategoryRepository extends BaseRepository
         $this->model = $model;
         $this->translated_model = new CategoryTranslation;
     }
-
-    
 }

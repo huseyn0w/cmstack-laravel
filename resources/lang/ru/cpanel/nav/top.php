@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: top.php
@@ -7,15 +8,15 @@
  */
 
 return [
-    'header_title'      => 'Панель администрирования Cmstack-Laravel',
-    'logged_in_as'      => 'Вошел как:',
-    'homepage'          => 'Главная',
-    'settings'          => 'Настройки',
-    'general_settings'  => 'Основные настройки',
-    'site_options'      => 'Опции сайтов',
-    'menus'             => 'Меню',
-    'user_roles'        => 'Статусы',
-    'change_language'   => 'Сменить язык',
-    'log_out'           => 'Выход',
+    'header_title' => 'Панель администрирования Cmstack-Laravel',
+    'logged_in_as' => 'Вошел как:',
+    'homepage' => 'Главная',
+    'settings' => 'Настройки',
+    'general_settings' => 'Основные настройки',
+    'site_options' => 'Опции сайтов',
+    'menus' => 'Меню',
+    'user_roles' => 'Статусы',
+    'change_language' => 'Сменить язык',
+    'log_out' => 'Выход',
 
 ];

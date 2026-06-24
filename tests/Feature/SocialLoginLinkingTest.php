@@ -43,8 +43,8 @@ class SocialLoginLinkingTest extends TestCase
     public function test_existing_email_account_is_linked_not_duplicated(): void
     {
         $existing = User::factory()->create([
-            'email'       => 'linkme@example.com',
-            'provider'    => null,
+            'email' => 'linkme@example.com',
+            'provider' => null,
             'provider_id' => null,
         ]);
 

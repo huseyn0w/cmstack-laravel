@@ -70,7 +70,7 @@ class AuthAndAdminTest extends DuskTestCase
             // dark-on-dark (it inherited the near-black body colour).
             $color = $browser->script(
                 "var a=[...document.querySelectorAll('aside a')].find(e=>e.textContent.trim()==='Users');".
-                "return a?getComputedStyle(a).color:null"
+                'return a?getComputedStyle(a).color:null'
             )[0];
 
             $this->assertNotNull($color, 'Sidebar "Users" link was not found');

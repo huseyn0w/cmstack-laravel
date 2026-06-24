@@ -1,5 +1,7 @@
 <?php
 
+use UniSharp\LaravelFilemanager\Handlers\ConfigHandler;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -28,14 +30,12 @@ return [
     // If true, share folder will be created when allow_multi_user is true.
     'allow_share_folder' => false,
 
-
-
     // Flexible way to customize client folders accessibility
     // If you want to customize client folders, publish tag="lfm_handler"
     // Then you can rewrite userField function in App\Handler\ConfigHander class
     // And set 'user_field' to App\Handler\ConfigHander::class
     // Ex: The private folder of user will be named as the user id.
-    'user_field' => UniSharp\LaravelFilemanager\Handlers\ConfigHandler::class,
+    'user_field' => ConfigHandler::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -48,10 +48,10 @@ return [
     'base_directory' => 'public/uploads',
 
     'images_folder_name' => '',
-    'files_folder_name'  => '',
+    'files_folder_name' => '',
 
     'shared_folder_name' => 'images',
-    'thumb_folder_name'  => 'thumbs',
+    'thumb_folder_name' => 'thumbs',
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +113,7 @@ return [
 
     // permissions to be set on file upload.
     'create_file_mode' => 0644,
-    
+
     // If true, it will attempt to chmod the file after upload
     'should_change_file_mode' => true,
 
@@ -143,17 +143,17 @@ return [
     */
 
     'file_type_array' => [
-        'gif'  => 'GIF Image',
-        'jpg'  => 'JPEG Image',
+        'gif' => 'GIF Image',
+        'jpg' => 'JPEG Image',
         'jpeg' => 'JPEG Image',
-        'png'  => 'PNG Image',
+        'png' => 'PNG Image',
     ],
 
     'file_icon_array' => [
-        'gif'  => 'fa-file-image-o',
-        'jpg'  => 'fa-file-image-o',
+        'gif' => 'fa-file-image-o',
+        'jpg' => 'fa-file-image-o',
         'jpeg' => 'fa-file-image-o',
-        'png'  => 'fa-file-image-o',
+        'png' => 'fa-file-image-o',
     ],
 
     /*
@@ -168,7 +168,7 @@ return [
     | directives are not supported.
     */
     'php_ini_overrides' => [
-        'memory_limit'        => '256M',
+        'memory_limit' => '256M',
     ],
 
 ];

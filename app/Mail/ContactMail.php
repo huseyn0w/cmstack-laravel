@@ -4,10 +4,8 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ContactMail extends Mailable
 {
@@ -16,7 +14,6 @@ class ContactMail extends Mailable
     public $data;
 
     public $mail_subject;
-
 
     /**
      * Create a new message instance.
@@ -29,9 +26,9 @@ class ContactMail extends Mailable
         $this->data = $data;
         $this->mail_subject = $data['subject'];
 
-        $this->message =  (new MailMessage)
+        $this->message = (new MailMessage)
             ->greeting('Hello!')
-            ->subject("My mail title")
+            ->subject('My mail title')
             ->line('You have got 1 message from contact page!')
             ->line('From: '.$data['email'])
             ->line('Subject: '.$data['subject'])

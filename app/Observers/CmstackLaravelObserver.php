@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CmstackLaravelObserver.php
@@ -7,9 +8,6 @@
  */
 
 namespace App\Observers;
-
-
-use App\Http\Models\Category;
 
 class CmstackLaravelObserver
 {
@@ -22,7 +20,4 @@ class CmstackLaravelObserver
         $this->locale = get_current_lang();
         $this->request = app('request');
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: media.php
@@ -8,6 +9,6 @@
 
 return [
 
-    'headline' => 'Медиа'
+    'headline' => 'Медиа',
 
 ];

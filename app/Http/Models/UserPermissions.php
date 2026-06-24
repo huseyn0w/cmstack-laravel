@@ -10,5 +10,3 @@ class UserPermissions extends Model
 
     protected $fillable = ['name'];
 }
-
-

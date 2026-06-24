@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Phase 7 (SEO/GEO): per-entity SEO overrides.
@@ -22,15 +22,15 @@ class AddSeoColumnsToTranslations extends Migration
     public function up()
     {
         foreach ($this->tables as $table) {
-            if (!Schema::hasTable($table)) {
+            if (! Schema::hasTable($table)) {
                 continue;
             }
 
             Schema::table($table, function (Blueprint $blueprint) use ($table) {
-                if (!Schema::hasColumn($table, 'canonical_url')) {
+                if (! Schema::hasColumn($table, 'canonical_url')) {
                     $blueprint->string('canonical_url')->nullable();
                 }
-                if (!Schema::hasColumn($table, 'meta_noindex')) {
+                if (! Schema::hasColumn($table, 'meta_noindex')) {
                     $blueprint->boolean('meta_noindex')->default(false);
                 }
             });
@@ -40,7 +40,7 @@ class AddSeoColumnsToTranslations extends Migration
     public function down()
     {
         foreach ($this->tables as $table) {
-            if (!Schema::hasTable($table)) {
+            if (! Schema::hasTable($table)) {
                 continue;
             }
 

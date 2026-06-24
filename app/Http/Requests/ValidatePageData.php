@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\Rule;
 
 class ValidatePageData extends CmstackLaravelRequest
 {
@@ -42,35 +39,31 @@ class ValidatePageData extends CmstackLaravelRequest
     public function rules()
     {
         $rules = [
-            'title'              => ['required', 'string', 'max:20'],
-            'slug'               => ['required', 'string', 'max:20'],
-            'author_id'          => 'required|string|exists:users,id',
-            'created_at'         => 'sometimes|required|string',
-            'updated_at'         => 'sometimes|required|string',
-            'content'            => 'nullable|string',
-            'meta_keywords'      => 'string|nullable',
-            'meta_description'   => 'string|nullable',
-            'canonical_url'      => 'nullable|url|max:255',
-            'meta_noindex'       => 'sometimes|boolean',
-            'custom_fields'      => 'array',
-            'template'           => 'required|string',
-            'status'             => 'required|numeric',
+            'title' => ['required', 'string', 'max:20'],
+            'slug' => ['required', 'string', 'max:20'],
+            'author_id' => 'required|string|exists:users,id',
+            'created_at' => 'sometimes|required|string',
+            'updated_at' => 'sometimes|required|string',
+            'content' => 'nullable|string',
+            'meta_keywords' => 'string|nullable',
+            'meta_description' => 'string|nullable',
+            'canonical_url' => 'nullable|url|max:255',
+            'meta_noindex' => 'sometimes|boolean',
+            'custom_fields' => 'array',
+            'template' => 'required|string',
+            'status' => 'required|numeric',
         ];
 
         $title = $this->newRecordRule('title');
         $slug = $this->newRecordRule('slug');
 
-
-        if($this->route_name === "cpanel_update_page")
-        {
+        if ($this->route_name === 'cpanel_update_page') {
             $title = $this->updateRecordRule('title');
             $slug = $this->updateRecordRule('slug');
         }
 
-
         $rules['title'][] = $title;
         $rules['slug'][] = $slug;
-
 
         return $rules;
     }

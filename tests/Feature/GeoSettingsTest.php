@@ -29,15 +29,15 @@ class GeoSettingsTest extends TestCase
     {
         $geo = CPanelGeoSettings::firstOrNew(['id' => 1]);
         $geo->fill(array_merge([
-            'business_name'   => 'Elman Group',
-            'business_type'   => 'LocalBusiness',
-            'description'     => 'Custom Laravel CMS and AI integration studio.',
-            'services'        => "Laravel development\nCustom CMS\nAI / MCP integration",
-            'service_area'    => 'Baku, Azerbaijan; Remote, EU',
-            'contact_email'   => 'contact@elman.group',
-            'same_as'         => "https://linkedin.com/in/huseyn0w\nhttps://github.com/huseyn0w",
-            'faq'             => 'Do you work remotely? | Yes, with clients across the EU and worldwide.',
-            'emit_jsonld'     => true,
+            'business_name' => 'Elman Group',
+            'business_type' => 'LocalBusiness',
+            'description' => 'Custom Laravel CMS and AI integration studio.',
+            'services' => "Laravel development\nCustom CMS\nAI / MCP integration",
+            'service_area' => 'Baku, Azerbaijan; Remote, EU',
+            'contact_email' => 'contact@elman.group',
+            'same_as' => "https://linkedin.com/in/huseyn0w\nhttps://github.com/huseyn0w",
+            'faq' => 'Do you work remotely? | Yes, with clients across the EU and worldwide.',
+            'emit_jsonld' => true,
             'include_in_llms' => true,
         ], $overrides));
         $geo->save();
@@ -106,17 +106,17 @@ class GeoSettingsTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('cpanel_update_geo_settings'), [
-                'business_name'   => 'Elman Group',
-                'business_type'   => 'ProfessionalService',
-                'description'     => 'We build CMS platforms.',
-                'services'        => "Web development\nConsulting",
-                'emit_jsonld'     => '1',
+                'business_name' => 'Elman Group',
+                'business_type' => 'ProfessionalService',
+                'description' => 'We build CMS platforms.',
+                'services' => "Web development\nConsulting",
+                'emit_jsonld' => '1',
                 'include_in_llms' => '1',
             ])
             ->assertRedirect();
 
         $this->assertDatabaseHas('geo_settings', [
-            'id'            => 1,
+            'id' => 1,
             'business_name' => 'Elman Group',
             'business_type' => 'ProfessionalService',
         ]);

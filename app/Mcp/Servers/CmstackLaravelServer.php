@@ -34,6 +34,7 @@ use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
 use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Attributes\Version;
+use Laravel\Mcp\Server\Tool;
 
 #[Name('Cmstack-Laravel')]
 #[Version('1.0.0')]
@@ -59,7 +60,7 @@ class CmstackLaravelServer extends Server
     /**
      * The tools registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Tool>>
+     * @var array<int, class-string<Tool>>
      */
     protected array $tools = [
         // Posts

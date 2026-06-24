@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Http\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Http\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -18,33 +18,33 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert(
             [
                 [
-                    'name' => "Elman",
-                    'surname' => "Hüseynov",
-                    'email' => "thehuseyn0w@gmail.com",
-                    'username' => "huseyn0w",
-                    'city' => "Baku",
-                    'country' => "Azerbaijan",
+                    'name' => 'Elman',
+                    'surname' => 'Hüseynov',
+                    'email' => 'thehuseyn0w@gmail.com',
+                    'username' => 'huseyn0w',
+                    'city' => 'Baku',
+                    'country' => 'Azerbaijan',
                     'role_id' => 1,
-                    'gender'  => "male",
-                    'avatar'  => env('APP_URL').'/filemanager/images/5dbb536d16ce8.jpg',
-                    'about_me' => "Founder of CMS Cmstack-Laravel",
-                    'linkedin_url' => "https://linkedin.com/in/huseyn0w",
+                    'gender' => 'male',
+                    'avatar' => env('APP_URL').'/filemanager/images/5dbb536d16ce8.jpg',
+                    'about_me' => 'Founder of CMS Cmstack-Laravel',
+                    'linkedin_url' => 'https://linkedin.com/in/huseyn0w',
                     'password' => bcrypt('elman123'),
                 ],
                 [
-                    'name' => "Admin",
-                    'surname' => "",
-                    'email' => "admin@ehuseynov.com",
-                    'username' => "admin",
-                    'city' => "",
-                    'country' => "",
+                    'name' => 'Admin',
+                    'surname' => '',
+                    'email' => 'admin@ehuseynov.com',
+                    'username' => 'admin',
+                    'city' => '',
+                    'country' => '',
                     'role_id' => 1,
-                    'gender'  => "male",
-                    'avatar'  => '',
-                    'about_me' => "ADMIN of CMS Cmstack-Laravel",
-                    'linkedin_url' => "",
+                    'gender' => 'male',
+                    'avatar' => '',
+                    'about_me' => 'ADMIN of CMS Cmstack-Laravel',
+                    'linkedin_url' => '',
                     'password' => bcrypt('cmstackadmin123'),
-                ]
+                ],
             ]
         );
 

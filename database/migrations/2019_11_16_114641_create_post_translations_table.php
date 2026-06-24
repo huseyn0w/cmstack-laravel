@@ -31,8 +31,8 @@ class CreatePostTranslationsTable extends Migration
             $table->integer('likes')->unsigned()->default(0);
             $table->timestamps();
 
-            $table->unique(['post_id','locale']);
-            $table->unique(['locale','title', 'slug']);
+            $table->unique(['post_id', 'locale']);
+            $table->unique(['locale', 'title', 'slug']);
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });

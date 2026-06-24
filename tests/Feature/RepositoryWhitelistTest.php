@@ -34,11 +34,11 @@ class RepositoryWhitelistTest extends TestCase
 
         // Attacker tries to spoof another user_id and auto-approve the comment.
         $request = new Request([
-            'post_id'   => 1,
-            'comment'   => 'injected',
-            'user_id'   => $victim->id,
-            'status'    => 1,
-            'id'        => 999,
+            'post_id' => 1,
+            'comment' => 'injected',
+            'user_id' => $victim->id,
+            'status' => 1,
+            'id' => 999,
         ]);
 
         app(PostCommentsRepository::class)->create($request);

@@ -2,18 +2,10 @@
 
 namespace App\Providers;
 
-
-use App\Http\Models\CPanel\CPanelGeneralSettings;
-use App\Http\Models\Menu;
-use App\Http\Models\Page;
-use App\Http\Models\Post;
-use App\Http\Models\User;
 use App\Http\Models\UserRoles;
-use App\Http\Models\Category;
 use App\Policies\UserPolicy;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -35,10 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        view()->composer('*', function ($view)
-        {
-            if(Auth::check()) $view->with('username', Auth::user()->name);
-            //...with this variable
+        view()->composer('*', function ($view) {
+            if (Auth::check()) {
+                $view->with('username', Auth::user()->name);
+            }
+            // ...with this variable
 
         });
         $this->registerPolicies();

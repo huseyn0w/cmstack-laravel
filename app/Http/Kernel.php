@@ -2,7 +2,36 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminPanelMiddleware;
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\CheckForMaintenanceMode;
+use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\Localization;
+use App\Http\Middleware\ManageCategories;
+use App\Http\Middleware\ManageComments;
+use App\Http\Middleware\ManageGeneralSettings;
+use App\Http\Middleware\ManageMenu;
+use App\Http\Middleware\ManagePages;
+use App\Http\Middleware\ManagePosts;
+use App\Http\Middleware\ManageRoles;
+use App\Http\Middleware\ManageUsers;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\TrimStrings;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\SetCacheHeaders;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ValidateSignature;
+use Illuminate\Session\Middleware\AuthenticateSession;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Kernel extends HttpKernel
 {
@@ -14,10 +43,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \App\Http\Middleware\CheckForMaintenanceMode::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        CheckForMaintenanceMode::class,
+        ValidatePostSize::class,
+        TrimStrings::class,
+        ConvertEmptyStringsToNull::class,
     ];
 
     /**
@@ -27,14 +56,14 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\Localization::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            SubstituteBindings::class,
+            Localization::class,
         ],
 
         'api' => [
@@ -51,24 +80,24 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'manage_users' => \App\Http\Middleware\ManageUsers::class,
-        'manage_posts' => \App\Http\Middleware\ManagePosts::class,
-        'manage_roles' => \App\Http\Middleware\ManageRoles::class,
-        'manage_pages' => \App\Http\Middleware\ManagePages::class,
-        'manage_menus' => \App\Http\Middleware\ManageMenu::class,
-        'manage_comments' => \App\Http\Middleware\ManageComments::class,
-        'see_admin_panel' => \App\Http\Middleware\AdminPanelMiddleware::class,
-        'manage_categories' => \App\Http\Middleware\ManageCategories::class,
-        'manage_general_settings' => \App\Http\Middleware\ManageGeneralSettings::class,
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'manage_users' => ManageUsers::class,
+        'manage_posts' => ManagePosts::class,
+        'manage_roles' => ManageRoles::class,
+        'manage_pages' => ManagePages::class,
+        'manage_menus' => ManageMenu::class,
+        'manage_comments' => ManageComments::class,
+        'see_admin_panel' => AdminPanelMiddleware::class,
+        'manage_categories' => ManageCategories::class,
+        'manage_general_settings' => ManageGeneralSettings::class,
+        'auth' => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'bindings' => SubstituteBindings::class,
+        'cache.headers' => SetCacheHeaders::class,
+        'can' => Authorize::class,
+        'guest' => RedirectIfAuthenticated::class,
+        'signed' => ValidateSignature::class,
+        'throttle' => ThrottleRequests::class,
+        'verified' => EnsureEmailIsVerified::class,
     ];
 
     /**
@@ -79,11 +108,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\Authenticate::class,
-        \Illuminate\Session\Middleware\AuthenticateSession::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \Illuminate\Auth\Middleware\Authorize::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        Authenticate::class,
+        AuthenticateSession::class,
+        SubstituteBindings::class,
+        Authorize::class,
     ];
 }

@@ -25,8 +25,8 @@ class UserListRequest extends FormRequest
     public function rules()
     {
         return [
-            'users_action'  => ["required" , "string", "regex:(delete)"],
-            'users'         => 'array|required'
+            'users_action' => ['required', 'string', 'regex:(delete)'],
+            'users' => 'array|required',
         ];
     }
 
@@ -34,7 +34,7 @@ class UserListRequest extends FormRequest
     {
         return [
             'users_action.regex' => 'You should use action "Delete"',
-            'users.required'  => 'You should choose at least 1 user to delete'
+            'users.required' => 'You should choose at least 1 user to delete',
         ];
     }
 }

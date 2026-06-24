@@ -6,6 +6,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Models\Post;
 use App\Http\Models\PostTranslation;
 use App\Http\Models\User;
+use App\Http\Models\UserRoles;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -33,15 +34,15 @@ class PostCrudTest extends TestCase
     private function postPayload(array $overrides = []): array
     {
         return array_merge([
-            'title'            => 'Round Trip Post',
-            'slug'             => 'round-trip-post',
-            'content'          => 'post body',
-            'preview'          => 'preview text',
-            'author_id'        => $this->admin->id,
-            'meta_keywords'    => 'kw',
+            'title' => 'Round Trip Post',
+            'slug' => 'round-trip-post',
+            'content' => 'post body',
+            'preview' => 'preview text',
+            'author_id' => $this->admin->id,
+            'meta_keywords' => 'kw',
             'meta_description' => 'md',
-            'category'         => [1],
-            'status'           => 1,
+            'category' => [1],
+            'status' => 1,
         ], $overrides);
     }
 
@@ -70,7 +71,7 @@ class PostCrudTest extends TestCase
         $translation = PostTranslation::where('slug', 'round-trip-post')->firstOrFail();
 
         $response = $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/posts/' . $translation->post_id . '/update', $this->postPayload([
+            ->put('/cmstack-laravel-admin/posts/'.$translation->post_id.'/update', $this->postPayload([
                 'content' => 'edited body',
             ]));
 
@@ -87,7 +88,7 @@ class PostCrudTest extends TestCase
         $postId = $translation->post_id;
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/posts/' . $postId . '/delete')
+            ->delete('/cmstack-laravel-admin/posts/'.$postId.'/delete')
             ->assertOk();
 
         $this->assertNull(Post::find($postId), 'Post should be soft deleted.');
@@ -117,8 +118,8 @@ class PostCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_post_permission_is_blocked(): void
     {
         // Can see the panel, but lacks manage_posts -> ManagePosts aborts 401.
-        $role = \App\Http\Models\UserRoles::create([
-            'name'        => 'PanelOnly',
+        $role = UserRoles::create([
+            'name' => 'PanelOnly',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_posts' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

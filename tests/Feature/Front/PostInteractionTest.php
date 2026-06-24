@@ -4,7 +4,6 @@ namespace Tests\Feature\Front;
 
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Models\Comments;
-use App\Http\Models\Likes;
 use App\Http\Models\PostTranslation;
 use App\Http\Models\User;
 use Database\Seeders\DatabaseSeeder;
@@ -78,16 +77,16 @@ class PostInteractionTest extends TestCase
     {
         $this->actingAs($this->user)
             ->post('/posts/handlecomment/1', [
-                'post_id'   => 1,
+                'post_id' => 1,
                 'parent_id' => null,
-                'comment'   => 'A new comment',
+                'comment' => 'A new comment',
             ])->assertRedirect();
 
         $this->assertDatabaseHas('post_comments', [
             'post_id' => 1,
             'user_id' => $this->user->id,
             'comment' => 'A new comment',
-            'status'  => 0, // non-admin comments start unapproved
+            'status' => 0, // non-admin comments start unapproved
         ]);
     }
 
@@ -101,7 +100,7 @@ class PostInteractionTest extends TestCase
         $this->actingAs($this->user)
             ->put('/posts/handlecomment/', [
                 'updated_comment_id' => $comment->id,
-                'comment'            => 'edited',
+                'comment' => 'edited',
             ])->assertRedirect();
 
         $this->assertSame('edited', $comment->fresh()->comment);
@@ -115,9 +114,9 @@ class PostInteractionTest extends TestCase
         ]);
 
         $this->actingAs($this->user)
-            ->delete('/posts/deletecomment/' . $comment->id, [
+            ->delete('/posts/deletecomment/'.$comment->id, [
                 'commentId' => $comment->id,
-                'username'  => $this->user->username,
+                'username' => $this->user->username,
             ])->assertOk();
 
         $this->assertDatabaseMissing('post_comments', ['id' => $comment->id]);
@@ -132,9 +131,9 @@ class PostInteractionTest extends TestCase
         ]);
 
         $this->actingAs($this->user)
-            ->delete('/posts/deletecomment/' . $comment->id, [
+            ->delete('/posts/deletecomment/'.$comment->id, [
                 'commentId' => $comment->id,
-                'username'  => $owner->username,
+                'username' => $owner->username,
             ])->assertOk();
 
         // Repository rejects the deletion: the comment must still exist.

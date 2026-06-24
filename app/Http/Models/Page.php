@@ -2,15 +2,14 @@
 
 namespace App\Http\Models;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Translatable;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
 class Page extends Model implements TranslatableContract
 {
     use Cachable;
-
     use Translatable;
 
     public $timestamps = false;
@@ -27,7 +26,7 @@ class Page extends Model implements TranslatableContract
         'custom_fields',
         'content',
         'meta_keywords',
-        'meta_description'
+        'meta_description',
     ];
 
     protected $fillable = [
@@ -42,13 +41,11 @@ class Page extends Model implements TranslatableContract
         'meta_keywords',
         'meta_description',
         'updated_at',
-        'created_at'
+        'created_at',
     ];
 
     public function author()
     {
-        return $this->hasOne('App\Http\Models\User','id', 'author_id');
+        return $this->hasOne('App\Http\Models\User', 'id', 'author_id');
     }
-
-
 }

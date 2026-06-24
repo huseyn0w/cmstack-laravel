@@ -32,14 +32,14 @@ class PageCrudTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'title'            => 'About Page',
-            'slug'             => 'about-page',
-            'author_id'        => (string) $this->admin->id,
-            'content'          => 'page body',
-            'meta_keywords'    => 'kw',
+            'title' => 'About Page',
+            'slug' => 'about-page',
+            'author_id' => (string) $this->admin->id,
+            'content' => 'page body',
+            'meta_keywords' => 'kw',
             'meta_description' => 'md',
-            'template'         => 'default',
-            'status'           => 1,
+            'template' => 'default',
+            'status' => 1,
         ], $overrides);
     }
 
@@ -63,7 +63,7 @@ class PageCrudTest extends TestCase
         $translation = PageTranslation::where('slug', 'about-page')->firstOrFail();
 
         $response = $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/pages/' . $translation->page_id . '/update', $this->payload([
+            ->put('/cmstack-laravel-admin/pages/'.$translation->page_id.'/update', $this->payload([
                 'content' => 'updated page body',
             ]));
 
@@ -78,7 +78,7 @@ class PageCrudTest extends TestCase
         $translation = PageTranslation::where('slug', 'about-page')->firstOrFail();
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/pages/' . $translation->page_id . '/delete')
+            ->delete('/cmstack-laravel-admin/pages/'.$translation->page_id.'/delete')
             ->assertOk();
 
         $this->assertSame(0, PageTranslation::where('slug', 'about-page')->count());
@@ -96,7 +96,7 @@ class PageCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_page_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoPages',
+            'name' => 'PanelNoPages',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_pages' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

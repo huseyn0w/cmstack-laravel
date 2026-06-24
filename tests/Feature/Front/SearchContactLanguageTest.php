@@ -32,7 +32,7 @@ class SearchContactLanguageTest extends TestCase
     public function test_search_returns_results_via_post(): void
     {
         $this->post('/search', [
-            'query'  => 'post',
+            'query' => 'post',
             'filter' => 'post',
         ])->assertStatus(200);
     }
@@ -55,10 +55,10 @@ class SearchContactLanguageTest extends TestCase
 
         $this->post('/contact/sendform', [
             'first_name' => 'Jane',
-            'last_name'  => 'Doe',
-            'subject'    => 'Hello',
-            'email'      => 'jane@example.com',
-            'message'    => 'Test message',
+            'last_name' => 'Doe',
+            'subject' => 'Hello',
+            'email' => 'jane@example.com',
+            'message' => 'Test message',
         ])->assertSessionHasNoErrors();
 
         Mail::assertSent(ContactMail::class);

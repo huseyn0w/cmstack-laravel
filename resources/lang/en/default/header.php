@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: header.php
@@ -7,13 +8,13 @@
  */
 
 return [
-   'edit_profile'     => 'Edit Profile',
-   'homepage_title'   => 'Cmstack-Laravel',
-   'searchpage_title' => 'Search',
-   'search'           => 'Search',
-   'cpanel'           => 'cPanel',
-   'profile'          => 'Profile',
-   'logout'           => 'Logout',
-   'register'         => 'Register',
-   'login'            => 'Login'
+    'edit_profile' => 'Edit Profile',
+    'homepage_title' => 'Cmstack-Laravel',
+    'searchpage_title' => 'Search',
+    'search' => 'Search',
+    'cpanel' => 'cPanel',
+    'profile' => 'Profile',
+    'logout' => 'Logout',
+    'register' => 'Register',
+    'login' => 'Login',
 ];

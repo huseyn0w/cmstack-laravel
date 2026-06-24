@@ -34,8 +34,8 @@ class MenuCrudTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'title'   => 'Footer',
-            'slug'    => 'footer-menu',
+            'title' => 'Footer',
+            'slug' => 'footer-menu',
             'content' => '[{"label":"Home","slug":"/"}]',
         ], $overrides);
     }
@@ -68,7 +68,7 @@ class MenuCrudTest extends TestCase
         $translation = MenuTranslation::where('title', 'Footer')->firstOrFail();
 
         $response = $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/menus/' . $translation->menu_id . '/update', $this->payload([
+            ->put('/cmstack-laravel-admin/menus/'.$translation->menu_id.'/update', $this->payload([
                 'content' => '[{"label":"Changed","slug":"/x"}]',
             ]));
 
@@ -82,7 +82,7 @@ class MenuCrudTest extends TestCase
         $translation = MenuTranslation::where('title', 'Footer')->firstOrFail();
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/menus/' . $translation->menu_id . '/delete')
+            ->delete('/cmstack-laravel-admin/menus/'.$translation->menu_id.'/delete')
             ->assertOk();
 
         $this->assertSame(0, MenuTranslation::where('title', 'Footer')->count());
@@ -100,7 +100,7 @@ class MenuCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_menu_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoMenus',
+            'name' => 'PanelNoMenus',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_menus' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

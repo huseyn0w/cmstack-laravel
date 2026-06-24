@@ -15,8 +15,8 @@ class CPanelGeneralSettingsSeeder extends Seeder
     public function run()
     {
         DB::table('general_settings')->insert([
-            'website_name' => "Cmstack-Laravel",
-            'tagline' => "Build your project on Cmstack-Laravel and take an advantage of it",
+            'website_name' => 'Cmstack-Laravel',
+            'tagline' => 'Build your project on Cmstack-Laravel and take an advantage of it',
             'contact_email' => 'thehuseyn0w@gmail.com',
             'posts_per_page' => 10,
             'comments_per_page' => 5,

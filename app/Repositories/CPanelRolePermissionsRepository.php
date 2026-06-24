@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)

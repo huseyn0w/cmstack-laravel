@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)
@@ -27,7 +28,7 @@ class CPanelPageRepository extends BaseRepository
         'meta_noindex',
         'status',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function __construct(Page $model)
@@ -36,7 +37,4 @@ class CPanelPageRepository extends BaseRepository
         $this->model = $model;
         $this->translated_model = new PageTranslation;
     }
-
-
-
 }

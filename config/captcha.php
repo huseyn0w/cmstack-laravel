@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'enabled' => env('CAPTCHA_ENABLED', !empty(env('RECAPTCHA_SECRET_KEY'))),
+    'enabled' => env('CAPTCHA_ENABLED', ! empty(env('RECAPTCHA_SECRET_KEY'))),
 
     /*
     |--------------------------------------------------------------------------

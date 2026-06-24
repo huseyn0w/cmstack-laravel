@@ -3,33 +3,32 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class Localization
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request  $request
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $locale = session('locale');
 
-        if(empty($locale)) $locale = \Config::get('app.locale');
+        if (empty($locale)) {
+            $locale = \Config::get('app.locale');
+        }
 
-        if(!empty($request->route('lang')))
-        {
+        if (! empty($request->route('lang'))) {
             $locale = $request->route('lang');
             \Session::put('locale', $locale);
         }
 
-        if(lang_exist($locale))
-        {
+        if (lang_exist($locale)) {
             \App::setLocale($locale);
-        }
-        else{
+        } else {
             \Session::put('locale', \Config::get('app.locale'));
         }
 

@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Models\CPanel\CPanelGeneralSettings;
 use App\Http\Models\User;
 use App\Http\Models\UserRoles;
-use App\Http\Models\CPanel\CPanelGeneralSettings;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -42,12 +42,12 @@ class CPanelWriteFlowSmokeTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->post('/cmstack-laravel-admin/general-settings', [
-                'website_name'         => 'New Site Name',
-                'tagline'              => 'New Tagline',
-                'posts_per_page'       => 7,
-                'comments_per_page'    => 4,
-                'contact_email'        => 'hello@example.com',
-                'membership'           => 'on',
+                'website_name' => 'New Site Name',
+                'tagline' => 'New Tagline',
+                'posts_per_page' => 7,
+                'comments_per_page' => 4,
+                'contact_email' => 'hello@example.com',
+                'membership' => 'on',
                 'active_template_name' => 'default',
             ])
             ->assertSessionHasNoErrors();
@@ -62,7 +62,7 @@ class CPanelWriteFlowSmokeTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->post('/cmstack-laravel-admin/roles/new', [
-                'name'        => 'Editor',
+                'name' => 'Editor',
                 'permissions' => ['manage_posts', 'manage_pages', 'not_a_real_permission'],
             ])
             ->assertSessionHasNoErrors();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: profile.php
@@ -7,24 +8,24 @@
  */
 
 return [
-    'profile'           => 'Profile',
-    'profile_info'      => 'Profile info',
-    'edit_profile'      => 'Edit profile',
-    'user_info'         => 'User info',
-    'username'          => 'Username',
-    'email'             => 'Email address',
-    'status'            => 'Status',
-    'name'              => 'Name',
-    'surname'           => 'Surname',
-    'country'           => 'Country',
-    'city'              => 'City',
-    'about'             => 'About',
-    'gender'            => 'Gender',
-    'edit'              => 'Edit',
-    'user_updated'      => 'User has been updated',
+    'profile' => 'Profile',
+    'profile_info' => 'Profile info',
+    'edit_profile' => 'Edit profile',
+    'user_info' => 'User info',
+    'username' => 'Username',
+    'email' => 'Email address',
+    'status' => 'Status',
+    'name' => 'Name',
+    'surname' => 'Surname',
+    'country' => 'Country',
+    'city' => 'City',
+    'about' => 'About',
+    'gender' => 'Gender',
+    'edit' => 'Edit',
+    'user_updated' => 'User has been updated',
     'user_update_error' => 'Some problem has been occurred. Please try again later.',
-    'change_password'   => 'Change password',
-    'gender_male'       => 'Male',
-    'gender_female'     => 'Female',
-    'updated_profile'   => 'Update profile'
+    'change_password' => 'Change password',
+    'gender_male' => 'Male',
+    'gender_female' => 'Female',
+    'updated_profile' => 'Update profile',
 ];

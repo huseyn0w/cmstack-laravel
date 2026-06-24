@@ -128,7 +128,7 @@ class SeoMetaTest extends TestCase
     public function test_robots_appends_admin_extra_lines(): void
     {
         $seo = CPanelSeoSettings::first();
-        $seo->robots_extra = "Disallow: /secret-area";
+        $seo->robots_extra = 'Disallow: /secret-area';
         $seo->save();
 
         $body = $this->get('/robots.txt')->getContent();

@@ -44,6 +44,6 @@ class RouteNamesTest extends TestCase
 
         $duplicates = array_filter(array_count_values($names), fn ($count) => $count > 1);
 
-        $this->assertSame([], $duplicates, 'Duplicate route names: ' . implode(', ', array_keys($duplicates)));
+        $this->assertSame([], $duplicates, 'Duplicate route names: '.implode(', ', array_keys($duplicates)));
     }
 }

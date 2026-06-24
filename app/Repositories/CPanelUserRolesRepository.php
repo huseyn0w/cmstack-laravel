@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)
@@ -7,10 +8,8 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Model;
-use Image;
 use App\Http\Models\UserRoles;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 
 class CPanelUserRolesRepository extends BaseRepository
 {
@@ -36,7 +35,7 @@ class CPanelUserRolesRepository extends BaseRepository
      * and only the submitted permission names are flipped to 1, so the stored
      * JSON can never contain attacker-defined permission keys.
      *
-     * @param  \Illuminate\Foundation\Http\FormRequest  $request
+     * @param  FormRequest  $request
      * @return array<string, mixed>
      */
     private function prepare_role_data($request): array
@@ -61,7 +60,7 @@ class CPanelUserRolesRepository extends BaseRepository
         }
 
         return [
-            'name'        => $validated['name'] ?? null,
+            'name' => $validated['name'] ?? null,
             'permissions' => json_encode($permissions),
         ];
     }

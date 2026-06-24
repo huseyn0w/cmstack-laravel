@@ -23,9 +23,9 @@ class MenuTranslationsTable extends Migration
             $table->string('title', 20)->unique();
             $table->json('content', 50);
 
-            $table->unique(['locale','title']);
+            $table->unique(['locale', 'title']);
 
-            $table->unique(['menu_id','locale']);
+            $table->unique(['menu_id', 'locale']);
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });

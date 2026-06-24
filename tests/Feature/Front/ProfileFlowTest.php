@@ -25,7 +25,7 @@ class ProfileFlowTest extends TestCase
         $this->withoutMiddleware(VerifyCsrfToken::class);
         $this->seed(DatabaseSeeder::class);
         $this->user = User::factory()->create([
-            'role_id'  => 2,
+            'role_id' => 2,
             'password' => 'current123',
         ]);
     }
@@ -48,8 +48,8 @@ class ProfileFlowTest extends TestCase
         $this->actingAs($this->user)
             ->put('/profile/update', [
                 'username' => $this->user->username,
-                'email'    => $this->user->email,
-                'name'     => 'Updated Name',
+                'email' => $this->user->email,
+                'name' => 'Updated Name',
                 'about_me' => 'Hello world',
             ])
             ->assertSessionHasNoErrors();
@@ -68,8 +68,8 @@ class ProfileFlowTest extends TestCase
     {
         $this->actingAs($this->user)
             ->put('/profile/change_password', [
-                'current_password'      => 'current123',
-                'password'              => 'brandnew123',
+                'current_password' => 'current123',
+                'password' => 'brandnew123',
                 'password_confirmation' => 'brandnew123',
             ])
             ->assertSessionHasNoErrors();
@@ -82,8 +82,8 @@ class ProfileFlowTest extends TestCase
         $this->actingAs($this->user)
             ->from('/profile/change_password')
             ->put('/profile/change_password', [
-                'current_password'      => 'wrong-current',
-                'password'              => 'brandnew123',
+                'current_password' => 'wrong-current',
+                'password' => 'brandnew123',
                 'password_confirmation' => 'brandnew123',
             ])
             ->assertSessionHasErrors();

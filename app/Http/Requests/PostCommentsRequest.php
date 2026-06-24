@@ -28,29 +28,23 @@ class PostCommentsRequest extends FormRequest
 
         $route_name = Route::currentRouteName();
 
-        if($route_name === "store_post_comments")
-        {
+        if ($route_name === 'store_post_comments') {
             $rules = [
                 'post_id' => 'required|integer',
                 'parent_id' => 'nullable|integer',
-                'comment' => 'required|string'
+                'comment' => 'required|string',
             ];
-        }
-        else if($route_name === "update_post_comment")
-        {
+        } elseif ($route_name === 'update_post_comment') {
             $rules = [
                 'updated_comment_id' => 'required|integer',
-                'comment' => 'required|string'
+                'comment' => 'required|string',
             ];
-        }
-        else if($route_name === "delete_post_comments"){
+        } elseif ($route_name === 'delete_post_comments') {
             $rules = [
                 'commentId' => 'required|integer',
-                'username' => 'required|string'
+                'username' => 'required|string',
             ];
         }
-
-
 
         return $rules;
     }

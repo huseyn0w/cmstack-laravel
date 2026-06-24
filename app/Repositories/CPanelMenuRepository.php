@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)
@@ -9,8 +10,6 @@ namespace App\Repositories;
 
 use App\Http\Models\Menu;
 use App\Http\Models\MenuTranslation;
-use Image;
-use Illuminate\Support\Facades\Auth;
 
 class CPanelMenuRepository extends BaseRepository
 {
@@ -24,7 +23,7 @@ class CPanelMenuRepository extends BaseRepository
         'id',
         'author_id',
         'title',
-        'slug'
+        'slug',
     ];
 
     public function __construct(Menu $model)
@@ -33,7 +32,4 @@ class CPanelMenuRepository extends BaseRepository
         $this->model = $model;
         $this->translated_model = new MenuTranslation;
     }
-
-
-
 }

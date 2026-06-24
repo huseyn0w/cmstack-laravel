@@ -29,8 +29,7 @@ class ContactMail extends FormRequest
             'last_name' => 'required|string',
             'subject' => 'required|string',
             'email' => 'required|email',
-            'message' => 'required|string'
+            'message' => 'required|string',
         ];
     }
-
 }

@@ -30,10 +30,10 @@ class UserCrudTest extends TestCase
     public function test_admin_can_create_a_user(): void
     {
         $response = $this->actingAs($this->admin)->post('/cmstack-laravel-admin/users/new', [
-            'username'              => 'createduser',
-            'email'                 => 'createduser@example.com',
-            'role_id'               => 2,
-            'password'              => 'password123',
+            'username' => 'createduser',
+            'email' => 'createduser@example.com',
+            'role_id' => 2,
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -42,8 +42,8 @@ class UserCrudTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'username' => 'createduser',
-            'email'    => 'createduser@example.com',
-            'role_id'  => 2,
+            'email' => 'createduser@example.com',
+            'role_id' => 2,
         ]);
     }
 
@@ -51,11 +51,11 @@ class UserCrudTest extends TestCase
     {
         $user = User::factory()->create(['role_id' => 2]);
 
-        $response = $this->actingAs($this->admin)->put('/cmstack-laravel-admin/users/' . $user->id . '/update', [
+        $response = $this->actingAs($this->admin)->put('/cmstack-laravel-admin/users/'.$user->id.'/update', [
             'username' => $user->username,
-            'email'    => $user->email,
-            'role_id'  => 2,
-            'name'     => 'Renamed',
+            'email' => $user->email,
+            'role_id' => 2,
+            'name' => 'Renamed',
         ]);
 
         $response->assertSessionHasNoErrors();
@@ -67,7 +67,7 @@ class UserCrudTest extends TestCase
         $user = User::factory()->create(['role_id' => 2]);
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/users/' . $user->id . '/delete')
+            ->delete('/cmstack-laravel-admin/users/'.$user->id.'/delete')
             ->assertOk();
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
@@ -80,10 +80,10 @@ class UserCrudTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->from('/cmstack-laravel-admin/users/new')
             ->post('/cmstack-laravel-admin/users/new', [
-                'username'              => $existing->username,
-                'email'                 => $existing->email,
-                'role_id'               => 2,
-                'password'              => 'password123',
+                'username' => $existing->username,
+                'email' => $existing->email,
+                'role_id' => 2,
+                'password' => 'password123',
                 'password_confirmation' => 'password123',
             ]);
 
@@ -93,7 +93,7 @@ class UserCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_user_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoUsers',
+            'name' => 'PanelNoUsers',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_users' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

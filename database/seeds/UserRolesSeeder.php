@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Http\Models\UserPermissions;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Http\Models\UserPermissions as UserPermissions;
 
 class UserRolesSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class UserRolesSeeder extends Seeder
         $admin_permissions_array = [];
         $user_permissions_array = [];
 
-        foreach($user_permissions as $permission){
+        foreach ($user_permissions as $permission) {
             $admin_permissions_array[$permission['name']] = 1;
             $user_permissions_array[$permission['name']] = 0;
         }

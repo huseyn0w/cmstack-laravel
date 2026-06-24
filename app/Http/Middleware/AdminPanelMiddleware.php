@@ -13,8 +13,6 @@ class AdminPanelMiddleware
      * Allow the request through only when the authenticated user holds the
      * `see_admin_panel` permission; otherwise deny with a 403.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)

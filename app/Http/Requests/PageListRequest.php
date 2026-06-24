@@ -25,8 +25,8 @@ class PageListRequest extends FormRequest
     public function rules()
     {
         return [
-            'pages_action'  => ["required" , "string", "regex:(delete)"],
-            'pages'         => 'array|required'
+            'pages_action' => ['required', 'string', 'regex:(delete)'],
+            'pages' => 'array|required',
         ];
     }
 
@@ -34,7 +34,7 @@ class PageListRequest extends FormRequest
     {
         return [
             'pages_action.regex' => 'You should use action "Delete"',
-            'pages.required'  => 'You should choose at least 1 page to delete'
+            'pages.required' => 'You should choose at least 1 page to delete',
         ];
     }
 }

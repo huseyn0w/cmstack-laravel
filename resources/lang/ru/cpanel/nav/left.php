@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: left.php
@@ -8,21 +9,21 @@
 
 return [
 
-    'dashboard'         => 'Главная страница',
-    'edit_profile'      => 'Изменить профиль',
-    'media'             => 'Медиа',
-    'pages'             => 'Страницы',
-    'posts'             => 'Посты',
-    'categories'        => 'Категории',
-    'all_posts'         => 'Все посты',
-    'comments'          => 'Комментарии',
-    'users'             => 'Пользователи',
-    'settings'          => 'Настройки',
-    'general_settings'  => 'Основные',
-    'site_options'      => 'Опции сайта',
-    'seo_settings'      => 'SEO',
-    'geo_settings'      => 'GEO (AI)',
-    'menus'             => 'Меню',
-    'user_roles'        => 'Статусы'
+    'dashboard' => 'Главная страница',
+    'edit_profile' => 'Изменить профиль',
+    'media' => 'Медиа',
+    'pages' => 'Страницы',
+    'posts' => 'Посты',
+    'categories' => 'Категории',
+    'all_posts' => 'Все посты',
+    'comments' => 'Комментарии',
+    'users' => 'Пользователи',
+    'settings' => 'Настройки',
+    'general_settings' => 'Основные',
+    'site_options' => 'Опции сайта',
+    'seo_settings' => 'SEO',
+    'geo_settings' => 'GEO (AI)',
+    'menus' => 'Меню',
+    'user_roles' => 'Статусы',
 
 ];

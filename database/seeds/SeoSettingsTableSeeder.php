@@ -20,18 +20,18 @@ class SeoSettingsTableSeeder extends Seeder
         }
 
         DB::table('seo_settings')->insert([
-            'title_separator'           => '—',
-            'default_meta_description'  => 'Cmstack-Laravel — a fast, lightweight Laravel content platform.',
-            'default_og_image'          => null,
-            'og_site_name'              => 'Cmstack-Laravel',
-            'twitter_handle'            => null,
-            'google_site_verification'  => null,
-            'bing_site_verification'    => null,
-            'ga4_measurement_id'        => null,
-            'gtm_container_id'          => null,
+            'title_separator' => '—',
+            'default_meta_description' => 'Cmstack-Laravel — a fast, lightweight Laravel content platform.',
+            'default_og_image' => null,
+            'og_site_name' => 'Cmstack-Laravel',
+            'twitter_handle' => null,
+            'google_site_verification' => null,
+            'bing_site_verification' => null,
+            'ga4_measurement_id' => null,
+            'gtm_container_id' => null,
             'discourage_search_engines' => false,
-            'sitemap_enabled'           => true,
-            'robots_extra'              => null,
+            'sitemap_enabled' => true,
+            'robots_extra' => null,
         ]);
     }
 }

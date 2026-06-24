@@ -42,14 +42,14 @@ class ObserverTest extends TestCase
         $this->bindRequest(['category' => [1], 'content' => 'c', 'preview' => 'p']);
 
         $post = Post::create([
-            'title'            => 'ObsPost',
-            'slug'             => 'obs-post',
-            'content'          => 'c',
-            'preview'          => 'p',
-            'author_id'        => $admin->id,
-            'meta_keywords'    => 'k',
+            'title' => 'ObsPost',
+            'slug' => 'obs-post',
+            'content' => 'c',
+            'preview' => 'p',
+            'author_id' => $admin->id,
+            'meta_keywords' => 'k',
             'meta_description' => 'd',
-            'status'           => 1,
+            'status' => 1,
         ]);
 
         $this->assertSame(1, $post->categories()->count());
@@ -65,14 +65,14 @@ class ObserverTest extends TestCase
         ]);
 
         Post::create([
-            'title'            => 'CleanPost',
-            'slug'             => 'clean-post',
-            'content'          => '<script>alert(1)</script><p>safe</p>',
-            'preview'          => '<p>preview</p>',
-            'author_id'        => $admin->id,
-            'meta_keywords'    => 'k',
+            'title' => 'CleanPost',
+            'slug' => 'clean-post',
+            'content' => '<script>alert(1)</script><p>safe</p>',
+            'preview' => '<p>preview</p>',
+            'author_id' => $admin->id,
+            'meta_keywords' => 'k',
             'meta_description' => 'd',
-            'status'           => 1,
+            'status' => 1,
         ]);
 
         $translation = PostTranslation::where('slug', 'clean-post')->firstOrFail();
@@ -85,18 +85,18 @@ class ObserverTest extends TestCase
         $admin = User::where('username', 'admin')->firstOrFail();
         $this->bindRequest([
             'custom_fields' => ['headline' => 'Hello'],
-            'content'       => '<p>page</p>',
+            'content' => '<p>page</p>',
         ]);
 
         Page::create([
-            'title'            => 'ObsPage',
-            'slug'             => 'obs-page',
-            'author_id'        => $admin->id,
-            'content'          => '<p>page</p>',
-            'meta_keywords'    => 'k',
+            'title' => 'ObsPage',
+            'slug' => 'obs-page',
+            'author_id' => $admin->id,
+            'content' => '<p>page</p>',
+            'meta_keywords' => 'k',
             'meta_description' => 'd',
-            'template'         => 'default',
-            'status'           => 1,
+            'template' => 'default',
+            'status' => 1,
         ]);
 
         $translation = PageTranslation::where('slug', 'obs-page')->firstOrFail();
@@ -109,18 +109,18 @@ class ObserverTest extends TestCase
         $admin = User::where('username', 'admin')->firstOrFail();
         $this->bindRequest([
             'custom_fields' => [],
-            'content'       => '<script>evil()</script><p>ok</p>',
+            'content' => '<script>evil()</script><p>ok</p>',
         ]);
 
         Page::create([
-            'title'            => 'CleanPage',
-            'slug'             => 'clean-page',
-            'author_id'        => $admin->id,
-            'content'          => '<script>evil()</script><p>ok</p>',
-            'meta_keywords'    => 'k',
+            'title' => 'CleanPage',
+            'slug' => 'clean-page',
+            'author_id' => $admin->id,
+            'content' => '<script>evil()</script><p>ok</p>',
+            'meta_keywords' => 'k',
             'meta_description' => 'd',
-            'template'         => 'default',
-            'status'           => 1,
+            'template' => 'default',
+            'status' => 1,
         ]);
 
         $translation = PageTranslation::where('slug', 'clean-page')->firstOrFail();

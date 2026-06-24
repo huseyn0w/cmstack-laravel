@@ -17,16 +17,16 @@ class CPanelMenusSeeder extends Seeder
         $menu_content = [
             'en' => [
                 ['slug' => '/', 'type' => 'pages', 'title' => 'Homepage'],
-                ['slug' => 'contact', 'type' => 'pages', 'title' => 'Contact']
+                ['slug' => 'contact', 'type' => 'pages', 'title' => 'Contact'],
             ],
             'ru' => [
                 ['slug' => '/', 'type' => 'pages', 'title' => 'Главная страница'],
-                ['slug' => 'kontakti', 'type' => 'pages', 'title' => 'Контакты']
-            ]
+                ['slug' => 'kontakti', 'type' => 'pages', 'title' => 'Контакты'],
+            ],
         ];
 
         DB::table('menus')->insert(
-            ['slug'   => 'header_menu']
+            ['slug' => 'header_menu']
         );
 
         DB::table('menu_translations')->insert([
@@ -34,14 +34,14 @@ class CPanelMenusSeeder extends Seeder
                 'title' => 'Header Menu',
                 'locale' => 'en',
                 'menu_id' => 1,
-                'content' => json_encode($menu_content['en'])
+                'content' => json_encode($menu_content['en']),
             ],
             [
                 'title' => 'Меню в шапке',
                 'locale' => 'ru',
                 'menu_id' => 1,
-                'content' => json_encode($menu_content['ru'])
-            ]
+                'content' => json_encode($menu_content['ru']),
+            ],
         ]);
     }
 }

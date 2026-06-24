@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CmstackLaravelRequest.php
@@ -6,18 +7,14 @@
  * Date: 23.11.2019
  */
 
-
 namespace App\Http\Requests;
 
-use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
 class CmstackLaravelRequest extends FormRequest
 {
-
     // NOTE: do NOT name this $locale — Symfony 7's HttpFoundation\Request (the
     // parent of FormRequest) declares a typed `protected ?string $locale`, and
     // an untyped redeclaration here is a fatal type-incompatibility on Laravel 11.
@@ -53,7 +50,6 @@ class CmstackLaravelRequest extends FormRequest
     {
         $term_id = $this->route('id');
 
-
         return Rule::unique($this->table, $field)->where(function ($query) {
             return $query->where('locale', $this->currentLocale);
         })->ignore($term_id, $this->ignore_column);
@@ -68,8 +64,4 @@ class CmstackLaravelRequest extends FormRequest
     {
         return true;
     }
-
-
-
-
 }

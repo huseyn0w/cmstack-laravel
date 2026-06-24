@@ -2,22 +2,21 @@
 
 namespace App\Http\Models;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Translatable;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
 class Menu extends Model implements TranslatableContract
 {
     use Cachable;
-
     use Translatable;
 
     public $translatedAttributes = [
         'title',
         'menu_id',
         'author_id',
-        'content'
+        'content',
     ];
 
     public $timestamps = false;
@@ -26,11 +25,11 @@ class Menu extends Model implements TranslatableContract
         'title',
         'slug',
         'content',
-        'author_id'
+        'author_id',
     ];
 
     public function author()
     {
-        return $this->hasOne('App\Http\Models\User','id', 'author_id');
+        return $this->hasOne('App\Http\Models\User', 'id', 'author_id');
     }
 }

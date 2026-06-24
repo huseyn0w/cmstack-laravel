@@ -20,6 +20,6 @@ class CPanelGeneralSettings extends Model
         'posts_per_page',
         'membership',
         'comments_per_page',
-        'active_template_name'
+        'active_template_name',
     ];
 }

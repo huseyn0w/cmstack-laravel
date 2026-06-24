@@ -26,21 +26,19 @@ class ValidateGeneralSettings extends FormRequest
     {
         $membership = $this->request->get('membership');
 
-        if($membership === 'on') {
+        if ($membership === 'on') {
             $this->request->add(['membership' => '1']);
-        }
-        else {
+        } else {
             $this->request->add(['membership' => '0']);
         }
 
-
         return [
-            'website_name'         => 'required|string',
-            'tagline'              => 'required|string',
-            'posts_per_page'       => 'required|integer',
-            'comments_per_page'    => 'required|integer',
-            'contact_email'        => 'required|email',
-            'membership'           => 'required|in:0,1',
+            'website_name' => 'required|string',
+            'tagline' => 'required|string',
+            'posts_per_page' => 'required|integer',
+            'comments_per_page' => 'required|integer',
+            'contact_email' => 'required|email',
+            'membership' => 'required|in:0,1',
             'active_template_name' => 'nullable|string',
         ];
 

@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class ChangePasswordRequest extends FormRequest
 {
@@ -26,9 +25,9 @@ class ChangePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'g-recaptcha-response'          => ['nullable', 'captcha'],
-            'password'                      => 'string|min:8|same:password_confirmation',
-            'password_confirmation'         => 'string|min:8',
+            'g-recaptcha-response' => ['nullable', 'captcha'],
+            'password' => 'string|min:8|same:password_confirmation',
+            'password_confirmation' => 'string|min:8',
         ];
     }
 }

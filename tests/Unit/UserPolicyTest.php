@@ -14,7 +14,7 @@ class UserPolicyTest extends TestCase
     public function test_policy_denies_safely_with_no_authenticated_user(): void
     {
         // No user is logged in, so the constructor must not throw.
-        $policy = new UserPolicy();
+        $policy = new UserPolicy;
 
         $this->assertFalse($policy->see_admin_panel());
         $this->assertFalse($policy->manage_users());

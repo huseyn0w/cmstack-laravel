@@ -26,8 +26,8 @@ class CaptchaServiceTest extends TestCase
     public function test_service_is_disabled_when_flag_off_even_with_keys(): void
     {
         $captcha = new CaptchaService([
-            'enabled'    => false,
-            'site_key'   => 'sk',
+            'enabled' => false,
+            'site_key' => 'sk',
             'secret_key' => 'secret',
         ]);
 
@@ -38,10 +38,10 @@ class CaptchaServiceTest extends TestCase
     public function test_enabled_service_rejects_empty_token_without_network(): void
     {
         $captcha = new CaptchaService([
-            'enabled'    => true,
-            'site_key'   => 'dummy-site',
+            'enabled' => true,
+            'site_key' => 'dummy-site',
             'secret_key' => 'dummy-secret',
-            'version'    => 'v3',
+            'version' => 'v3',
         ]);
 
         $this->assertTrue($captcha->enabled());
@@ -53,10 +53,10 @@ class CaptchaServiceTest extends TestCase
     public function test_enabled_service_renders_v3_widget_with_escaped_site_key(): void
     {
         $captcha = new CaptchaService([
-            'enabled'    => true,
-            'site_key'   => 'my"site',
+            'enabled' => true,
+            'site_key' => 'my"site',
             'secret_key' => 'dummy-secret',
-            'version'    => 'v3',
+            'version' => 'v3',
         ]);
 
         $html = $captcha->render();
@@ -71,10 +71,10 @@ class CaptchaServiceTest extends TestCase
     public function test_enabled_service_renders_v2_checkbox_widget(): void
     {
         $captcha = new CaptchaService([
-            'enabled'    => true,
-            'site_key'   => 'site',
+            'enabled' => true,
+            'site_key' => 'site',
             'secret_key' => 'secret',
-            'version'    => 'v2',
+            'version' => 'v2',
         ]);
 
         $html = $captcha->render();

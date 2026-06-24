@@ -7,7 +7,6 @@ use App\Http\Requests\FrontEndUserRequest;
 use App\Repositories\UserRepository;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 /**
@@ -31,10 +30,10 @@ class FrontendProfileUpdateTest extends TestCase
 
         // Build a validated FormRequest carrying a malicious role_id.
         $request = FrontEndUserRequest::create('/profile/update', 'PUT', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'username' => $user->username,
-            'name'     => 'New Name',
-            'role_id'  => 1,
+            'name' => 'New Name',
+            'role_id' => 1,
         ]);
         $request->setContainer($this->app)->setRedirector($this->app['redirect']);
         $request->validateResolved();

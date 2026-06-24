@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: registration.php
@@ -8,11 +9,11 @@
 
 return [
     'register_page_headline' => 'Регистрация',
-    'register'               => 'Регистрация',
-    'name'                   => 'Имя',
-    'email'                  => 'E-Mail Адресс',
-    'username'               => 'Логин',
-    'password'               => 'Пароль',
-    'confirm_password'       => 'Подтвердите пароль',
-    'register_btn'           => 'Зарегистрироваться'
+    'register' => 'Регистрация',
+    'name' => 'Имя',
+    'email' => 'E-Mail Адресс',
+    'username' => 'Логин',
+    'password' => 'Пароль',
+    'confirm_password' => 'Подтвердите пароль',
+    'register_btn' => 'Зарегистрироваться',
 ];

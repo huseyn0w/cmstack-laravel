@@ -25,7 +25,7 @@ class CPanelCommentsRequest extends FormRequest
     public function rules()
     {
         return [
-            'comments' => 'required|array'
+            'comments' => 'required|array',
         ];
     }
 }

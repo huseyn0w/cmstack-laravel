@@ -28,11 +28,11 @@ class CommentAuthorizationTest extends TestCase
     private function makeComment(int $userId): Comments
     {
         return Comments::create([
-            'post_id'   => 1,
+            'post_id' => 1,
             'parent_id' => null,
-            'comment'   => 'original',
-            'user_id'   => $userId,
-            'status'    => 1,
+            'comment' => 'original',
+            'user_id' => $userId,
+            'status' => 1,
         ]);
     }
 
@@ -40,7 +40,7 @@ class CommentAuthorizationTest extends TestCase
     {
         return new Request([
             'updated_comment_id' => $commentId,
-            'comment'            => $text,
+            'comment' => $text,
         ]);
     }
 

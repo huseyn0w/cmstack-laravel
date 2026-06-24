@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: change_password.php
@@ -7,12 +8,12 @@
  */
 
 return [
-    'headline'             => 'Profile',
-    'edit_profile'         => 'Edit Profile',
-    'password_updated'     => 'User password has been updated',
-    'problem_occurred'     => 'Some problem has been occurred. Please try again later.',
-    'current_password'     => 'Current password',
-    'new_password'         => 'New Password',
+    'headline' => 'Profile',
+    'edit_profile' => 'Edit Profile',
+    'password_updated' => 'User password has been updated',
+    'problem_occurred' => 'Some problem has been occurred. Please try again later.',
+    'current_password' => 'Current password',
+    'new_password' => 'New Password',
     'confirm_new_password' => 'Confirm New Password',
-    'change_password'      => 'Change Password'
+    'change_password' => 'Change Password',
 ];

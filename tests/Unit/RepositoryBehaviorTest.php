@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Http\Models\CategoryTranslation;
-use App\Http\Models\PostTranslation;
 use App\Http\Models\User;
+use App\Http\Requests\FrontEndUserRequest;
+use App\Http\Requests\ValidateUserRoles;
 use App\Repositories\CPanelCategoryRepository;
 use App\Repositories\CPanelPostRepository;
 use App\Repositories\CPanelUserRolesRepository;
@@ -54,17 +54,17 @@ class RepositoryBehaviorTest extends TestCase
         // Translatable create from a plain array (no route id) -> stored on the
         // main model, translated attributes routed to the translation table.
         $category = $repo->create([
-            'title'            => 'UnitCat',
-            'slug'             => 'unit-cat',
+            'title' => 'UnitCat',
+            'slug' => 'unit-cat',
             'meta_description' => 'md',
-            'meta_keywords'    => 'mk',
-            'description'      => 'd',
-            'author_id'        => 1,
+            'meta_keywords' => 'mk',
+            'description' => 'd',
+            'author_id' => 1,
         ]);
 
         $this->assertNotNull($category);
         $this->assertDatabaseHas('category_translations', [
-            'slug'   => 'unit-cat',
+            'slug' => 'unit-cat',
             'locale' => 'en',
         ]);
     }
@@ -79,15 +79,15 @@ class RepositoryBehaviorTest extends TestCase
         // `category` is a validated input consumed by the observer, NOT a
         // posts column. The repository must strip it before mass assignment.
         $repo->create([
-            'title'            => 'UnitPost',
-            'slug'             => 'unit-post',
-            'content'          => 'c',
-            'preview'          => 'p',
-            'author_id'        => $admin->id,
-            'meta_keywords'    => 'k',
+            'title' => 'UnitPost',
+            'slug' => 'unit-post',
+            'content' => 'c',
+            'preview' => 'p',
+            'author_id' => $admin->id,
+            'meta_keywords' => 'k',
             'meta_description' => 'd',
-            'status'           => 1,
-            'category'         => [1],
+            'status' => 1,
+            'category' => [1],
         ]);
 
         $this->assertDatabaseHas('post_translations', ['slug' => 'unit-post']);
@@ -101,11 +101,11 @@ class RepositoryBehaviorTest extends TestCase
         $repo = app(CPanelUserRolesRepository::class);
 
         $request = Request::create('/cmstack-laravel-admin/roles/new', 'POST', [
-            'name'        => 'UnitRole',
+            'name' => 'UnitRole',
             'permissions' => ['manage_posts', 'totally_made_up'],
         ]);
         // Reproduce a validated FormRequest by binding rules via a real one.
-        $formRequest = \App\Http\Requests\ValidateUserRoles::createFrom($request);
+        $formRequest = ValidateUserRoles::createFrom($request);
         $formRequest->setContainer(app())->setRedirector(app('redirect'));
         $formRequest->validateResolved();
 
@@ -126,11 +126,11 @@ class RepositoryBehaviorTest extends TestCase
 
         $request = Request::create('/profile/update', 'PUT', [
             'username' => $user->username,
-            'email'    => $user->email,
-            'name'     => 'SafeName',
-            'role_id'  => 1, // escalation attempt
+            'email' => $user->email,
+            'name' => 'SafeName',
+            'role_id' => 1, // escalation attempt
         ]);
-        $formRequest = \App\Http\Requests\FrontEndUserRequest::createFrom($request);
+        $formRequest = FrontEndUserRequest::createFrom($request);
         $formRequest->setContainer(app())->setRedirector(app('redirect'));
         $formRequest->validateResolved();
 

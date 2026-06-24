@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSiteOptionsTable extends Migration
 {
@@ -17,8 +17,8 @@ class CreateSiteOptionsTable extends Migration
             $table->bigIncrements('id');
             $table->char('logo_url', 100);
             $table->string('copyright', 200);
-            $table->char('github_url',100);
-            $table->char('linkedin_url',100);
+            $table->char('github_url', 100);
+            $table->char('linkedin_url', 100);
         });
     }
 

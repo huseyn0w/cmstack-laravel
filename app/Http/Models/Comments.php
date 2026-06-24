@@ -21,14 +21,15 @@ class Comments extends Model
     public function replies()
     {
         return $this->hasMany(Comments::class, 'parent_id')
-                    ->where('status', 1)
-                    ->with('user');
+            ->where('status', 1)
+            ->with('user');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
-        static::deleting(function($comment) {
+        static::deleting(function ($comment) {
             $comment->replies()->delete();
         });
     }
@@ -37,6 +38,4 @@ class Comments extends Model
     {
         return $this->belongsTo(Post::class);
     }
-
-
 }

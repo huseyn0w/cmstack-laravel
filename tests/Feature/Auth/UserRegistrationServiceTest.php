@@ -29,9 +29,9 @@ class UserRegistrationServiceTest extends TestCase
         $service = app(UserRegistrationService::class);
 
         $user = $service->register([
-            'name'     => 'Jane Doe',
+            'name' => 'Jane Doe',
             'username' => 'jane',
-            'email'    => 'jane@example.com',
+            'email' => 'jane@example.com',
             'password' => 'secret-password',
         ]);
 
@@ -45,9 +45,9 @@ class UserRegistrationServiceTest extends TestCase
         $service = app(UserRegistrationService::class);
 
         $user = $service->register([
-            'name'     => 'John Doe',
+            'name' => 'John Doe',
             'username' => 'john',
-            'email'    => 'john@example.com',
+            'email' => 'john@example.com',
             'password' => 'another-secret',
         ]);
 
@@ -59,11 +59,11 @@ class UserRegistrationServiceTest extends TestCase
         $service = app(UserRegistrationService::class);
 
         $user = $service->register([
-            'name'     => 'Mallory',
+            'name' => 'Mallory',
             'username' => 'mallory',
-            'email'    => 'mallory@example.com',
+            'email' => 'mallory@example.com',
             'password' => 'pw',
-            'role_id'  => 1, // attempt to self-assign administrator
+            'role_id' => 1, // attempt to self-assign administrator
         ]);
 
         $this->assertSame(2, (int) $user->fresh()->role_id);
@@ -76,10 +76,10 @@ class UserRegistrationServiceTest extends TestCase
     public function test_registered_user_can_login_with_their_password(): void
     {
         $this->post('/register', [
-            'name'                  => 'Real User',
-            'username'              => 'realuser',
-            'email'                 => 'real@example.com',
-            'password'              => 'correct-horse',
+            'name' => 'Real User',
+            'username' => 'realuser',
+            'email' => 'real@example.com',
+            'password' => 'correct-horse',
             'password_confirmation' => 'correct-horse',
         ]);
 

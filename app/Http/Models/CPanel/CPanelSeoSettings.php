@@ -36,6 +36,6 @@ class CPanelSeoSettings extends Model
 
     protected $casts = [
         'discourage_search_engines' => 'boolean',
-        'sitemap_enabled'           => 'boolean',
+        'sitemap_enabled' => 'boolean',
     ];
 }

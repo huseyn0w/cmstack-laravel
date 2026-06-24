@@ -2,11 +2,10 @@
 
 namespace App\Http\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Auth as Auth;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
@@ -23,11 +22,10 @@ class User extends Authenticatable implements OAuthenticatable
      * The model lives in a non-standard namespace (App\Http\Models), so the
      * default factory name guesser cannot resolve it automatically.
      */
-    protected static function newFactory(): \Database\Factories\UserFactory
+    protected static function newFactory(): UserFactory
     {
-        return \Database\Factories\UserFactory::new();
+        return UserFactory::new();
     }
-
 
     /**
      * The attributes that are mass assignable.
@@ -51,7 +49,7 @@ class User extends Authenticatable implements OAuthenticatable
         'facebook_url',
         'twitter_url',
         'instagram_url',
-        'google_url'
+        'google_url',
     ];
 
     // NOTE: `provider`/`provider_id` are intentionally NOT mass assignable;
@@ -110,7 +108,4 @@ class User extends Authenticatable implements OAuthenticatable
     {
         return $this->hasMany(Post::class);
     }
-
-
-
 }

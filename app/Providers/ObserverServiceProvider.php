@@ -33,6 +33,4 @@ class ObserverServiceProvider extends ServiceProvider
         PostTranslation::observe(PostTranslationObserver::class);
         Page::observe(PageObserver::class);
     }
-
-
 }

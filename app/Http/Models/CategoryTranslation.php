@@ -2,14 +2,15 @@
 
 namespace App\Http\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Model;
 
 class CategoryTranslation extends Model
 {
     use Cachable;
 
     public $timestamps = false;
+
     protected $fillable = [
         'title',
         'slug',
@@ -21,6 +22,6 @@ class CategoryTranslation extends Model
         'meta_description',
         'meta_keywords',
         'canonical_url',
-        'meta_noindex'
+        'meta_noindex',
     ];
 }

@@ -17,8 +17,6 @@ class CPanelSiteOptions extends Model
         'logo_url',
         'copyright',
         'github_url',
-        'linkedin_url'
+        'linkedin_url',
     ];
-
-
 }

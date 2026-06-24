@@ -40,12 +40,12 @@ class SettingsTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->post('/cmstack-laravel-admin/general-settings', [
-                'website_name'         => 'Persisted Name',
-                'tagline'              => 'Persisted Tagline',
-                'posts_per_page'       => 9,
-                'comments_per_page'    => 3,
-                'contact_email'        => 'hi@example.com',
-                'membership'           => 'on',
+                'website_name' => 'Persisted Name',
+                'tagline' => 'Persisted Tagline',
+                'posts_per_page' => 9,
+                'comments_per_page' => 3,
+                'contact_email' => 'hi@example.com',
+                'membership' => 'on',
                 'active_template_name' => 'default',
             ])
             ->assertSessionHasNoErrors();
@@ -66,9 +66,9 @@ class SettingsTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->post('/cmstack-laravel-admin/site-options', [
-                'logo_url'     => 'https://example.com/logo.png',
-                'copyright'    => 'Copyright 2026',
-                'github_url'   => 'https://github.com/example/repo',
+                'logo_url' => 'https://example.com/logo.png',
+                'copyright' => 'Copyright 2026',
+                'github_url' => 'https://github.com/example/repo',
                 'linkedin_url' => 'https://linkedin.com/in/example',
             ])
             ->assertSessionHasNoErrors();
@@ -83,9 +83,9 @@ class SettingsTest extends TestCase
         $this->actingAs($this->admin)
             ->from('/cmstack-laravel-admin/site-options')
             ->post('/cmstack-laravel-admin/site-options', [
-                'logo_url'     => 'not-a-url',
-                'copyright'    => '',
-                'github_url'   => 'not-a-url',
+                'logo_url' => 'not-a-url',
+                'copyright' => '',
+                'github_url' => 'not-a-url',
                 'linkedin_url' => 'not-a-url',
             ])
             ->assertSessionHasErrors(['logo_url', 'copyright', 'github_url', 'linkedin_url']);
@@ -94,7 +94,7 @@ class SettingsTest extends TestCase
     public function test_user_without_settings_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoSettings',
+            'name' => 'PanelNoSettings',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_general_settings' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

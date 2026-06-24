@@ -2,15 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\Rule;
 
 class ValidatePostData extends CmstackLaravelRequest
 {
-
     protected $table = 'post_translations';
 
     protected $ignore_column = 'post_id';
@@ -45,35 +40,32 @@ class ValidatePostData extends CmstackLaravelRequest
     {
 
         $rules = [
-            'title'             => ['string', 'required', 'max:20'],
-            'slug'              => ['required', 'string', 'max:20'],
-            'content'           => 'nullable|string',
-            'preview'           => 'nullable|string',
-            'author_id'         => 'required|integer|exists:users,id',
-            'meta_keywords'     => 'required|string',
-            'meta_description'  => 'required|string',
-            'canonical_url'     => 'nullable|url|max:255',
-            'meta_noindex'      => 'sometimes|boolean',
-            'created_at'        => 'sometimes|required|string',
-            'updated_at'        => 'sometimes|required|string',
-            'category'          => 'required|array',
-            'thumbnail'         => 'nullable|url',
-            'status'            => 'required|numeric'
+            'title' => ['string', 'required', 'max:20'],
+            'slug' => ['required', 'string', 'max:20'],
+            'content' => 'nullable|string',
+            'preview' => 'nullable|string',
+            'author_id' => 'required|integer|exists:users,id',
+            'meta_keywords' => 'required|string',
+            'meta_description' => 'required|string',
+            'canonical_url' => 'nullable|url|max:255',
+            'meta_noindex' => 'sometimes|boolean',
+            'created_at' => 'sometimes|required|string',
+            'updated_at' => 'sometimes|required|string',
+            'category' => 'required|array',
+            'thumbnail' => 'nullable|url',
+            'status' => 'required|numeric',
         ];
 
         $title = $this->newRecordRule('title');
         $slug = $this->newRecordRule('slug');
 
-        if($this->route_name === "cpanel_update_post")
-        {
+        if ($this->route_name === 'cpanel_update_post') {
             $title = $this->updateRecordRule('title');
             $slug = $this->updateRecordRule('slug');
         }
 
-
         $rules['title'][] = $title;
         $rules['slug'][] = $slug;
-
 
         return $rules;
     }

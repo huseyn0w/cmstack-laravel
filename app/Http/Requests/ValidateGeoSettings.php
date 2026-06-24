@@ -23,7 +23,7 @@ class ValidateGeoSettings extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'emit_jsonld'     => $this->boolean('emit_jsonld'),
+            'emit_jsonld' => $this->boolean('emit_jsonld'),
             'include_in_llms' => $this->boolean('include_in_llms'),
         ]);
     }
@@ -31,18 +31,18 @@ class ValidateGeoSettings extends FormRequest
     public function rules()
     {
         return [
-            'business_name'   => 'nullable|string|max:255',
-            'business_type'   => 'required|in:Organization,LocalBusiness,ProfessionalService,Person',
-            'description'     => 'nullable|string|max:1000',
-            'founder_name'    => 'nullable|string|max:255',
-            'services'        => 'nullable|string|max:2000',
-            'service_area'    => 'nullable|string|max:255',
-            'contact_email'   => 'nullable|email|max:255',
-            'contact_phone'   => 'nullable|string|max:50',
-            'address'         => 'nullable|string|max:255',
-            'same_as'         => 'nullable|string|max:2000',
-            'faq'             => 'nullable|string|max:5000',
-            'emit_jsonld'     => 'boolean',
+            'business_name' => 'nullable|string|max:255',
+            'business_type' => 'required|in:Organization,LocalBusiness,ProfessionalService,Person',
+            'description' => 'nullable|string|max:1000',
+            'founder_name' => 'nullable|string|max:255',
+            'services' => 'nullable|string|max:2000',
+            'service_area' => 'nullable|string|max:255',
+            'contact_email' => 'nullable|email|max:255',
+            'contact_phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:255',
+            'same_as' => 'nullable|string|max:2000',
+            'faq' => 'nullable|string|max:5000',
+            'emit_jsonld' => 'boolean',
             'include_in_llms' => 'boolean',
         ];
     }

@@ -26,8 +26,8 @@ class PostListRequest extends FormRequest
     public function rules()
     {
         return [
-            'posts_action'  => ["required" , "string", Rule::in(['delete', 'destroy', 'restore']),],
-            'posts'         => 'array|required'
+            'posts_action' => ['required', 'string', Rule::in(['delete', 'destroy', 'restore'])],
+            'posts' => 'array|required',
         ];
     }
 
@@ -35,7 +35,7 @@ class PostListRequest extends FormRequest
     {
         return [
             'posts_action.regex' => 'You should use action "Delete"',
-            'posts.required'  => 'You should choose at least 1 post to delete'
+            'posts.required' => 'You should choose at least 1 post to delete',
         ];
     }
 }

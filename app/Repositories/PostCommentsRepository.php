@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: PostCommentsRepository.php
@@ -8,12 +9,11 @@
 
 namespace App\Repositories;
 
-
 use App\Http\Models\Comments;
+use Doctrine\DBAL\Driver\PDOException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Doctrine\DBAL\Driver\PDOException;
 
 class PostCommentsRepository extends BaseRepository
 {
@@ -30,16 +30,18 @@ class PostCommentsRepository extends BaseRepository
      */
     public function create($request)
     {
-        if (!is_logged_in()) return false;
+        if (! is_logged_in()) {
+            return false;
+        }
 
         $user = Auth::user();
 
         $data = [
-            'post_id'   => (int) $request->input('post_id'),
+            'post_id' => (int) $request->input('post_id'),
             'parent_id' => $request->input('parent_id'),
-            'comment'   => $request->input('comment'),
-            'user_id'   => $user->id,
-            'status'    => $this->isAdmin($user) ? 1 : 0,
+            'comment' => $request->input('comment'),
+            'user_id' => $user->id,
+            'status' => $this->isAdmin($user) ? 1 : 0,
         ];
 
         return parent::create($data);
@@ -47,19 +49,23 @@ class PostCommentsRepository extends BaseRepository
 
     public function delete($request)
     {
-        if (!is_logged_in()) return false;
+        if (! is_logged_in()) {
+            return false;
+        }
 
         $user = Auth::user();
 
         $comment_id = $request['commentId'];
-        $username   = $request['username'];
+        $username = $request['username'];
 
         // Only the comment owner or an administrator may delete a comment.
-        if ($user->username !== $username && !$this->isAdmin($user)) return false;
+        if ($user->username !== $username && ! $this->isAdmin($user)) {
+            return false;
+        }
 
         $comment_deleted = parent::delete($comment_id);
 
-        return $comment_deleted ? "Comment has been deleted" : "Some problem occured";
+        return $comment_deleted ? 'Comment has been deleted' : 'Some problem occured';
     }
 
     /**
@@ -68,26 +74,29 @@ class PostCommentsRepository extends BaseRepository
      */
     public function update($request, $id = null)
     {
-        if (!is_logged_in()) throwAbort();
+        if (! is_logged_in()) {
+            throwAbort();
+        }
 
-        $user       = Auth::user();
+        $user = Auth::user();
         $comment_id = (int) $request->input('updated_comment_id');
 
         try {
             $comment = $this->model::findOrFail($comment_id);
 
-            if (!$this->isAdmin($user) && (int) $comment->user_id !== (int) $user->id) {
+            if (! $this->isAdmin($user) && (int) $comment->user_id !== (int) $user->id) {
                 return throwAbort();
             }
 
             return (bool) $comment->update([
                 'comment' => $request->input('comment'),
             ]);
-        } catch (QueryException | PDOException | \Error $e) {
+        } catch (QueryException|PDOException|\Error $e) {
             Log::error('Comment update failed', [
                 'comment_id' => $comment_id,
-                'exception'  => $e->getMessage(),
+                'exception' => $e->getMessage(),
             ]);
+
             return throwAbort();
         }
     }

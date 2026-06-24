@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+
 return [
 
     /*
@@ -21,15 +23,15 @@ return [
     ],
 
     'github' => [
-        'client_id' => env ( 'GITHUB_CLIENT_ID' ),
-        'client_secret' => env ( 'GITHUB_CLIENT_SECRET' ),
-        'redirect' => env ( 'GITHUB_CALLBACK_URL' )
+        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_CALLBACK_URL'),
     ],
 
     'linkedin' => [
-        'client_id' => env ( 'LINKEDIN_CLIENT_ID' ),
-        'client_secret' => env ( 'LINKEDIN_CLIENT_SECRET' ),
-        'redirect' => env ( 'LINKEDIN_CALLBACK_URL' )
+        'client_id' => env('LINKEDIN_CLIENT_ID'),
+        'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
+        'redirect' => env('LINKEDIN_CALLBACK_URL'),
     ],
 
     'mailgun' => [
@@ -53,7 +55,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\User::class,
+        'model' => User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [

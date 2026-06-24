@@ -5,6 +5,7 @@ namespace Tests\Feature\Auth;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -33,12 +34,12 @@ class AuthFlowTest extends TestCase
     public function test_user_can_login_with_valid_credentials(): void
     {
         $user = User::factory()->create([
-            'role_id'  => 2,
+            'role_id' => 2,
             'password' => 'secret123',
         ]);
 
         $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'secret123',
         ])->assertRedirect();
 
@@ -48,12 +49,12 @@ class AuthFlowTest extends TestCase
     public function test_login_fails_with_invalid_credentials(): void
     {
         $user = User::factory()->create([
-            'role_id'  => 2,
+            'role_id' => 2,
             'password' => 'secret123',
         ]);
 
         $this->from('/login')->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong-password',
         ])->assertSessionHasErrors('email');
 
@@ -77,16 +78,16 @@ class AuthFlowTest extends TestCase
     public function test_user_can_register(): void
     {
         $this->post('/register', [
-            'name'                  => 'New Person',
-            'username'              => 'newp',
-            'email'                 => 'newperson@example.com',
-            'password'              => 'password123',
+            'name' => 'New Person',
+            'username' => 'newp',
+            'email' => 'newperson@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ])->assertRedirect('/');
 
         $this->assertDatabaseHas('users', [
             'username' => 'newp',
-            'email'    => 'newperson@example.com',
+            'email' => 'newperson@example.com',
         ]);
         $this->assertAuthenticated();
     }
@@ -94,10 +95,10 @@ class AuthFlowTest extends TestCase
     public function test_registration_validation_blocks_bad_input(): void
     {
         $this->from('/register')->post('/register', [
-            'name'                  => '',
-            'username'              => '',
-            'email'                 => 'not-an-email',
-            'password'              => 'short',
+            'name' => '',
+            'username' => '',
+            'email' => 'not-an-email',
+            'password' => 'short',
             'password_confirmation' => 'mismatch',
         ])->assertSessionHasErrors(['name', 'username', 'email', 'password']);
 
@@ -115,6 +116,6 @@ class AuthFlowTest extends TestCase
         $this->post('/password/email', ['email' => $user->email])
             ->assertSessionHasNoErrors();
 
-        Notification::assertSentTo($user, \Illuminate\Auth\Notifications\ResetPassword::class);
+        Notification::assertSentTo($user, ResetPassword::class);
     }
 }

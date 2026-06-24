@@ -2,12 +2,13 @@
 
 namespace App\Http\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Model;
 
 class PageTranslation extends Model
 {
     use Cachable;
+
     protected $fillable = [
         'title',
         'locale',
@@ -23,6 +24,6 @@ class PageTranslation extends Model
         'meta_description',
         'meta_keywords',
         'canonical_url',
-        'meta_noindex'
+        'meta_noindex',
     ];
 }

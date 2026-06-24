@@ -31,7 +31,7 @@ class RoleCrudTest extends TestCase
     public function test_admin_can_create_a_role(): void
     {
         $response = $this->actingAs($this->admin)->post('/cmstack-laravel-admin/roles/new', [
-            'name'        => 'Author',
+            'name' => 'Author',
             'permissions' => ['manage_posts', 'manage_comments'],
         ]);
 
@@ -48,12 +48,12 @@ class RoleCrudTest extends TestCase
     public function test_admin_can_update_a_role(): void
     {
         $role = UserRoles::create([
-            'name'        => 'Temp',
+            'name' => 'Temp',
             'permissions' => json_encode(['manage_posts' => 1]),
         ]);
 
-        $response = $this->actingAs($this->admin)->put('/cmstack-laravel-admin/roles/' . $role->id . '/update', [
-            'name'        => 'Temp Renamed',
+        $response = $this->actingAs($this->admin)->put('/cmstack-laravel-admin/roles/'.$role->id.'/update', [
+            'name' => 'Temp Renamed',
             'permissions' => ['manage_pages'],
         ]);
 
@@ -68,12 +68,12 @@ class RoleCrudTest extends TestCase
     public function test_admin_can_delete_a_role(): void
     {
         $role = UserRoles::create([
-            'name'        => 'Disposable',
+            'name' => 'Disposable',
             'permissions' => json_encode([]),
         ]);
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/roles/' . $role->id . '/delete')
+            ->delete('/cmstack-laravel-admin/roles/'.$role->id.'/delete')
             ->assertOk();
 
         $this->assertDatabaseMissing('user_roles', ['id' => $role->id]);
@@ -91,7 +91,7 @@ class RoleCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_role_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoRoles',
+            'name' => 'PanelNoRoles',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_user_roles' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

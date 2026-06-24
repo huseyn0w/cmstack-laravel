@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserRoles extends Model
 {
     use Cachable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -15,7 +16,7 @@ class UserRoles extends Model
      */
     protected $fillable = [
         'name',
-        'permissions'
+        'permissions',
     ];
 
     public $timestamps = false;

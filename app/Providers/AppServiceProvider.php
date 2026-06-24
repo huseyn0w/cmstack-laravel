@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,8 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
-        view()->composer('*', function ($view)
-        {
+        view()->composer('*', function ($view) {
             $view->with('current_user', \Auth::user());
             $view->with('home_page_data', get_data(1, 'page', ['slug', 'title']));
         });

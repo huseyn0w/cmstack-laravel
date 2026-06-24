@@ -2,11 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\Rule;
-
 
 class MenuRequest extends CmstackLaravelRequest
 {
@@ -34,21 +30,17 @@ class MenuRequest extends CmstackLaravelRequest
 
         $rules = [
             'content' => 'required|string|min:3',
-            'slug'    => 'required|string',
-            'title'   => ['required', 'string', 'max:20']
+            'slug' => 'required|string',
+            'title' => ['required', 'string', 'max:20'],
         ];
 
         $title = $this->newRecordRule('title');
 
-
-        if($this->route_name === "cpanel_update_menu")
-        {
+        if ($this->route_name === 'cpanel_update_menu') {
             $title = $this->updateRecordRule('title');
         }
 
-
         $rules['title'][] = $title;
-
 
         return $rules;
     }

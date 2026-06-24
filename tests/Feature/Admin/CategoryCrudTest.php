@@ -32,12 +32,12 @@ class CategoryCrudTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'title'            => 'Travel',
-            'slug'             => 'travel',
-            'description'      => 'desc',
+            'title' => 'Travel',
+            'slug' => 'travel',
+            'description' => 'desc',
             'meta_description' => 'md',
-            'meta_keywords'    => 'mk',
-            'parent_category'  => '',
+            'meta_keywords' => 'mk',
+            'parent_category' => '',
         ], $overrides);
     }
 
@@ -61,7 +61,7 @@ class CategoryCrudTest extends TestCase
         $translation = CategoryTranslation::where('slug', 'travel')->firstOrFail();
 
         $response = $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/categories/' . $translation->category_id . '/update', $this->payload([
+            ->put('/cmstack-laravel-admin/categories/'.$translation->category_id.'/update', $this->payload([
                 'description' => 'updated description',
             ]));
 
@@ -75,7 +75,7 @@ class CategoryCrudTest extends TestCase
         $translation = CategoryTranslation::where('slug', 'travel')->firstOrFail();
 
         $this->actingAs($this->admin)
-            ->delete('/cmstack-laravel-admin/categories/' . $translation->category_id . '/delete')
+            ->delete('/cmstack-laravel-admin/categories/'.$translation->category_id.'/delete')
             ->assertOk();
 
         $this->assertSame(0, CategoryTranslation::where('slug', 'travel')->count());
@@ -93,7 +93,7 @@ class CategoryCrudTest extends TestCase
     public function test_user_with_panel_access_but_no_category_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoCats',
+            'name' => 'PanelNoCats',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_post_categories' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

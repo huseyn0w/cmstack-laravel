@@ -17,8 +17,8 @@ class CPanelPostCategorySeeder extends Seeder
         DB::table('category_post')->insert([
             [
                 'category_id' => 1,
-                'post_id' => 1
-            ]
+                'post_id' => 1,
+            ],
         ]);
     }
 }

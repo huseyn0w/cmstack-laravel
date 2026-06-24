@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
 class CategoryRequest extends CmstackLaravelRequest
@@ -43,22 +41,20 @@ class CategoryRequest extends CmstackLaravelRequest
     {
 
         $rules = [
-            'description'       => 'string|nullable',
-            'meta_description'  => 'string|nullable',
-            'meta_keywords'     => 'string|nullable',
-            'canonical_url'     => 'nullable|url|max:255',
-            'meta_noindex'      => 'sometimes|boolean',
-            'title'             => ['required', 'string', 'max:30'],
-            'slug'              => ['required', 'string', 'max:30'],
-            'parent_category'   => ['nullable', 'numeric']
+            'description' => 'string|nullable',
+            'meta_description' => 'string|nullable',
+            'meta_keywords' => 'string|nullable',
+            'canonical_url' => 'nullable|url|max:255',
+            'meta_noindex' => 'sometimes|boolean',
+            'title' => ['required', 'string', 'max:30'],
+            'slug' => ['required', 'string', 'max:30'],
+            'parent_category' => ['nullable', 'numeric'],
         ];
 
         $title = $this->newRecordRule('title');
         $slug = $this->newRecordRule('slug');
 
-
-        if($this->route_name === "cpanel_update_category")
-        {
+        if ($this->route_name === 'cpanel_update_category') {
             $title = $this->updateRecordRule('title');
             $slug = $this->updateRecordRule('slug');
 
@@ -68,8 +64,6 @@ class CategoryRequest extends CmstackLaravelRequest
         $rules['title'][] = $title;
         $rules['slug'][] = $slug;
 
-
         return $rules;
     }
-
 }

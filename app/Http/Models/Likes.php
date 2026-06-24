@@ -12,9 +12,8 @@ class Likes extends Model
 
     protected $fillable = [
         'user_id',
-        'post_id'
+        'post_id',
     ];
-
 
     public function author()
     {
@@ -25,6 +24,4 @@ class Likes extends Model
     {
         return $this->belongsTo(Post::class);
     }
-
-
 }

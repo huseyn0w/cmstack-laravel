@@ -40,18 +40,18 @@ class SeoSettingsTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->post('/cmstack-laravel-admin/seo-settings', [
-                'title_separator'           => '|',
-                'default_meta_description'  => 'A persisted default description.',
-                'default_og_image'          => 'https://example.com/og.png',
-                'og_site_name'              => 'Persisted Site',
-                'twitter_handle'            => '@persisted',
-                'google_site_verification'  => 'google-token-123',
-                'bing_site_verification'    => 'bing-token-456',
-                'ga4_measurement_id'        => 'G-PERSIST123',
-                'gtm_container_id'          => '',
+                'title_separator' => '|',
+                'default_meta_description' => 'A persisted default description.',
+                'default_og_image' => 'https://example.com/og.png',
+                'og_site_name' => 'Persisted Site',
+                'twitter_handle' => '@persisted',
+                'google_site_verification' => 'google-token-123',
+                'bing_site_verification' => 'bing-token-456',
+                'ga4_measurement_id' => 'G-PERSIST123',
+                'gtm_container_id' => '',
                 'discourage_search_engines' => '1',
-                'sitemap_enabled'           => '1',
-                'robots_extra'              => "Disallow: /private",
+                'sitemap_enabled' => '1',
+                'robots_extra' => 'Disallow: /private',
             ])
             ->assertSessionHasNoErrors();
 
@@ -83,7 +83,7 @@ class SeoSettingsTest extends TestCase
         $this->actingAs($this->admin)
             ->from('/cmstack-laravel-admin/seo-settings')
             ->post('/cmstack-laravel-admin/seo-settings', [
-                'title_separator'  => '',                 // required
+                'title_separator' => '',                 // required
                 'default_og_image' => 'not-a-url',        // must be a url
             ])
             ->assertSessionHasErrors(['title_separator', 'default_og_image']);
@@ -92,7 +92,7 @@ class SeoSettingsTest extends TestCase
     public function test_user_without_settings_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoSeo',
+            'name' => 'PanelNoSeo',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_general_settings' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

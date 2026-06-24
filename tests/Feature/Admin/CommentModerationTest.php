@@ -31,11 +31,11 @@ class CommentModerationTest extends TestCase
     private function makeComment(int $status = 0): Comments
     {
         return Comments::create([
-            'post_id'   => 1,
+            'post_id' => 1,
             'parent_id' => null,
-            'comment'   => 'pending comment',
-            'user_id'   => $this->admin->id,
-            'status'    => $status,
+            'comment' => 'pending comment',
+            'user_id' => $this->admin->id,
+            'status' => $status,
         ]);
     }
 
@@ -53,7 +53,7 @@ class CommentModerationTest extends TestCase
         $comment = $this->makeComment(0);
 
         $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/comments/' . $comment->id . '/approve')
+            ->put('/cmstack-laravel-admin/comments/'.$comment->id.'/approve')
             ->assertOk();
 
         $this->assertSame(1, (int) $comment->fresh()->status);
@@ -64,7 +64,7 @@ class CommentModerationTest extends TestCase
         $comment = $this->makeComment(1);
 
         $this->actingAs($this->admin)
-            ->put('/cmstack-laravel-admin/comments/' . $comment->id . '/unapprove')
+            ->put('/cmstack-laravel-admin/comments/'.$comment->id.'/unapprove')
             ->assertOk();
 
         $this->assertSame(0, (int) $comment->fresh()->status);
@@ -86,7 +86,7 @@ class CommentModerationTest extends TestCase
     public function test_user_with_panel_access_but_no_comment_permission_is_blocked(): void
     {
         $role = UserRoles::create([
-            'name'        => 'PanelNoComments',
+            'name' => 'PanelNoComments',
             'permissions' => json_encode(['see_admin_panel' => 1, 'manage_comments' => 0]),
         ]);
         $user = User::factory()->create(['role_id' => $role->id]);

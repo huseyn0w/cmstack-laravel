@@ -25,8 +25,8 @@ class CategoryListRequest extends FormRequest
     public function rules()
     {
         return [
-            'categories_action'  => ["required" , "string", "regex:(delete)"],
-            'categories'         => 'array|required'
+            'categories_action' => ['required', 'string', 'regex:(delete)'],
+            'categories' => 'array|required',
         ];
     }
 
@@ -34,7 +34,7 @@ class CategoryListRequest extends FormRequest
     {
         return [
             'categories_action.regex' => 'You should use action "Delete"',
-            'categories.required'  => 'You should choose at least 1 category to delete'
+            'categories.required' => 'You should choose at least 1 category to delete',
         ];
     }
 }

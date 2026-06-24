@@ -36,7 +36,7 @@ class CPanelGeoSettings extends Model
     ];
 
     protected $casts = [
-        'emit_jsonld'     => 'boolean',
+        'emit_jsonld' => 'boolean',
         'include_in_llms' => 'boolean',
     ];
 

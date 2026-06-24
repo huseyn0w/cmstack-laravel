@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Models\Post;
 use App\Http\Models\User;
+use App\Repositories\CPanelUserRepository;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -26,10 +27,10 @@ class MassAssignmentTest extends TestCase
     public function test_user_provider_fields_are_not_mass_assignable(): void
     {
         $user = new User([
-            'name'        => 'Mallory',
-            'email'       => 'mallory@example.com',
-            'username'    => 'mallory',
-            'provider'    => 'github',
+            'name' => 'Mallory',
+            'email' => 'mallory@example.com',
+            'username' => 'mallory',
+            'provider' => 'github',
             'provider_id' => '999999',
         ]);
 
@@ -40,7 +41,7 @@ class MassAssignmentTest extends TestCase
 
     public function test_post_main_row_has_no_mass_assignable_columns(): void
     {
-        $this->assertSame([], (new Post())->getFillable());
+        $this->assertSame([], (new Post)->getFillable());
     }
 
     public function test_self_service_update_cannot_escalate_role(): void
@@ -50,8 +51,8 @@ class MassAssignmentTest extends TestCase
 
         $this->actingAs($user);
 
-        app(\App\Repositories\CPanelUserRepository::class)->update($user->id, [
-            'name'    => 'Updated Name',
+        app(CPanelUserRepository::class)->update($user->id, [
+            'name' => 'Updated Name',
             'role_id' => 1,
         ]);
 

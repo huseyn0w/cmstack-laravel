@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: modal.php
@@ -6,8 +7,7 @@
  * Date: 21.11.2019
  */
 
-
 return [
-    'edit_comment'       => 'Edit comment',
-    'update_comment_btn' => 'Update Comment'
+    'edit_comment' => 'Edit comment',
+    'update_comment_btn' => 'Update Comment',
 ];

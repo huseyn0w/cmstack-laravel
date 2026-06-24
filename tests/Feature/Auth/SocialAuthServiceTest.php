@@ -41,8 +41,8 @@ class SocialAuthServiceTest extends TestCase
         $service = app(SocialAuthService::class);
 
         $existing = User::factory()->create([
-            'email'       => 'byid@example.com',
-            'provider'    => 'github',
+            'email' => 'byid@example.com',
+            'provider' => 'github',
             'provider_id' => 'gh-1',
         ]);
 
@@ -57,8 +57,8 @@ class SocialAuthServiceTest extends TestCase
         $service = app(SocialAuthService::class);
 
         $existing = User::factory()->create([
-            'email'       => 'linkme@example.com',
-            'provider'    => null,
+            'email' => 'linkme@example.com',
+            'provider' => null,
             'provider_id' => null,
         ]);
         $before = User::count();

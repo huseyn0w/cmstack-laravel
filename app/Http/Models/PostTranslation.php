@@ -2,8 +2,8 @@
 
 namespace App\Http\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Model;
 
 class PostTranslation extends Model
 {
@@ -25,6 +25,6 @@ class PostTranslation extends Model
         'status',
         'meta_keywords',
         'canonical_url',
-        'meta_noindex'
+        'meta_noindex',
     ];
 }

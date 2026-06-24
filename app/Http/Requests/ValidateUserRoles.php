@@ -4,8 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 class ValidateUserRoles extends FormRequest
 {
@@ -35,12 +35,11 @@ class ValidateUserRoles extends FormRequest
 
         $rules['name'] = 'string|required|unique:user_roles';
 
-        if($route_name === "cpanel_update_user_role")
-        {
+        if ($route_name === 'cpanel_update_user_role') {
             $rules['name'] = ['required',
                 'string',
                 'max:100',
-                Rule::unique('user_roles')->ignore($role_id)
+                Rule::unique('user_roles')->ignore($role_id),
             ];
         }
 
@@ -52,8 +51,8 @@ class ValidateUserRoles extends FormRequest
     public function messages()
     {
         return [
-            'name.unique'           => 'You already have Role with this name',
-            'permissions.required'  => 'You should choose at least 1 role management operation'
+            'name.unique' => 'You already have Role with this name',
+            'permissions.required' => 'You should choose at least 1 role management operation',
         ];
     }
 }

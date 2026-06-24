@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Http\Models\User;
-use App\Http\Models\Category;
 use App\Http\Models\CategoryTranslation;
+use App\Http\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,12 +24,12 @@ class TranslatableCreateTest extends TestCase
         $admin = User::where('username', 'admin')->firstOrFail();
 
         $response = $this->actingAs($admin)->post('/cmstack-laravel-admin/categories/new', [
-            'title'            => 'QA Category',
-            'slug'             => 'qa-category',
-            'description'      => 'desc',
+            'title' => 'QA Category',
+            'slug' => 'qa-category',
+            'description' => 'desc',
             'meta_description' => 'md',
-            'meta_keywords'    => 'mk',
-            'parent_category'  => '',
+            'meta_keywords' => 'mk',
+            'parent_category' => '',
         ]);
 
         $response->assertSessionHasNoErrors();

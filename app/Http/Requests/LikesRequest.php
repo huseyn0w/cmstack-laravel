@@ -26,7 +26,7 @@ class LikesRequest extends FormRequest
     {
         return [
             'postId' => 'required|integer',
-            'userId' => 'required|integer'
+            'userId' => 'required|integer',
         ];
     }
 }

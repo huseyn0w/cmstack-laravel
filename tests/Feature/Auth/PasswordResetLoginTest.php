@@ -31,9 +31,9 @@ class PasswordResetLoginTest extends TestCase
         $token = Password::broker()->createToken($user);
 
         $this->post('/password/reset', [
-            'token'                 => $token,
-            'email'                 => 'reset@example.com',
-            'password'              => 'brand-new-pass',
+            'token' => $token,
+            'email' => 'reset@example.com',
+            'password' => 'brand-new-pass',
             'password_confirmation' => 'brand-new-pass',
         ]);
 

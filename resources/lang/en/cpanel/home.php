@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: home.php
@@ -8,13 +9,13 @@
 
 return [
 
-    'dashboard'       => 'Dashboard',
-    'greetings'       => 'Welcome to Cmstack-Laravel Dashboard page. This is main page of admin area. Here is some last statistic',
-    'last_posts'      => 'Last 5 posts',
-    'no_posts'        => 'No posts',
-    'last_comments'   => 'Last 5 comments',
-    'no_comments'     => 'No comments',
-    'last_users'      => 'Last 5 registered users',
-    'no_users'        => 'No users'
+    'dashboard' => 'Dashboard',
+    'greetings' => 'Welcome to Cmstack-Laravel Dashboard page. This is main page of admin area. Here is some last statistic',
+    'last_posts' => 'Last 5 posts',
+    'no_posts' => 'No posts',
+    'last_comments' => 'Last 5 comments',
+    'no_comments' => 'No comments',
+    'last_users' => 'Last 5 registered users',
+    'no_users' => 'No users',
 
 ];

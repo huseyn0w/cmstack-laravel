@@ -15,9 +15,9 @@ class MenuRenderEscapingTest extends TestCase
     {
         $menu = [
             (object) [
-                'type'  => 'custom',
+                'type' => 'custom',
                 'title' => '<script>alert(1)</script>',
-                'slug'  => '/',
+                'slug' => '/',
             ],
         ];
 
@@ -31,9 +31,9 @@ class MenuRenderEscapingTest extends TestCase
     {
         $menu = [
             (object) [
-                'type'  => "custom' onmouseover='alert(1)",
-                'title' => "evil",
-                'slug'  => "x' onclick='alert(1)",
+                'type' => "custom' onmouseover='alert(1)",
+                'title' => 'evil',
+                'slug' => "x' onclick='alert(1)",
             ],
         ];
 
