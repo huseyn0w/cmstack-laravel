@@ -163,6 +163,16 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Assign a new plaintext password to a user instance (the model's
+     * setPasswordAttribute mutator hashes it once). The caller persists the
+     * model; this keeps password mutation out of the controller layer.
+     */
+    public function setPlainPassword(User $user, string $password): void
+    {
+        $user->password = $password;
+    }
+
+    /**
      * Create a user from a self-service registration. Only the four whitelisted
      * fields are persisted; the plaintext password is passed through and hashed
      * once by the model's setPasswordAttribute mutator (privileged fields like

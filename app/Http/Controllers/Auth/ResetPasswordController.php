@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
@@ -33,7 +34,7 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(private UserRepository $users)
     {
         $this->middleware('guest');
     }
@@ -52,6 +53,6 @@ class ResetPasswordController extends Controller
      */
     protected function setUserPassword($user, $password)
     {
-        $user->password = $password;
+        $this->users->setPlainPassword($user, $password);
     }
 }
