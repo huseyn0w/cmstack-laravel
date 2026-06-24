@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\CPanel;
 
 use App\Http\Requests\ValidateGeoSettings;
-use App\Repositories\CPanelGeoSettingsRepository;
+use App\Services\CPanel\GeoSettingsService;
 
 /**
  * Admin GEO settings page (global, singleton row id = 1).
@@ -11,24 +11,22 @@ use App\Repositories\CPanelGeoSettingsRepository;
  */
 class CPanelGeoSettingsController extends CPanelBaseController
 {
-    public function __construct(CPanelGeoSettingsRepository $repository)
+    public function __construct(GeoSettingsService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     public function index()
     {
-        $geo_settings = $this->repository->firstOrNew();
+        $geo_settings = $this->service->currentOrNew();
 
         return view('cpanel.settings.geo-settings', compact('geo_settings'));
     }
 
     public function store(ValidateGeoSettings $request)
     {
-        $instance = $this->repository->firstOrNew();
-        $instance->fill($request->validated());
-        $result = $instance->save();
+        $result = $this->service->save($request);
 
         return back()->with('message', $result);
     }

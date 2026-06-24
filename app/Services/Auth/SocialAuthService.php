@@ -3,15 +3,16 @@
 namespace App\Services\Auth;
 
 use App\Http\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /**
  * Social-login business logic, extracted from LoginController so the
  * controller stays thin (resolve socialite user -> service -> Auth::login).
  *
- * Behaviour is preserved exactly from the original controller:
+ * The service owns the flow (resolve-or-link, validate, create) but never
+ * touches the ORM directly — all persistence goes through UserRepository:
  *  - match first on (provider_id, provider),
  *  - then link by the provider-supplied email (no duplicate accounts),
  *  - lookup + linking and creation each run in a transaction,
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
  */
 class SocialAuthService
 {
+    public function __construct(private UserRepository $users) {}
+
     /**
      * Resolve an existing account for the social user, linking by email when
      * needed. Returns null when no account can be resolved (caller then
@@ -27,33 +30,7 @@ class SocialAuthService
      */
     public function findOrLink(object $socialUser, string $provider): ?User
     {
-        return DB::transaction(function () use ($socialUser, $provider) {
-            $authUser = User::where('provider_id', $socialUser->id)
-                ->where('provider', $provider)
-                ->first();
-
-            if ($authUser) {
-                return $authUser;
-            }
-
-            if (empty($socialUser->email)) {
-                return null;
-            }
-
-            $existing = User::where('email', $socialUser->email)->first();
-
-            if ($existing) {
-                // Link the social identity to the existing account. Provider
-                // fields are set explicitly (they are not mass assignable).
-                $existing->provider = $provider;
-                $existing->provider_id = $socialUser->id;
-                $existing->save();
-
-                return $existing;
-            }
-
-            return null;
-        });
+        return $this->users->findOrLinkSocialIdentity($socialUser, $provider);
     }
 
     /**
@@ -92,19 +69,11 @@ class SocialAuthService
      */
     public function create(object $socialUser, string $provider): User
     {
-        return DB::transaction(function () use ($socialUser, $provider) {
-            $newUser = new User([
-                'name' => $socialUser->name,
-                'email' => $socialUser->email,
-                'username' => $this->usernameFromEmail((string) $socialUser->email),
-            ]);
-
-            $newUser->provider = $provider;
-            $newUser->provider_id = $socialUser->id;
-            $newUser->save();
-
-            return $newUser;
-        });
+        return $this->users->createFromSocial(
+            $socialUser,
+            $provider,
+            $this->usernameFromEmail((string) $socialUser->email)
+        );
     }
 
     /**

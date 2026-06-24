@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)
@@ -33,9 +34,8 @@ class CPanelPostRepository extends BaseRepository
         'slug',
         'status',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
-
 
     public function __construct(Post $model)
     {
@@ -44,10 +44,19 @@ class CPanelPostRepository extends BaseRepository
         $this->translated_model = new PostTranslation;
     }
 
+    /**
+     * Latest N posts with their translated title, for the admin dashboard.
+     * listsTranslations() joins post_translations, so `id` is qualified to
+     * avoid an ambiguous-column error.
+     */
+    public function latestWithTitles($count)
+    {
+        return $this->model->listsTranslations('title')->orderBy('posts.id', 'desc')->take($count)->get();
+    }
 
-
-    public function trashedPosts($count){
-        try{
+    public function trashedPosts($count)
+    {
+        try {
             $this->locale = get_current_lang();
             $this->select_fields_ready_array = $this->generateSelectFieldsArray($this->select_fields);
 
@@ -56,36 +65,34 @@ class CPanelPostRepository extends BaseRepository
                 ->where($this->translated_table.'.locale', $this->locale)
                 ->with('author')->onlyTrashed()->paginate($count);
 
-        } catch (QueryException | PDOException | \Error $e) {
+        } catch (QueryException|PDOException|\Error $e) {
             Log::error('Fetching trashed posts failed', [
                 'exception' => $e->getMessage(),
             ]);
+
             return throwAbort();
         }
 
         return $data;
     }
 
-
     public function delete($id)
     {
 
-        if(is_array($id))
-        {
-            foreach($id as $post_id)
-            {
+        if (is_array($id)) {
+            foreach ($id as $post_id) {
                 $result = $this->deletePost($post_id);
             }
-        }
-        else{
+        } else {
             $result = $this->deletePost($id);
 
         }
 
-        if(!$result) throwAbort();
+        if (! $result) {
+            throwAbort();
+        }
 
         return $result;
-
 
     }
 
@@ -94,7 +101,9 @@ class CPanelPostRepository extends BaseRepository
 
         $result = false;
         $post = $this->model::findOrFail($id);
-        if($post->delete()) $result = true;
+        if ($post->delete()) {
+            $result = true;
+        }
 
         return $result;
 
@@ -102,41 +111,38 @@ class CPanelPostRepository extends BaseRepository
 
     public function destroy($id)
     {
-        if(is_array($id))
-        {
-            foreach($id as $post_id)
-            {
+        if (is_array($id)) {
+            foreach ($id as $post_id) {
                 $result = $this->destroyPost($post_id);
             }
-        }
-        else{
+        } else {
             $result = $this->destroyPost($id);
 
         }
 
-        if(!$result) throwAbort();
+        if (! $result) {
+            throwAbort();
+        }
 
         return $result;
-
 
     }
 
     public function restore($id)
     {
 
-        if(is_array($id))
-        {
-            foreach($id as $post_id)
-            {
+        if (is_array($id)) {
+            foreach ($id as $post_id) {
                 $result = $this->restorePost($post_id);
             }
-        }
-        else{
+        } else {
             $result = $this->restorePost($id);
 
         }
 
-        if(!$result) throwAbort();
+        if (! $result) {
+            throwAbort();
+        }
 
         return $result;
 
@@ -145,15 +151,16 @@ class CPanelPostRepository extends BaseRepository
     public function restorePost($id)
     {
 
-        if($this->model::withTrashed()->where('id', $id)->restore()) $result = true;
+        if ($this->model::withTrashed()->where('id', $id)->restore()) {
+            $result = true;
+        }
 
-        if(!$result) return throwAbort();
+        if (! $result) {
+            return throwAbort();
+        }
 
         return $result;
     }
-
-
-
 
     private function destroyPost($id)
     {
@@ -161,16 +168,14 @@ class CPanelPostRepository extends BaseRepository
 
         $result = false;
         $post = Post::withTrashed()->find($id);
-        if($post && $post->forceDelete()) $deleted_post = true;
-        if($deleted_post)
-        {
+        if ($post && $post->forceDelete()) {
+            $deleted_post = true;
+        }
+        if ($deleted_post) {
             $result = true;
         }
 
         return $result;
 
     }
-
-
-
 }

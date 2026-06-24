@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\CPanel;
 
 use App\Http\Requests\ValidateUserRoles;
-use App\Repositories\CPanelUserRolesRepository;
-use Illuminate\Http\Request;
+use App\Services\CPanel\CPanelRoleService;
 
 class CPanelRoleController extends CPanelBaseController
 {
     private $user_roles;
+
     private $countries;
+
     private $role_permissions;
 
-    public function __construct(CPanelUserRolesRepository $repository)
+    public function __construct(CPanelRoleService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
         $this->user_roles = get_user_roles();
         $this->countries = get_countries_array();
         $this->role_permissions = get_user_role_permissions();
@@ -23,14 +24,14 @@ class CPanelRoleController extends CPanelBaseController
 
     public function index()
     {
-        $roles_list = $this->repository->only($this->per_page);
+        $roles_list = $this->service->list($this->per_page);
 
-        return view('cpanel.roles.roles_list', compact("roles_list"));
+        return view('cpanel.roles.roles_list', compact('roles_list'));
     }
 
     public function addRole()
     {
-        return view('cpanel.roles.new_role', ["user_roles" => $this->user_roles, "countries" => $this->countries, "role_permissions" => $this->role_permissions]);
+        return view('cpanel.roles.new_role', ['user_roles' => $this->user_roles, 'countries' => $this->countries, 'role_permissions' => $this->role_permissions]);
     }
 
     public function createRole(ValidateUserRoles $request)
@@ -43,7 +44,8 @@ class CPanelRoleController extends CPanelBaseController
     public function editRole($id)
     {
         parent::edit($id);
-        return view('cpanel.roles.edit_role', ["role" => $this->result, "user_roles" => $this->user_roles, "countries" => $this->countries, "role_permissions" => $this->role_permissions]);
+
+        return view('cpanel.roles.edit_role', ['role' => $this->result, 'user_roles' => $this->user_roles, 'countries' => $this->countries, 'role_permissions' => $this->role_permissions]);
     }
 
     public function updateRole($id, ValidateUserRoles $request)

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\CPanel;
 
 use App\Http\Requests\ValidateSeoSettings;
-use App\Repositories\CPanelSeoSettingsRepository;
+use App\Services\CPanel\SeoSettingsService;
 
 /**
  * Phase 7 (SEO/GEO): admin SEO settings page (global, singleton row id = 1).
@@ -11,24 +11,22 @@ use App\Repositories\CPanelSeoSettingsRepository;
  */
 class CPanelSeoSettingsController extends CPanelBaseController
 {
-    public function __construct(CPanelSeoSettingsRepository $repository)
+    public function __construct(SeoSettingsService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
     }
 
     public function index()
     {
-        $seo_settings = $this->repository->firstOrNew();
+        $seo_settings = $this->service->currentOrNew();
 
         return view('cpanel.settings.seo-settings', compact('seo_settings'));
     }
 
     public function store(ValidateSeoSettings $request)
     {
-        $instance = $this->repository->firstOrNew();
-        $instance->fill($request->validated());
-        $result = $instance->save();
+        $result = $this->service->save($request);
 
         return back()->with('message', $result);
     }

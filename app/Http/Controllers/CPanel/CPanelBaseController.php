@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\CPanel;
 
-use Illuminate\Contracts\Validation\ValidatesWhenResolved;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 
 class CPanelBaseController extends Controller
 {
-    protected $repository;
+    /**
+     * Domain service (a App\Services\BaseCrudService subclass) that owns all
+     * data access. Controllers never call a repository directly — the chain is
+     * Controller -> Service -> Repository. Left untyped (like the legacy
+     * codebase) so each subclass can assign its own concrete domain service and
+     * call domain-specific methods on it.
+     */
+    protected $service;
 
     protected $per_page = 10;
 
@@ -20,11 +25,10 @@ class CPanelBaseController extends Controller
 
     protected $locale;
 
-
     public function __construct()
     {
         $this->middleware(function (Request $request, $next) {
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return redirect('/login');
             }
             $this->user = \Auth::user(); // you can access user id hereyou can access user id here
@@ -38,7 +42,9 @@ class CPanelBaseController extends Controller
 
     protected function checkUserPermission($permissionName, $modelName)
     {
-        if (Auth::user()->cannot($permissionName, $modelName)) return false;
+        if (Auth::user()->cannot($permissionName, $modelName)) {
+            return false;
+        }
 
         return true;
 
@@ -51,36 +57,31 @@ class CPanelBaseController extends Controller
 
     protected function deleteAjax(int $id)
     {
-        if($id <= 0){
+        if ($id <= 0) {
             echo trans('cpanel/controller.id_int');
+
             return;
         }
 
-        $result = $this->repository->delete($id);
+        $result = $this->service->delete($id);
 
-
-
-        if($result){
+        if ($result) {
             echo trans('cpanel/controller.ok');
-        }
-        else{
+        } else {
             echo $result;
-            echo trans('cpanel/controller.problem');;
+            echo trans('cpanel/controller.problem');
         }
 
-        return;
     }
-
 
     protected function delete($id)
     {
-        $result = $this->repository->delete($id);
+        $result = $this->service->delete($id);
 
-        if(($result)){
-            $message = "green";
-        }
-        else{
-            $message = "red";
+        if (($result)) {
+            $message = 'green';
+        } else {
+            $message = 'red';
         }
 
         return back()->with('message', $message);
@@ -88,59 +89,56 @@ class CPanelBaseController extends Controller
 
     protected function edit($id)
     {
-        $this->result = $this->repository->getBy('id', $id);
+        $this->result = $this->service->getById($id);
 
-        if(!$this->result) abort(404);
+        if (! $this->result) {
+            abort(404);
+        }
     }
 
     protected function update($id, $data)
     {
-        $this->result = $this->repository->update($id, $data);
+        $this->result = $this->service->update($id, $data);
 
-        return back()->with('message', " ");
+        return back()->with('message', ' ');
     }
 
     protected function create($request)
     {
-        $this->result = $this->repository->create($request);
+        $this->result = $this->service->create($request);
 
         return $this->result;
     }
 
-
     protected function restore($id)
     {
-        $this->result = $this->repository->restore($id);
+        $this->result = $this->service->restore($id);
 
-        return back()->with('post_restored', " ");
+        return back()->with('post_restored', ' ');
     }
-
-
 
     protected function destroyAjax(int $id)
     {
-        if($id <= 0){
-            echo trans('cpanel/controller.id_int');;
+        if ($id <= 0) {
+            echo trans('cpanel/controller.id_int');
+
             return;
         }
 
-        $result = $this->repository->destroy($id);
+        $result = $this->service->destroy($id);
 
-
-        if($result){
+        if ($result) {
             echo trans('cpanel/controller.ok');
-        }
-        else{
+        } else {
             echo trans('cpanel/controller.problem');
         }
 
-        return;
     }
 
     protected function setLang($lang)
     {
-        \Session::put('locale',$lang);
+        \Session::put('locale', $lang);
+
         return redirect()->refresh();
     }
-
 }

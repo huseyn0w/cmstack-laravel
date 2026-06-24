@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Models\CPanel\CPanelGeoSettings;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Persistence for the global GEO settings singleton (row id = 1).
@@ -23,5 +24,19 @@ class CPanelGeoSettingsRepository extends BaseRepository
     public function firstOrNew()
     {
         return $this->model::firstOrNew(['id' => 1]);
+    }
+
+    /**
+     * Persist the settings singleton (row id = 1) from validated input.
+     *
+     * @param  FormRequest  $request
+     * @return bool
+     */
+    public function saveSingleton($request)
+    {
+        $instance = $this->model::firstOrNew(['id' => 1]);
+        $instance->fill($request->validated());
+
+        return (bool) $instance->save();
     }
 }

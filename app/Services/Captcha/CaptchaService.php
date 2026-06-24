@@ -23,8 +23,7 @@ class CaptchaService
 
     public function __construct(
         protected array $config
-    ) {
-    }
+    ) {}
 
     /**
      * Whether captcha protection is active.
@@ -32,8 +31,8 @@ class CaptchaService
     public function enabled(): bool
     {
         return (bool) ($this->config['enabled'] ?? false)
-            && !empty($this->config['site_key'])
-            && !empty($this->config['secret_key']);
+            && ! empty($this->config['site_key'])
+            && ! empty($this->config['secret_key']);
     }
 
     /**
@@ -43,7 +42,7 @@ class CaptchaService
      */
     public function render(): string
     {
-        if (!$this->enabled()) {
+        if (! $this->enabled()) {
             return '';
         }
 
@@ -89,7 +88,7 @@ HTML;
      */
     public function verify(?string $token): bool
     {
-        if (!$this->enabled()) {
+        if (! $this->enabled()) {
             return true;
         }
 
@@ -102,7 +101,7 @@ HTML;
         if (($this->config['version'] ?? 'v3') === 'v3') {
             $recaptcha->setScoreThreshold((float) ($this->config['score_threshold'] ?? 0.5));
 
-            if (!empty($this->config['action'])) {
+            if (! empty($this->config['action'])) {
                 $recaptcha->setExpectedAction($this->config['action']);
             }
         }

@@ -3,39 +3,39 @@
 namespace App\Http\Controllers\CPanel;
 
 use App\Http\Requests\MenuRequest;
-use App\Repositories\CPanelMenuRepository;
-use Illuminate\Http\Request;
+use App\Services\CPanel\CPanelMenuService;
 
 class CPanelMenuController extends CPanelBaseController
 {
+    private $post_fields;
 
-    private $post_fields, $categories_fields, $pages_fields;
+    private $categories_fields;
 
-    public function __construct(CPanelMenuRepository $repository)
+    private $pages_fields;
+
+    public function __construct(CPanelMenuService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
         $this->post_fields = ['posts.id', 'post_translations.title', 'post_translations.slug'];
         $this->pages_fields = ['pages.id', 'page_translations.title', 'page_translations.slug'];
         $this->categories_fields = ['category_translations.category_id', 'category_translations.title', 'category_translations.slug'];
     }
 
-
-
     public function index()
     {
-        $menus_list = $this->repository->only($this->per_page);
-        return view('cpanel.menus.menus_list', compact("menus_list"));
+        $menus_list = $this->service->list($this->per_page);
+
+        return view('cpanel.menus.menus_list', compact('menus_list'));
     }
 
     public function addMenu()
     {
         $array = [
-            "terms_list" => $this->getTermsListForMenu()
+            'terms_list' => $this->getTermsListForMenu(),
         ];
 
-        if(request()->route('lang'))
-        {
+        if (request()->route('lang')) {
             $array['translation_links'] = get_entity_translation_links('menus', request()->id);
         }
 
@@ -44,22 +44,23 @@ class CPanelMenuController extends CPanelBaseController
 
     public function createMenu(MenuRequest $request)
     {
-        if(!empty($request->route('id'))) unset($request['slug']);
+        $this->service->createFromRequest($request);
 
-        parent::create($request);
-        return redirect()->route('cpanel_menu_list')->with('menu_added', " ");
+        return redirect()->route('cpanel_menu_list')->with('menu_added', ' ');
     }
 
     public function editMenu($id)
     {
-        $this->result = $this->repository->getBy('id', $id);
+        $this->result = $this->service->getById($id);
 
-        if(is_null($this->result)) return $this->addMenu();
+        if (is_null($this->result)) {
+            return $this->addMenu();
+        }
 
         return view('cpanel.menus.edit_menu', [
-            "entity" => $this->result,
-            "terms_list" => $this->getTermsListForMenu(),
-            "translation_links" => get_entity_translation_links('menus', $id)
+            'entity' => $this->result,
+            'terms_list' => $this->getTermsListForMenu(),
+            'translation_links' => get_entity_translation_links('menus', $id),
         ]);
     }
 
@@ -76,5 +77,4 @@ class CPanelMenuController extends CPanelBaseController
     {
         return parent::update($id, $request);
     }
-
 }

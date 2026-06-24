@@ -37,12 +37,6 @@ parameters:
 			path: app/Http/Controllers/BaseController.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Http/Controllers/CPanel/CPanelPostController.php
-
-		-
 			message: '#^Access to an undefined property App\\Http\\Models\\Category\:\:\$slug\.$#'
 			identifier: property.notFound
 			count: 1

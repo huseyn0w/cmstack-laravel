@@ -2,51 +2,26 @@
 
 namespace App\Http\Controllers\CPanel;
 
-
-use App\Http\Models\Comments;
-use App\Http\Models\Post;
-use App\Http\Models\User;
+use App\Services\CPanel\CPanelDashboardService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CPanelHomeController extends CPanelBaseController
 {
-    public function  __construct()
+    private CPanelDashboardService $dashboard;
+
+    public function __construct(CPanelDashboardService $dashboard)
     {
         parent::__construct();
+        $this->dashboard = $dashboard;
     }
-
 
     public function index(Request $request)
     {
         $count = 5;
-        $posts = $this->getPosts($count);
-        $users = $this->getUsers($count);
-        $comments = $this->getComments($count);
+        $posts = $this->dashboard->latestPosts($count);
+        $users = $this->dashboard->latestUsers($count);
+        $comments = $this->dashboard->latestComments($count);
 
-        return view('cpanel.home', compact('posts','users', 'comments'));
+        return view('cpanel.home', compact('posts', 'users', 'comments'));
     }
-
-    private function getPosts($count)
-    {
-        // listsTranslations() joins post_translations, so `id` must be
-        // qualified to avoid an ambiguous-column error.
-        $posts = Post::listsTranslations('title')->orderBy('posts.id', 'desc')->take($count)->get();
-        return $posts;
-    }
-
-    private function getUsers($count)
-    {
-        $users = User::select('username')->orderBy('id', 'desc')->take($count)->get();
-        return $users;
-    }
-
-    private function getComments($count)
-    {
-        $pages = Comments::select('comment')->orderBy('id', 'desc')->take($count)->get();
-        return $pages;
-    }
-
-
-
 }

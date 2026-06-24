@@ -3,40 +3,35 @@
 namespace App\Http\Controllers\CPanel;
 
 use App\Http\Requests\CPanelCommentsRequest;
-use App\Repositories\CPanelCommentRepository;
-use Illuminate\Http\Request;
+use App\Services\CPanel\CPanelCommentService;
 
 class CPanelCommentController extends CPanelBaseController
 {
-    public function __construct(CPanelCommentRepository $repository)
+    public function __construct(CPanelCommentService $service)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->service = $service;
     }
-
 
     public function index()
     {
-        $comments_list = $this->repository->only($this->per_page);
-        return view('cpanel.comments.comments_list', compact("comments_list"));
+        $comments_list = $this->service->list($this->per_page);
+
+        return view('cpanel.comments.comments_list', compact('comments_list'));
     }
-
-
 
     public function approve(int $id)
     {
         $this->validateCommentID($id);
 
-        $result = $this->repository->approve($id);
+        $result = $this->service->approve($id);
 
-        if($result){
+        if ($result) {
             echo trans('cpanel/controller.ok');
-        }
-        else{
+        } else {
             echo $result;
         }
 
-        return;
     }
 
     public function unApprove(int $id)
@@ -44,38 +39,32 @@ class CPanelCommentController extends CPanelBaseController
 
         $this->validateCommentID($id);
 
+        $result = $this->service->unApprove($id);
 
-        $result = $this->repository->unapprove($id);
-
-
-
-        if($result){
+        if ($result) {
             echo trans('cpanel/controller.ok');
-        }
-        else{
+        } else {
             echo $result;
             echo trans('cpanel/controller.problem');
         }
 
-        return;
     }
 
     public function multipleDelete(CPanelCommentsRequest $request)
     {
-        $result = $this->repository->delete($request->comments);
+        $result = $this->service->delete($request->comments);
 
         return back()->with('deleted', $result);
     }
 
     public function validateCommentID($id)
     {
-        if($id <= 0){
+        if ($id <= 0) {
             echo trans('cpanel/controller.id_int');
+
             return false;
         }
 
         return true;
     }
-
-
 }

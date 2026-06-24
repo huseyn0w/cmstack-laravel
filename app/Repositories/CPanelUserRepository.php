@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cmstack-Laravel
  * File: CPanelUserRepository.phpCreated by Elman (https://linkedin.com/in/huseyn0w)
@@ -7,13 +8,12 @@
 
 namespace App\Repositories;
 
-use Image;
 use App\Http\Models\User;
 use App\Http\Models\UserRoles;
-use Illuminate\Database\QueryException;
 use Doctrine\DBAL\Driver\PDOException;
+use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class CPanelUserRepository extends BaseRepository
 {
@@ -44,6 +44,13 @@ class CPanelUserRepository extends BaseRepository
         $this->model = $model;
     }
 
+    /**
+     * Latest N usernames for the admin dashboard.
+     */
+    public function latestUsernames($count)
+    {
+        return $this->model->select('username')->orderBy('id', 'desc')->take($count)->get();
+    }
 
     public function translatedOnlyOnly($count)
     {
@@ -55,14 +62,14 @@ class CPanelUserRepository extends BaseRepository
             'surname',
             'country',
             'city',
-            'role_id'
+            'role_id',
         ];
 
-        try{
-            $data = !empty($fields) ?
+        try {
+            $data = ! empty($fields) ?
                 $data = $this->model::select($fields)
-                                    ->with('role')
-                                    ->paginate($count)
+                    ->with('role')
+                    ->paginate($count)
                                     : false;
         } catch (QueryException $e) {
             throwAbort();
@@ -71,7 +78,6 @@ class CPanelUserRepository extends BaseRepository
         } catch (\Error $e) {
             throwAbort();
         }
-
 
         return $data;
     }
@@ -84,7 +90,7 @@ class CPanelUserRepository extends BaseRepository
      * be set through a self-service profile update.
      *
      * @param  int  $id
-     * @param  \Illuminate\Foundation\Http\FormRequest|array  $updatedRequest
+     * @param  FormRequest|array  $updatedRequest
      * @return bool
      */
     public function update($id, $updatedRequest)
@@ -97,7 +103,7 @@ class CPanelUserRepository extends BaseRepository
             unset($data['password']);
         }
 
-        if (!$this->canManageUsers()) {
+        if (! $this->canManageUsers()) {
             unset($data['role_id']);
         }
 
@@ -113,6 +119,4 @@ class CPanelUserRepository extends BaseRepository
 
         return $user && $user->can('manage_users', UserRoles::class);
     }
-
-
 }

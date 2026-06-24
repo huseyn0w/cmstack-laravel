@@ -135,6 +135,78 @@ refresh `HANDOFF.md`.
 
 ---
 
+## 1b. HARD RULE (prompt update) — ZERO business logic / data access in controllers
+
+The prompt now mandates (top priority): every controller in `app/Http/Controllers`
+is a **pure HTTP boundary** — read/validate (Form Request) → call a **service** → map
+result to response. **No** repository calls, Eloquent/query-builder/raw SQL, domain
+conditionals, multi-step orchestration, or result→meaning mapping in controllers. Chain is
+strictly **Controller → Service → Repository**. Adversarial verification must reject any
+controller still holding logic/data access.
+
+### Full controller audit (drives the refactor)
+
+The two base controllers do the data access for nearly the whole app:
+- `CPanelBaseController` — `create/update/edit/delete/restore/destroy/deleteAjax/destroyAjax`
+  all call `$this->repository->…` and map results to `green/red`/echo-trans. → retarget at a
+  **`BaseCrudService`** (returns domain results, not redirects). Cleans inherited violations
+  in every admin controller's `parent::*` calls at once.
+- `BaseController` (front) — `index/modifyTranslatedSlug/setLang` do repo `getBy` + slug/locale
+  orchestration. → **`ContentResolverService`** + **`LocaleService`**. Cleans front
+  `PostController/PageController/CategoryController` `index()` at once.
+
+| Controller | Violating methods | Owning service |
+|---|---|---|
+| CPanelBaseController | 8 (all CRUD + ajax + setLang) | **BaseCrudService** + LocaleService |
+| BaseController (front) | 3 (index, modifyTranslatedSlug, setLang) | **ContentResolverService** + LocaleService |
+| CPanelPostController | 8 | CPanelPostService |
+| CPanelCommentController | 5 | CPanelCommentService |
+| CPanelCategoryController | 5 | CPanelCategoryService |
+| CPanelMenuController | 5 (incl. slug-mutation rule) | CPanelMenuService |
+| CPanelPageController | 4 | CPanelPageService |
+| CPanelUserController | 4 | CPanelUserService |
+| CPanelRoleController | 4 (3 inherited + index) | CPanelRoleService |
+| CPanelHomeController | 4 (raw Eloquent: Post/User/Comments L34/40/46) | CPanelDashboardService |
+| CPanelSeoSettingsController | 2 (raw firstOrNew→fill→save) | SeoSettingsService |
+| CPanelGeoSettingsController | 2 (raw firstOrNew→fill→save) | GeoSettingsService |
+| CPanelGeneralSettingController | 2 | GeneralSettingsService |
+| CPanelSiteOptionsController | 2 | SiteOptionsService |
+| CPanelLanguageController | 1 | LocaleService |
+| CPanelMediaController | 0 (drop unused import) | — |
+| SeoController | 5 (raw Eloquent: Page/Post/Category joins L48-62, L234) | SeoFeedService |
+| PostController | 2 (index inherited, handleLike) | PostViewService + PostLikeService |
+| PageController | 4 (index, sendMail, searchResult, paginatedResult) | PageViewService + ContactService + SearchService |
+| PostCommentController | 3 (store/delete/update) | CommentService |
+| UserController | 4 (yourProfile/update/changePassword/show) | ProfileService |
+| CategoryController | 1 (index) | CategoryViewService |
+| Auth/* | 0 — COMPLIANT (SocialAuthService, UserRegistrationService) | done |
+
+### Service-layer design
+`App\Services\BaseCrudService` wraps a `BaseRepositoryInterface` and exposes
+`list($perPage) / getById($id) / create($request) / update($id,$data) / delete($ids) /
+destroy($ids) / restore($ids)` returning **domain results** (entity/bool/paginator), never
+redirects/views. Each domain service `extends BaseCrudService` and passes its repository to
+`parent::__construct()`, adding domain methods (bulk actions, approve/unapprove, settings
+singleton save, slug rules). Controllers inject the **domain service** (not the repository),
+`CPanelBaseController` holds `protected $service` and delegates; response mapping
+(redirect/`green|red`/echo-trans/json/view) stays in the controller.
+
+### Execution order (Slice C)
+1. **C1 (foundation):** `BaseCrudService`; retarget `CPanelBaseController` → `$this->service`.
+2. **C2 (front foundation):** `ContentResolverService` + `LocaleService`; retarget `BaseController`.
+3. **C3:** posts + comments controllers (admin + front).
+4. **C4:** pages, categories, menu, users, roles.
+5. **C5:** settings (Seo/Geo/General/SiteOptions/Language), CPanelHomeController, SeoController.
+Each slice: characterization test → refactor → suite green (shown) → adversarial skeptic →
+fix → commit.
+
+---
+
 ## 6. Status log
 
-- 2026-06-24: Audit complete; baseline 170/170 green; this plan written. Next: Slice A.
+- 2026-06-24: Audit complete; baseline 170 green; plan written.
+- 2026-06-24: Slice A (auth service extraction) done + adversarially verified; fixed a
+  latent double-hash bug (register + password reset). Suite 182 green.
+- 2026-06-24: Slice B (Pint + Larastan level5/baseline + composer scripts) done; analyse green.
+- 2026-06-24: Prompt updated with the ZERO-logic-in-controllers hard rule; full controller
+  audit added above. Next: Slice C1 (BaseCrudService + CPanelBaseController).
