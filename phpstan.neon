@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+
+    paths:
+        - app
+
+    # Models live in a non-standard location (app/Http/Models); Larastan still
+    # resolves them via the configured autoloader.
+    excludePaths:
+        - app/Mcp/* # MCP tooling relies on dynamic Response factories; revisit separately.
+
+    ignoreErrors: []

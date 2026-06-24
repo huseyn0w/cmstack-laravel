@@ -24,8 +24,8 @@ class UserRegistrationService
     public function register(array $data): User
     {
         return User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'username' => $data['username'],
             'password' => $data['password'],
         ]);

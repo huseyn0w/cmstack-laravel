@@ -1,0 +1,367 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Exceptions\\Handler\:\:render\(\) should return Illuminate\\Http\\Response but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Exceptions\\Handler\:\:\$dontFlash is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Exceptions\\Handler\:\:\$dontFlash\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Exceptions\\Handler\:\:\$dontReport is not covariant with PHPDoc type array\<int, class\-string\<Throwable\>\> of overridden property Illuminate\\Foundation\\Exceptions\\Handler\:\:\$dontReport\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\LoginController\:\:handleProviderCallback\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 3
+			path: app/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\LoginController\:\:redirectToProvider\(\) should return Illuminate\\Http\\Response but returns Symfony\\Component\\HttpFoundation\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/LoginController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\BaseController\:\:\$lang_prefixes\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/BaseController.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Http/Controllers/CPanel/CPanelPostController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Models\\Category\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/SeoController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Models\\Category\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/SeoController.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middleware is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middleware\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middlewareGroups is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middlewareGroups\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middlewarePriority is not covariant with PHPDoc type array\<string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middlewarePriority\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$routeMiddleware is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$routeMiddleware\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\CheckForMaintenanceMode\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/CheckForMaintenanceMode.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\EncryptCookies\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Cookie\\Middleware\\EncryptCookies\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/EncryptCookies.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\TrimStrings\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\TrimStrings\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/TrimStrings.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\VerifyCsrfToken\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/VerifyCsrfToken.php
+
+		-
+			message: '#^Relation ''comments'' is not found in App\\Http\\Models\\Post model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Models/Category.php
+
+		-
+			message: '#^Relation ''user'' is not found in App\\Http\\Models\\Comments model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Models/Comments.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Models\\Post\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Models/Post.php
+
+		-
+			message: '#^Relation ''replies'' is not found in App\\Http\\Models\\Comments model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Models/Post.php
+
+		-
+			message: '#^Relation ''user'' is not found in App\\Http\\Models\\Comments model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Models/Post.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Models\\User\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Models\\User\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Models\\UserRoles\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Models/UserRoles.php
+
+		-
+			message: '#^Variable \$rules might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Requests/PostCommentsRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Mail\\ContactMail\:\:\$message\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Mail/ContactMail.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Models\\Post\:\:\$post_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/PostObserver.php
+
+		-
+			message: '#^Parameter \#1 \$view of static method Laravel\\Passport\\Passport\:\:authorizationView\(\) expects \(Closure\(array\<string, mixed\>\)\: Symfony\\Component\\HttpFoundation\\Response\)\|string, Closure\(mixed\)\: Illuminate\\View\\View given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Providers\\AuthServiceProvider\:\:\$policies is not covariant with PHPDoc type array\<class\-string, class\-string\> of overridden property Illuminate\\Foundation\\Support\\Providers\\AuthServiceProvider\:\:\$policies\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Providers\\EventServiceProvider\:\:\$listen is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Support\\Providers\\EventServiceProvider\:\:\$listen\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Providers/EventServiceProvider.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Illuminate\\Http\\Request and ''route'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Call to method getMessage\(\) on an unknown class Doctrine\\DBAL\\Driver\\PDOException\.$#'
+			identifier: class.notFound
+			count: 3
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Caught class Doctrine\\DBAL\\Driver\\PDOException not found\.$#'
+			identifier: class.notFound
+			count: 12
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Http\\Request and Illuminate\\Http\\Request will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Variable \$data might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$fields$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Repositories/BaseRepositoryInterface.php
+
+		-
+			message: '#^Variable \$result might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Repositories/CPanelCommentRepository.php
+
+		-
+			message: '#^Call to method getMessage\(\) on an unknown class Doctrine\\DBAL\\Driver\\PDOException\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/CPanelPostRepository.php
+
+		-
+			message: '#^Caught class Doctrine\\DBAL\\Driver\\PDOException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/CPanelPostRepository.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: app/Repositories/CPanelPostRepository.php
+
+		-
+			message: '#^Variable \$result might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: app/Repositories/CPanelPostRepository.php
+
+		-
+			message: '#^Caught class Doctrine\\DBAL\\Driver\\PDOException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/CPanelUserRepository.php
+
+		-
+			message: '#^Variable \$data might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Repositories/CPanelUserRepository.php
+
+		-
+			message: '#^Variable \$fields in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Repositories/CPanelUserRepository.php
+
+		-
+			message: '#^Parameter \#1 \$request of method App\\Repositories\\CPanelUserRolesRepository\:\:prepare_role_data\(\) expects Illuminate\\Foundation\\Http\\FormRequest, array\|Illuminate\\Http\\Request given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repositories/CPanelUserRolesRepository.php
+
+		-
+			message: '#^Access to an undefined property App\\Repositories\\CategoryRepository\:\:\$translated_table_model\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Repositories/CategoryRepository.php
+
+		-
+			message: '#^Caught class Doctrine\\DBAL\\Driver\\PDOException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/CategoryRepository.php
+
+		-
+			message: '#^Relation ''author'' is not found in App\\Http\\Models\\Post model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/CategoryRepository.php
+
+		-
+			message: '#^Relation ''categories'' is not found in App\\Http\\Models\\Post model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/CategoryRepository.php
+
+		-
+			message: '#^Variable \$data might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Repositories/CategoryRepository.php
+
+		-
+			message: '#^Access to an undefined property App\\Repositories\\PageRepository\:\:\$translated_table_model\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Repositories/PageRepository.php
+
+		-
+			message: '#^Call to method getMessage\(\) on an unknown class Doctrine\\DBAL\\Driver\\PDOException\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/PostCommentsRepository.php
+
+		-
+			message: '#^Caught class Doctrine\\DBAL\\Driver\\PDOException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Repositories/PostCommentsRepository.php
+
+		-
+			message: '#^Access to an undefined property App\\Repositories\\PostRepository\:\:\$translated_table_model\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Repositories/PostRepository.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable\:\:\$password\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Repositories/UserRepository.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Http\\Request and Illuminate\\Http\\Request will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Services/Captcha/CaptchaService.php

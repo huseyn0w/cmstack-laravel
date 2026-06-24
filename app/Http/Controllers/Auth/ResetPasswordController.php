@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
@@ -45,7 +46,7 @@ class ResetPasswordController extends Controller
      * plaintext through keeps a single hashing path and avoids double-hashing
      * (which would silently break login after a reset).
      *
-     * @param  \App\Http\Models\User  $user
+     * @param  User  $user
      * @param  string  $password
      * @return void
      */

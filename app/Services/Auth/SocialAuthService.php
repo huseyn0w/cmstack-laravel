@@ -67,13 +67,13 @@ class SocialAuthService
 
         $validator = Validator::make(
             [
-                'email'    => $socialUser->email,
-                'name'     => $socialUser->name,
+                'email' => $socialUser->email,
+                'name' => $socialUser->name,
                 'username' => $username,
             ],
             [
-                'name'     => ['required', 'string', 'max:255'],
-                'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'username' => ['required', 'string', 'max:255', 'unique:users'],
             ]
         );
@@ -94,8 +94,8 @@ class SocialAuthService
     {
         return DB::transaction(function () use ($socialUser, $provider) {
             $newUser = new User([
-                'name'     => $socialUser->name,
-                'email'    => $socialUser->email,
+                'name' => $socialUser->name,
+                'email' => $socialUser->email,
                 'username' => $this->usernameFromEmail((string) $socialUser->email),
             ]);
 

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Auth\SocialAuthService;
+use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Http\Response;
 use Socialite;
-
 
 class LoginController extends Controller
 {
@@ -37,11 +37,10 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-
     /**
      * Redirect the user to the GitHub authentication page.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function redirectToProvider($provider)
     {
@@ -51,7 +50,7 @@ class LoginController extends Controller
     /**
      * Obtain the user information from GitHub.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handleProviderCallback($provider)
     {
@@ -61,6 +60,7 @@ class LoginController extends Controller
 
         if ($authUser) {
             Auth::login($authUser, true);
+
             return redirect($this->redirectTo);
         }
 
@@ -83,8 +83,9 @@ class LoginController extends Controller
         $field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL)
             ? $this->username()
             : 'username';
+
         return [
-            $field     => $request->get($this->username()),
+            $field => $request->get($this->username()),
             'password' => $request->password,
         ];
     }
