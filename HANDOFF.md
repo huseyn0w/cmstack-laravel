@@ -3,17 +3,19 @@
 > Living handoff for the canon-convergence effort. Read this + `REFACTOR_PLAN.md` +
 > `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-24.
 >
-> **Latest:** suite **196 green**, PHPStan clean. Architecture refactor complete;
-> comment-notification + rate-limiting DONE; **Tags taxonomy DONE end-to-end** (schema/models,
-> find-or-create+sync, post attachment via observer, admin post-form `tags` field, public
-> `/tag/{slug}` archive, tags on post detail) & adversarially verified. Resume at PENDING
-> item 1 (Revisions + restore UI). Optional Tags leftovers: tags in search (§4) + a dedicated
-> admin tag-list/CRUD.
+> **Latest:** suite **211 green**, PHPStan + Pint clean. Architecture refactor complete;
+> comment-notification + rate-limiting DONE; Tags taxonomy DONE; **Revisions + restore UI DONE
+> end-to-end** (immutable pre-update snapshot of the Post/PageTranslation row via the translation
+> `updating` observer → polymorphic `revisions` table; admin paginated history + per-field diff +
+> scoped restore for posts & pages; restore is itself revisioned/undoable; allow-list restore,
+> transactional writes, trash/scope/authz guards) & adversarially verified (3 skeptics, all
+> findings fixed). Resume at PENDING **Soft-delete for pages** (P3). Optional leftovers: tags in
+> search (§4) + admin tag-list/CRUD; revision storage pruning + morph map (v1-acceptable).
 
 ## Where things stand
 
 **Branch:** `refactor/canon-convergence` (off `master`). All work committed there.
-**Suite:** `php artisan test` → **182 passed (472 assertions)**, ~17s (in-memory SQLite).
+**Suite:** `php artisan test` → **211 passed (543 assertions)**, ~20s (in-memory SQLite).
 **Static analysis:** `composer analyse` (PHPStan/Larastan level 5 + baseline) → **green**.
 **Lint:** `composer lint` (Pint, Laravel preset) → clean on all touched files.
 
@@ -66,10 +68,9 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
 > skeptics → fix → commit → refresh this file. Keep services repo-only and side effects in
 > events/observers (with sync/async classification in `REFACTOR_PLAN.md`).
 
-> DONE since last handoff: **comment-notification** (`App\Events\CommentSubmitted` →
-> queued `App\Listeners\SendCommentNotification` → `CommentSubmittedMail`, emitted from
-> `CommentService::create`) AND **comment submit rate-limiting** (`throttle:8,1` on the
-> comment write routes + `max:5000` body cap) — closes parity §18 and §3. 4 tests added.
+> DONE since last handoff: **Revisions + restore UI** (P2) — see item 3 below; net-new for all
+> three stacks, adversarially verified, +15 tests (suite 196 → 211). Earlier this effort:
+> comment-notification + rate-limiting (§18/§3) and Tags taxonomy (§2).
 
 1. **Tags taxonomy** (P1) — **DONE end-to-end** (schema `tags`/`tag_translations`/`post_tag`;
    `Tag`/`TagTranslation`; `Post::tags()`; `TagRepository` find-or-create+sync + `postsForTag`;
@@ -79,11 +80,18 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
    keys). **Optional leftovers:** include tags in search (§4); a dedicated admin tag-list/CRUD.
    NB: 2 of the frozen PHPStan baseline entries are tag `relationExistence` larastan
    false-positives (identical to the category ones) — leave.
-3. **Revisions + restore UI** (P2, net-new for all stacks): immutable snapshot before
-   post/page update (in the repository write, or a `Revisioned` observer); dashboard diff +
-   restore view.
-4. **Soft-delete for pages** (P3): extend the posts soft-delete/trash/restore to `Page`
-   (+ admin bulk actions; `BaseCrudService` already has delete/destroy/restore).
+3. **Revisions + restore UI** (P2) — **DONE end-to-end** (polymorphic `revisions` table;
+   `Revision` model; `RevisionRepository` snapshot/listFor/findFor/diff/restoreFrom +
+   allow-list restore; `PostTranslationObserver`/`PageTranslationObserver` `updating` hook
+   delegating the snapshot; `ManagesRevisions` trait on the post/page services; controller
+   `revisions`/`revisionDiff`/`restoreRevision` + routes; shared `cpanel/revisions/{list,diff}`
+   views + en/ru lang; transactional writes, trash/scope/authz guards; 15 tests). Adversarially
+   verified. **Optional leftovers:** prune/cap `revisions.data` growth; register a morph map.
+4. **Soft-delete for pages** (P3, **resume here**): extend the posts soft-delete/trash/restore
+   to `Page` (+ admin bulk actions; `BaseCrudService` already has delete/destroy/restore). NB:
+   `Page` does NOT use `SoftDeletes` yet and `page_translations` has no `deleted_at` — add both;
+   mirror `CPanelPostRepository::trashedPosts`/`delete`/`restore`/`destroy` + the posts_list
+   trash-tab UI.
 5. **Category tree admin UI** (P4): parent picker on the category form.
 6. **Scheduled publishing** (P6): `scheduled_at` column + `posts:publish-due` console command
    + scheduler entry.
@@ -179,6 +187,7 @@ Operating rules (unchanged):
   <noreply@anthropic.com>). When context drops below ~50%, refresh HANDOFF.md (incl. this
   continuation prompt) and tell me in Russian to open a new window.
 
-Start with PENDING item 1 (Tags taxonomy). Comment-notification + comment rate-limiting are
-already DONE (parity §18 + §3).
+Start with PENDING **Soft-delete for pages** (P3). Already DONE this effort: architecture
+refactor, comment-notification + rate-limiting (§18/§3), Tags taxonomy (§2), and Revisions +
+restore UI (§1).
 ```
