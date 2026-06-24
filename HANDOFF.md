@@ -3,10 +3,12 @@
 > Living handoff for the canon-convergence effort. Read this + `REFACTOR_PLAN.md` +
 > `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-24.
 >
-> **Latest:** suite **195 green**, PHPStan clean. Architecture refactor complete;
-> comment-notification + rate-limiting DONE; **Tags taxonomy core DONE** (schema/models,
-> find-or-create+sync, post attachment via observer, public `/tag/{slug}` archive) &
-> adversarially verified. Resume at PENDING item 1 (finish Tags UI glue, then revisions).
+> **Latest:** suite **196 green**, PHPStan clean. Architecture refactor complete;
+> comment-notification + rate-limiting DONE; **Tags taxonomy DONE end-to-end** (schema/models,
+> find-or-create+sync, post attachment via observer, admin post-form `tags` field, public
+> `/tag/{slug}` archive, tags on post detail) & adversarially verified. Resume at PENDING
+> item 1 (Revisions + restore UI). Optional Tags leftovers: tags in search (§4) + a dedicated
+> admin tag-list/CRUD.
 
 ## Where things stand
 
@@ -69,15 +71,14 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
 > `CommentService::create`) AND **comment submit rate-limiting** (`throttle:8,1` on the
 > comment write routes + `max:5000` body cap) — closes parity §18 and §3. 4 tests added.
 
-1. **Tags taxonomy** (P1) — **CORE DONE** (schema `tags`/`tag_translations`/`post_tag`;
-   `Tag`/`TagTranslation`; `Post::tags()`; `TagRepository` find-or-create+sync +
-   `postsForTag`; `PostObserver::syncTags` reads the `tags` form field; `Front\TagViewService`
-   + thin `TagController` + `/tag/{slug}` archive + view; language switcher wired). **Remaining
-   UI glue:** (a) add a `tags` input to the admin post create/edit form so editors can set
-   tags (observer already consumes the `tags` request key — comma-separated names); (b) show a
-   post's tags (linking `/tag/{slug}`) on the public post-detail view; (c) optional: include
-   tags in search (§4) + an admin tag list. NB: 2 of the frozen PHPStan baseline entries are
-   tag `relationExistence` larastan false-positives (identical to the category ones) — leave.
+1. **Tags taxonomy** (P1) — **DONE end-to-end** (schema `tags`/`tag_translations`/`post_tag`;
+   `Tag`/`TagTranslation`; `Post::tags()`; `TagRepository` find-or-create+sync + `postsForTag`;
+   `PostObserver::syncTags` reads the `tags` form field; admin post-form `tags` input
+   (new+edit, edit pre-fills); `Front\TagViewService` + thin `TagController` + `/tag/{slug}`
+   archive + view; tags-as-pills on public post detail; language switcher wired; en/ru lang
+   keys). **Optional leftovers:** include tags in search (§4); a dedicated admin tag-list/CRUD.
+   NB: 2 of the frozen PHPStan baseline entries are tag `relationExistence` larastan
+   false-positives (identical to the category ones) — leave.
 3. **Revisions + restore UI** (P2, net-new for all stacks): immutable snapshot before
    post/page update (in the repository write, or a `Revisioned` observer); dashboard diff +
    restore view.
