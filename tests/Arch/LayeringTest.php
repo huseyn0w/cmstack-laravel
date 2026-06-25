@@ -55,11 +55,6 @@ arch('repositories are the only home for Eloquent query building')
         // and snapshot revisions on model events — registered in ObserverServiceProvider.
         'App\Observers',
 
-        // ResetPasswordController injects UserRepository directly to delegate
-        // the password-hashing path (avoiding double-hash via setPasswordAttribute).
-        // Extracting this into AuthService is a future refactor task.
-        'App\Http\Controllers',
-
         // CategoryRequest uses CPanelCategoryRepository::descendantIds() inside
         // a validation closure to prevent assigning a category as its own child.
         // A form request is the natural place for cross-field DB validation.
