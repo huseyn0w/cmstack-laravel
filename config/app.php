@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\CaptchaServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\ObserverServiceProvider;
+use App\Providers\PluginServiceProvider;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
@@ -273,6 +274,7 @@ return [
         EventServiceProvider::class,
         RouteServiceProvider::class,
         CaptchaServiceProvider::class,
+        PluginServiceProvider::class,
 
     ],
 
