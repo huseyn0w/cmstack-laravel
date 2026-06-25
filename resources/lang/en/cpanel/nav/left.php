@@ -23,6 +23,7 @@ return [
     'site_options' => 'Site Options',
     'seo_settings' => 'SEO',
     'geo_settings' => 'GEO (AI)',
+    'plugins' => 'Plugins',
     'menus' => 'Menus',
     'user_roles' => 'User Roles',
 

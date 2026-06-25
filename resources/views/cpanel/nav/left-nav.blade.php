@@ -30,7 +30,7 @@ $isActive = fn ($route) => $current_route === $route;
 
 // Are any children of a group active (to auto-open the submenu)?
 $postsActive    = in_array($current_route, ['cpanel_category_list', 'cpanel_posts_list', 'cpanel_trashed_posts_list', 'cpanel_comments_list']);
-$settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_site_options', 'cpanel_seo_settings', 'cpanel_menu_list', 'cpanel_user_roles']);
+$settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_site_options', 'cpanel_seo_settings', 'cpanel_geo_settings', 'cpanel_plugins_list', 'cpanel_menu_list', 'cpanel_user_roles']);
 ?>
 <div class="flex h-full flex-col">
     {{-- Brand --}}
@@ -141,6 +141,9 @@ $settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_s
                             </a>
                             <a href="{{route('cpanel_geo_settings')}}" class="{{ $subBase }} {{ $isActive('cpanel_geo_settings') ? $subActive : $subIdle }}">
                                 <span class="h-1 w-1 rounded-full bg-current opacity-50"></span>@lang('cpanel/nav/left.geo_settings')
+                            </a>
+                            <a href="{{route('cpanel_plugins_list')}}" class="{{ $subBase }} {{ $isActive('cpanel_plugins_list') ? $subActive : $subIdle }}">
+                                <span class="h-1 w-1 rounded-full bg-current opacity-50"></span>@lang('cpanel/nav/left.plugins')
                             </a>
                         @endif
                         @if (Auth::user()->can('manage_menus', 'App\Http\Models\UserRoles'))

@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers\CPanel;
+
+use App\Services\CPanel\CPanelPluginService;
+use Illuminate\Http\Request;
+
+/**
+ * Admin plugin manager: list discovered plugins and toggle them on/off. Pure
+ * HTTP boundary — all logic/data access lives in CPanelPluginService.
+ */
+class CPanelPluginController extends CPanelBaseController
+{
+    public function __construct(CPanelPluginService $service)
+    {
+        parent::__construct();
+        $this->service = $service;
+    }
+
+    public function index()
+    {
+        return view('cpanel.plugins.list', ['plugins' => $this->service->listForAdmin()]);
+    }
+
+    public function toggle(Request $request)
+    {
+        $data = $request->validate([
+            'slug' => 'required|string',
+            'enabled' => 'required|boolean',
+        ]);
+
+        $this->service->toggle($data['slug'], (bool) $data['enabled']);
+
+        return redirect()->route('cpanel_plugins_list')->with('message', ' ');
+    }
+}

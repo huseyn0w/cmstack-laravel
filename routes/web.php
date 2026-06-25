@@ -60,6 +60,11 @@ Route::prefix('cmstack-laravel-admin')->middleware(['auth', 'see_admin_panel'])-
         Route::post('/', 'CPanelGeoSettingsController@store')->name('cpanel_update_geo_settings');
     });
 
+    Route::prefix('plugins')->middleware('manage_general_settings')->group(function () {
+        Route::get('/', 'CPanelPluginController@index')->name('cpanel_plugins_list');
+        Route::put('/toggle', 'CPanelPluginController@toggle')->name('cpanel_toggle_plugin');
+    });
+
     // The profile controller resolves the user from Auth when no id is
     // supplied (see CPanelUserController::editUser), so this route can only
     // ever surface the authenticated user's own profile.
