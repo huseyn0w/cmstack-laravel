@@ -169,9 +169,26 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
    LOW falsy-drop (robust `region()`), LOW arbitrary-slug junk rows (toggle validates against
    `discover()` → 404). **Optional leftovers:** filter priorities, plugin zip-upload, Octane re-prime
    reset, expose plugin toggles via MCP (all YAGNI/out-of-scope).
-10. **Coverage → ≥80% on services/repos + 100% critical paths** (P10, **resume here**), and **CI pipeline**
-    (lint → analyse → test → build → e2e). NOTE: this box has **no Xdebug/PCOV** installed,
-    so `--coverage` cannot run here yet — install PCOV (or run in CI) before reporting numbers.
+10. **Testing mandate + coverage + CI** (P10, **resume here**) — per the updated operating prompt
+    (`../prompts/cmstack-laravel.md`, the authoritative contract; read it first):
+    - **Migrate the suite to Pest 4** (`composer require pestphp/pest --dev` + init). Pest is the
+      canonical runner; run `./vendor/bin/pest --coverage` and SHOW output. Keep the existing
+      characterization tests (they run as-is under Pest/PHPUnit).
+    - **Add Pest `arch()` presets** enforcing the layering rules (controllers must not touch
+      Eloquent; services must not import `Illuminate\Support\Facades\DB` / query builder; chain
+      controller→service→repository→model).
+    - **Migrate Dusk → Pest 4 browser testing** (`pestphp/pest-plugin-browser` + Playwright),
+      preserving the scenarios in `tests/Browser/` (`AuthAndAdminTest`, `PublicSiteTest`,
+      `GeoSettingsBrowserTest`); use `data-testid` selectors, `assertNoAccessibilityIssues()`
+      (WCAG 2.1 AA), `assertNoSmoke()` (no console/JS errors), mobile device sim. Remove the
+      `laravel/dusk` dependency once parity is reached — don't lose coverage.
+    - **Per-layer test status table in `REFACTOR_PLAN.md`** (models, controllers, middleware, form
+      requests, policies, repositories, services, observers/events/listeners, jobs, console
+      commands, providers/bindings, Blade components, factories) — no layer at zero tests.
+    - **Coverage targets:** ≥80% line on services/repos + 100% of critical paths (auth, content
+      CRUD, publishing, media). **No Xdebug/PCOV in this sandbox** → `--coverage` can't run here;
+      install PCOV locally or measure in CI before reporting numbers (never assert a number unrun).
+    - **CI pipeline** (lint → analyse → test → build → e2e).
 11. **UI redesign to `../DESIGN_SYSTEM.md`** (Task 3, biggest): tokens → self-hosted fonts
     (Newsreader/Inter/Geist Mono) → Blade components → perf budget → a11y. **Lighthouse ≥95
     mobile must be MEASURED** with a real run (needs served app + headless Chrome against
@@ -197,12 +214,16 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
 
 ```bash
 # in cmstack-laravel/
-php artisan test                       # full suite (in-memory SQLite; never touches MySQL)
+php artisan test                       # full suite TODAY (PHPUnit; in-memory SQLite; never MySQL)
+# P10 TARGET runner (after migration): ./vendor/bin/pest --coverage  + Pest browser suite
 composer lint                          # pint --test
 composer analyse                       # phpstan level 5 (+ baseline)
 composer check                         # lint + analyse + test
 # App (needs MySQL 8 + ext-imagick): make setup ; admin at /cmstack-laravel-admin
 ```
+> NOTE: the updated operating prompt (`../prompts/cmstack-laravel.md`) makes **Pest 4** the
+> canonical runner and **Pest browser** the E2E layer (replacing Dusk). The suite still runs under
+> PHPUnit via `php artisan test` until the P10 migration lands.
 
 ## Gotchas
 
@@ -231,12 +252,20 @@ You are a senior Laravel/PHP engineer continuing the cmstack-laravel canon-conve
 work AUTONOMOUSLY in /Users/huseyn0w/Desktop/SWE/cmstack/cmstack-laravel (git branch
 refactor/canon-convergence).
 
-First read, in order: cmstack-laravel/HANDOFF.md, cmstack-laravel/REFACTOR_PLAN.md,
-../FEATURE_MATRIX.md, ../DESIGN_SYSTEM.md (the last two are read-only canon — do NOT edit;
-if either is missing, stop and tell me in Russian "Нет общих спеков — сначала запусти
-prompts/00-bootstrap.md"). Then resume from the FIRST item in HANDOFF.md "PENDING".
+AUTHORITATIVE OPERATING CONTRACT: ../prompts/cmstack-laravel.md (updated 2026-06-26) — read it
+FIRST; if it conflicts with anything below, IT wins. Then read, in order:
+cmstack-laravel/HANDOFF.md, cmstack-laravel/REFACTOR_PLAN.md, ../FEATURE_MATRIX.md,
+../DESIGN_SYSTEM.md (the last two are read-only canon — do NOT edit; if either is missing, stop
+and tell me in Russian "Нет общих спеков — сначала запусти prompts/00-bootstrap.md"). Then resume
+from the FIRST item in HANDOFF.md "PENDING".
 
-Operating rules (unchanged):
+Operating rules (summary — the prompt above is authoritative):
+- ORCHESTRATOR MODEL: you (lead, Opus) do only thinking — decomposition, architecture, the plan,
+  integration, review. DELEGATE the doing (reading big files, writing code/tests, running suites)
+  to subagents; protect your context. Model routing: Haiku = cheap lookups; Sonnet = low-risk
+  implementation/tests; Opus = architecture-sensitive/critical work + all review.
+- TESTING: Pest 4 is the canonical runner (`./vendor/bin/pest`), Pest browser replaces Dusk, add
+  `arch()` layering presets, per-layer test status in REFACTOR_PLAN.md (see PENDING P10).
 - Work autonomously inside cmstack-laravel/; don't ask permission for reads/edits/artisan/
   composer/npm/tests/local git. Only stop for genuinely irreversible actions or a product
   decision the spec files don't answer (batch such questions).
@@ -258,12 +287,15 @@ Operating rules (unchanged):
   driver in the sandbox, flag it). Lint (Pint) + static analysis (Larastan level 5) stay
   clean; new code adds no baseline entries.
 - Respond to me in RUSSIAN; all code/comments/identifiers/commit messages/.md docs in
-  English. Commit each verified slice (Co-Authored-By: Claude Opus 4.8
-  <noreply@anthropic.com>). When context drops below ~50%, refresh HANDOFF.md (incl. this
+  English. Commit each verified slice with a plain message — **NO `Co-Authored-By` / Claude
+  attribution trailer**. When context drops below ~50%, refresh HANDOFF.md (incl. this
   continuation prompt) and tell me in Russian to open a new window.
 
-Start with PENDING **Coverage ≥80% + CI pipeline** (P10) — note this box has no Xdebug/PCOV, so
-flag that coverage numbers need PCOV/CI — or **UI redesign to ../DESIGN_SYSTEM.md** (Task 3). Already
+Start with PENDING **Testing mandate + coverage + CI** (P10): migrate the suite to **Pest 4**
+(canonical runner), add `arch()` layering presets, migrate **Dusk → Pest browser**, record a
+per-layer test-status table in REFACTOR_PLAN.md, then chase ≥80%/100%-critical coverage (no
+PCOV here — flag it) + the CI pipeline. (Task 3 **UI redesign to ../DESIGN_SYSTEM.md** is the
+other large remaining track.) Already
 DONE this effort: architecture refactor, comment-notification + rate-limiting (§18/§3), Tags (§2),
 Revisions + restore UI (§1), Soft-delete for pages (§1, P3), Category tree admin UI (§2, P4),
 Scheduled publishing (§1, P6), RSS/Atom feeds (P7), Membership + email-verification (P8), and

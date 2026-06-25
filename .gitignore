@@ -17,3 +17,5 @@ npm-debug.log
 yarn-error.log
 _ide_helper.php
 .phpstorm.meta.php
+# Claude Code personal permissions (do not commit)
+.claude/settings.local.json
