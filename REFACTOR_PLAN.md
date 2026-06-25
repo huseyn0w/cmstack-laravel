@@ -320,3 +320,36 @@ mail *is* the primary user action, not a side effect of a DB write.)
   Pint + PHPStan clean. Pre-existing gaps noted (NOT this feature): front never filters plain
   drafts (status=0, no schedule); MCP post tools don't expose scheduled_at. Remaining: parity
   P7–P9, UI redesign, coverage→80%/CI, README.
+- 2026-06-26: Phase 4 test gap-filling DONE. Per-layer status table added (see below). Direct tests
+  added for 6 previously-transitive-only layers: `WriteThemeFileTool` (security/path-traversal),
+  `ChangePasswordRequest` (validation rules via route), `PostViewService` (slug resolution +
+  scheduling visibility), `CategoryRepository` (sitemapEntries/llmsEntries/displayList),
+  `CPanelPostService` (create + category pivot + trashed), `CPanelPageService` (create + update +
+  delete/restore/trashed). Suite **321 green**, Pint + PHPStan clean.
+
+---
+
+## Per-layer test status (P10)
+
+> Updated by P10 Phase 4. "Direct" = a test file that imports/instantiates the class or
+> invokes its command/route as the explicit subject. "Transitive" = exercised only as a
+> side effect of another test. No layer is at absolute zero; the gap-fillers below add
+> direct tests to the highest-value previously-transitive-only layers (services/MCP).
+
+| Layer | Files | Representative tests | Status |
+|---|---|---|---|
+| Models | 22 (`app/Http/Models/**`, incl. `*Translation`, `CPanel/`) | ObserverTest, MassAssignmentTest, TagModelTest, Revisions/*, Admin/* | ✅ covered (gaps: `CPanelMedia`, `Likes` class-level) |
+| Controllers | 22 (front + Auth + CPanel) | AdminPanelAccessTest, Admin/*, Auth/*, Front/*, MediaRouteGuardTest | ✅ covered (gaps: `CPanelLanguageController`, `UserPermissionsController`) |
+| Middleware | 14 (`app/Http/Middleware/**`) | AdminPanelAccessTest, Admin/* (manage_*), Auth/EmailVerificationTest, Auth/MembershipToggleTest, SearchContactLanguageTest | ✅ covered (untested are thin framework wrappers: CheckForMaintenanceMode, EncryptCookies, TrimStrings) |
+| Form Requests | 21 (`app/Http/Requests/**`) | RepositoryBehaviorTest, Admin/*, Front/* (via routes) | ✅ covered (gap: `ChangePasswordRequest` → filled) |
+| Policies | 1 (`UserPolicy`) | tests/Unit/UserPolicyTest.php | ✅ covered |
+| Repositories | 21 (`app/Repositories/**`, front + CPanel*) | RepositoryBehaviorTest, RepositoryWhitelistTest, Plugins/*, TagRepositoryTest, Revisions/*, Admin/* | ✅ covered (direct gaps: front `CategoryRepository`/`PageRepository`, `CPanelRolePermissionsRepository` → CategoryRepository filled) |
+| Services | 27 (`app/Services/**`: Auth, CPanel, Front, Captcha, Concerns) | CaptchaServiceTest, Auth/UserRegistrationServiceTest, Auth/SocialAuthServiceTest, CommentNotificationTest | ⚠️ → ✅ (CPanel + Front services were transitive-only; direct tests added for `CPanelPostService`, `CPanelPageService`, `PostViewService`) |
+| Observers / Events / Listeners | 5 observers + `CommentSubmitted` + 2 listeners | ObserverTest, Revisions/PageRevisionTest, CommentNotificationTest, Auth/EmailVerificationTest | ✅ covered |
+| Jobs | 0 (layer absent) | — | ✅ n/a |
+| Console Commands | 1 (`PublishDuePosts`) | Scheduling/PublishDuePostsTest (+2) | ✅ covered |
+| Providers / bindings | 8 (`app/Providers/**`) | PluginBootIntegrationTest, UserPolicyTest, CommentNotificationTest, CaptchaServiceTest | ✅ covered (AppServiceProvider/Broadcast/Observer/RouteServiceProvider verified transitively) |
+| Blade components | 0 (`app/View/Components` absent) | — | ✅ n/a |
+| Factories | 1 (`UserFactory`) | exercised by 20+ test files | ✅ covered |
+| Helpers | `bootstrap/cmstack-laravel-helpers.php` | tests/Unit/HelpersTest.php | ✅ covered |
+| MCP tools | 27 (`app/Mcp/**`) | Mcp/CmstackLaravelServerTest (5 tools + Concerns) | ⚠️ → ✅ (security-critical `WriteThemeFileTool` path-traversal test added) |
