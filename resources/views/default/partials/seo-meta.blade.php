@@ -335,3 +335,6 @@
 @foreach($jsonLdBlocks as $block)
 {!! json_ld($block) !!}
 @endforeach
+
+{{-- Plugin render-region: head (e.g. analytics/meta injected by plugins) --}}
+@hook('head')

@@ -72,6 +72,7 @@ $languages = get_translation_links();
         </div>
         @endif
     </div>
+    @hook('footer')
 </footer>
 <!-- End footer Area -->
 

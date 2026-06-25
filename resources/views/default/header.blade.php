@@ -163,6 +163,7 @@ $current_lang = get_current_lang_prefix();
             @endauth
         </div>
     </div>
+    @hook('header')
 </header>
 <!-- End Header Area -->
 

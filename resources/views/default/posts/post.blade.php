@@ -55,9 +55,9 @@
         </figure>
     @endif
 
-    {{-- Post body --}}
+    {{-- Post body (passed through the `the_content` plugin filter) --}}
     <div class="article-prose mt-12">
-        {!! $data->content !!}
+        {!! app('hooks')->filter('the_content', $data->content) !!}
     </div>
 
     {{-- Tags --}}
