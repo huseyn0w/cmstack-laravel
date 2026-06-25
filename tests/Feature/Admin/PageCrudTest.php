@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Models\Page;
 use App\Http\Models\PageTranslation;
 use App\Http\Models\User;
 use App\Http\Models\UserRoles;
@@ -81,7 +82,11 @@ class PageCrudTest extends TestCase
             ->delete('/cmstack-laravel-admin/pages/'.$translation->page_id.'/delete')
             ->assertOk();
 
-        $this->assertSame(0, PageTranslation::where('slug', 'about-page')->count());
+        // Delete is now a soft-delete (parity with posts): the page is hidden
+        // from normal listings but the row + translation are kept for restore.
+        $this->assertNull(Page::find($translation->page_id), 'Page should be soft deleted.');
+        $this->assertNotNull(Page::withTrashed()->find($translation->page_id), 'Soft deleted page row should remain.');
+        $this->assertSame(1, PageTranslation::where('slug', 'about-page')->count());
     }
 
     public function test_validation_blocks_invalid_page(): void

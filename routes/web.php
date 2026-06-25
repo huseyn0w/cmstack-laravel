@@ -86,12 +86,18 @@ Route::prefix('cmstack-laravel-admin')->middleware(['auth', 'see_admin_panel'])-
 
     Route::prefix('pages')->middleware('manage_pages')->group(function () {
         Route::get('/', 'CPanelPageController@index')->name('cpanel_pages_list');
+        Route::get('/trashed', 'CPanelPageController@trashedPages')->name('cpanel_trashed_pages_list');
+        // Restore is GET /{id}/restore — registered BEFORE the greedy /{id}/{lang}
+        // editor route so it isn't shadowed (matched as edit with lang="restore").
+        Route::get('/{id}/restore', 'CPanelPageController@restore')->name('cpanel_restore_page')->where('id', '[0-9]+');
         Route::get('/{id}/{lang}', 'CPanelPageController@editPage')->name('cpanel_edit_page')->where('id', '[0-9]+');
         Route::put('/{id}/update', 'CPanelPageController@updatePage')->name('cpanel_update_page')->where('id', '[0-9]+');
         Route::get('/{id}/revisions/{lang}', 'CPanelPageController@revisions')->name('cpanel_page_revisions')->where('id', '[0-9]+');
         Route::get('/{id}/revisions/{revision}/compare/{lang}', 'CPanelPageController@revisionDiff')->name('cpanel_page_revision_diff')->where(['id' => '[0-9]+', 'revision' => '[0-9]+']);
         Route::post('/{id}/revisions/{revision}/restore/{lang}', 'CPanelPageController@restoreRevision')->name('cpanel_restore_page_revision')->where(['id' => '[0-9]+', 'revision' => '[0-9]+']);
         Route::delete('/multipleDelete', 'CPanelPageController@multipleDelete')->name('cpanel_pages_bulk_delete');
+        Route::post('/multiple', 'CPanelPageController@multipleActions')->name('cpanel_pages_bulk_action');
+        Route::delete('/{id}/destroy', 'CPanelPageController@destroyAjax')->name('cpanel_destroy_page')->where('id', '[0-9]+');
         Route::delete('/{id}/delete', 'CPanelPageController@deleteAjax')->name('cpanel_ajax_soft_delete_page')->where('id', '[0-9]+');
         Route::get('/new', 'CPanelPageController@addPage')->name('cpanel_add_new_page');
         Route::post('/new/{id?}', 'CPanelPageController@createPage')->name('cpanel_save_new_page')->where('id', '[0-9]+');

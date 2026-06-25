@@ -12,6 +12,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
 
+@php
+$route_name = Route::current()->getName();
+$is_trash = $route_name == "cpanel_trashed_pages_list";
+@endphp
+
 @section('content')
     <div class="mx-auto max-w-7xl">
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -23,22 +28,39 @@
         </div>
 
         @include('cpanel.core.flash')
-        @if (($update_message = Session::get('message')) !== null)
-            <div class="alert {{ $update_message ? 'alert-success' : 'alert-danger' }}"><strong>{{ $update_message ? __('cpanel/pages.bulky_deleted_message') : __('cpanel/pages.bulky_deleted_error_message') }}</strong></div>
-        @endif
         @if (Session::get('page_added'))
             <div class="alert alert-success"><strong>@lang('cpanel/pages.page_added')</strong></div>
         @endif
+        @if (($update_message = Session::get('deleted')) !== null)
+            <div class="alert {{ $update_message ? 'alert-success' : 'alert-danger' }}"><strong>{{ $update_message ? __('cpanel/pages.bulky_deleted_message') : __('cpanel/pages.bulky_error_message') }}</strong></div>
+        @endif
+        @if (($update_message = Session::get('restored')) !== null)
+            <div class="alert {{ $update_message ? 'alert-success' : 'alert-danger' }}"><strong>{{ $update_message ? __('cpanel/pages.bulky_restored_message') : __('cpanel/pages.bulky_error_message') }}</strong></div>
+        @endif
+        @if (($update_message = Session::get('destroyed')) !== null)
+            <div class="alert {{ $update_message ? 'alert-success' : 'alert-danger' }}"><strong>{{ $update_message ? __('cpanel/pages.bulky_destroyed_message') : __('cpanel/pages.bulky_error_message') }}</strong></div>
+        @endif
+
+        {{-- Tab switch: published vs trashed --}}
+        <div class="mb-4 inline-flex rounded-lg border border-ink-200 bg-surface p-1 shadow-sm">
+            <a href="{{route('cpanel_pages_list')}}" class="rounded-md px-3.5 py-1.5 text-sm font-medium transition {{ !$is_trash ? 'bg-brand-600 text-white shadow-sm' : 'text-ink-600 hover:text-ink-900' }}">@lang('cpanel/pages.general_pages')</a>
+            <a href="{{route('cpanel_trashed_pages_list')}}" class="rounded-md px-3.5 py-1.5 text-sm font-medium transition {{ $is_trash ? 'bg-brand-600 text-white shadow-sm' : 'text-ink-600 hover:text-ink-900' }}">@lang('cpanel/pages.trashed_pages')</a>
+        </div>
 
         <div class="card overflow-hidden">
-            <form method="POST" action="{{route('cpanel_pages_bulk_delete')}}">
+            <form method="POST" action="{{ $is_trash ? route('cpanel_pages_bulk_action') : route('cpanel_pages_bulk_delete') }}">
                 @csrf
-                @method('DELETE')
+                @if($is_trash) @method('POST') @else @method('DELETE') @endif
                 <div class="border-b border-ink-100 px-5 py-4">
                     <div class="select-cover mb-0">
                         <select id="inputState" name="pages_action" required class="form-control">
                             <option selected="selected">@lang('cpanel/pages.bulk_action_label')</option>
-                            <option value="delete">@lang('cpanel/pages.bulk_action_delete_label')</option>
+                            @if($is_trash)
+                                <option value="destroy">@lang('cpanel/pages.bulk_action_destroy_label')</option>
+                                <option value="restore">@lang('cpanel/pages.bulk_action_restore_label')</option>
+                            @else
+                                <option value="delete">@lang('cpanel/pages.bulk_action_delete_label')</option>
+                            @endif
                         </select>
                         <button type="submit" class="btn btn-ghost">@lang('cpanel/pages.bulk_action_apply')</button>
                     </div>
@@ -66,10 +88,15 @@
                                 <td>
                                     <span class="font-medium text-ink-900">{{$page->title}}</span>
                                     <span class="user_actions">
-                                        @if (Auth::user()->can('manage_users', 'App\Http\Models\UserRoles'))
+                                        @if (Auth::user()->can('manage_pages', 'App\Http\Models\UserRoles'))
                                             <a href="{{route('cpanel_edit_page', ['id' => $page->id, 'lang' => get_current_lang()])}}" target="_blank">@lang('cpanel/pages.edit_page')</a>
                                             <input type="hidden" class="deleted_page_id" value="{{$page->id}}" name="deleted_page_id">
-                                            <button type="button" class="delete_page">@lang('cpanel/pages.delete_page')</button>
+                                            @if(!$is_trash)
+                                                <button type="button" class="delete_page">@lang('cpanel/pages.delete_page')</button>
+                                            @else
+                                                <button type="button" class="destroy_page">@lang('cpanel/pages.destroy_page')</button>
+                                                <a href="{{route('cpanel_restore_page', $page->id)}}" class="restore_page">@lang('cpanel/pages.restore_page')</a>
+                                            @endif
                                         @endif
                                     </span>
                                 </td>
@@ -99,9 +126,11 @@
 
 @push('finalscripts')
     <script>
-        delete_confirmation = '@lang('cpanel/pages.js_delete_confirmation')',
-        delete_success = '@lang('cpanel/pages.js_delete_success')',
-        error_message = '@lang('cpanel/pages.js_delete_error')';
+        var delete_confirmation = '@lang('cpanel/pages.js_delete_confirmation')',
+            delete_success = '@lang('cpanel/pages.js_delete_success')',
+            destroy_confirmation = '@lang('cpanel/pages.js_destroy_confirmation')',
+            destroy_success = '@lang('cpanel/pages.js_destroy_success')',
+            error_message = '@lang('cpanel/pages.js_delete_error')';
     </script>
     <script src="{{asset('admin')}}/js/page.js"></script>
 @endpush

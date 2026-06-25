@@ -27,11 +27,43 @@ class CPanelPageController extends CPanelBaseController
         return view('cpanel.pages.pages_list', compact('pages_list'));
     }
 
+    public function trashedPages()
+    {
+        $pages_list = $this->service->trashed($this->per_page);
+
+        return view('cpanel.pages.pages_list', compact('pages_list'));
+    }
+
     public function multipleDelete(PageListRequest $request)
     {
-        $result = $this->service->delete($request->pages);
+        $this->service->delete($request->pages);
 
-        return back()->with('message', $result);
+        return back()->with('deleted', true);
+    }
+
+    public function multipleActions(PageListRequest $request)
+    {
+        $action = $request->pages_action;
+
+        switch ($action) {
+            case 'restore':
+                $this->service->runBulkAction($action, $request->pages);
+
+                return back()->with('restored', true);
+            case 'destroy':
+                $this->service->runBulkAction($action, $request->pages);
+
+                return back()->with('destroyed', true);
+            default:
+                return redirect()->back();
+        }
+    }
+
+    public function restore($id)
+    {
+        $this->service->restore($id);
+
+        return back()->with('restored', true);
     }
 
     public function editPage($id)

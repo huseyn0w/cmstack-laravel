@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class PageListRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class PageListRequest extends FormRequest
     public function rules()
     {
         return [
-            'pages_action' => ['required', 'string', 'regex:(delete)'],
+            'pages_action' => ['required', 'string', Rule::in(['delete', 'destroy', 'restore'])],
             'pages' => 'array|required',
         ];
     }
@@ -33,8 +34,8 @@ class PageListRequest extends FormRequest
     public function messages()
     {
         return [
-            'pages_action.regex' => 'You should use action "Delete"',
-            'pages.required' => 'You should choose at least 1 page to delete',
+            'pages_action.in' => 'You should use action "Delete", "Restore" or "Destroy"',
+            'pages.required' => 'You should choose at least 1 page',
         ];
     }
 }

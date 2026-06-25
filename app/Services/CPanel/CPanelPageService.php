@@ -21,4 +21,28 @@ class CPanelPageService extends BaseCrudService
         parent::__construct($repo);
         $this->revisions = $revisions;
     }
+
+    /**
+     * Paginated listing of trashed pages for the index screen.
+     */
+    public function trashed($count)
+    {
+        return $this->repo->trashedPages($count);
+    }
+
+    /**
+     * Dispatch a bulk action (restore/destroy) against the given pages.
+     * Returns the underlying repository result, or false for an unknown action.
+     */
+    public function runBulkAction(string $action, $pages)
+    {
+        switch ($action) {
+            case 'restore':
+                return $this->restore($pages);
+            case 'destroy':
+                return $this->destroy($pages);
+            default:
+                return false;
+        }
+    }
 }
