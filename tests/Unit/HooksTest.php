@@ -61,4 +61,20 @@ class HooksTest extends TestCase
     {
         $this->assertSame('', $this->hooks()->region('nothing'));
     }
+
+    public function test_region_flattens_array_fragments_instead_of_crashing(): void
+    {
+        $hooks = $this->hooks();
+        $hooks->onRegion('multi', fn () => ['<a>', '<b>']);
+
+        $this->assertSame('<a><b>', $hooks->region('multi'));
+    }
+
+    public function test_region_keeps_falsy_string_fragments(): void
+    {
+        $hooks = $this->hooks();
+        $hooks->onRegion('zero', fn () => '0');
+
+        $this->assertSame('0', $hooks->region('zero'));
+    }
 }

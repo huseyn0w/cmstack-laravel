@@ -30,7 +30,9 @@ class ReadingTimePlugin implements PluginInterface
 
     public function boot(Hooks $hooks): void
     {
-        $hooks->onFilter('the_content', function (string $html): string {
+        $hooks->onFilter('the_content', function (?string $html): string {
+            // Posts may have no body (nullable content); treat null as empty.
+            $html = (string) $html;
             $words = str_word_count(strip_tags($html));
             $minutes = max(1, (int) ceil($words / self::WORDS_PER_MINUTE));
             $badge = '<p class="reading-time">'.$minutes.' min read</p>';

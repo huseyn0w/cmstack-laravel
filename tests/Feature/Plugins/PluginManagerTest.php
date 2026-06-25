@@ -41,4 +41,17 @@ class PluginManagerTest extends TestCase
         $manager->loadEnabled($hooks2);
         $this->assertStringContainsString('min read', $hooks2->filter('the_content', str_repeat('word ', 400)));
     }
+
+    public function test_reading_time_filter_tolerates_null_content(): void
+    {
+        $manager = app(PluginManager::class);
+        $manager->sync();
+        app(CPanelPluginRepository::class)->setEnabled('reading-time', true);
+
+        $hooks = new Hooks(Event::getFacadeRoot());
+        $manager->loadEnabled($hooks);
+
+        // A post with no body yields null content; the filter must not crash.
+        $this->assertIsString($hooks->filter('the_content', null));
+    }
 }

@@ -29,7 +29,9 @@ class CPanelPluginController extends CPanelBaseController
             'enabled' => 'required|boolean',
         ]);
 
-        $this->service->toggle($data['slug'], (bool) $data['enabled']);
+        if (! $this->service->toggle($data['slug'], (bool) $data['enabled'])) {
+            abort(404);
+        }
 
         return redirect()->route('cpanel_plugins_list')->with('message', ' ');
     }

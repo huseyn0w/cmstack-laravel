@@ -56,4 +56,13 @@ class PluginAdminTest extends TestCase
     {
         $this->get('/cmstack-laravel-admin/plugins')->assertRedirect();
     }
+
+    public function test_toggle_rejects_unknown_slug(): void
+    {
+        $this->actingAs($this->admin)
+            ->put('/cmstack-laravel-admin/plugins/toggle', ['slug' => 'totally-not-a-plugin', 'enabled' => 1])
+            ->assertNotFound();
+
+        $this->assertDatabaseMissing('plugins', ['slug' => 'totally-not-a-plugin']);
+    }
 }

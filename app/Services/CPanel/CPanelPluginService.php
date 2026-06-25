@@ -36,9 +36,19 @@ class CPanelPluginService
             ->values();
     }
 
-    public function toggle(string $slug, bool $enabled): void
+    /**
+     * @return bool false when the slug is not a discovered plugin (so junk rows
+     *              can't be inserted and a not-yet-shipped slug can't be pre-enabled).
+     */
+    public function toggle(string $slug, bool $enabled): bool
     {
+        if (! array_key_exists($slug, $this->manager->discover())) {
+            return false;
+        }
+
         $this->repository->ensureExists($slug);
         $this->repository->setEnabled($slug, $enabled);
+
+        return true;
     }
 }

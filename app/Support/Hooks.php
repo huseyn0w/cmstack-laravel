@@ -53,9 +53,20 @@ class Hooks
 
     public function region(string $name, array $context = []): string
     {
-        $fragments = $this->events->dispatch($this->key('region', $name), [$context]);
+        $fragments = (array) $this->events->dispatch($this->key('region', $name), [$context]);
 
-        return implode('', array_map(fn ($fragment) => (string) $fragment, array_filter((array) $fragments)));
+        $html = '';
+        foreach ($fragments as $fragment) {
+            if ($fragment === null) {
+                continue; // a listener with no opinion returns null
+            }
+            // Tolerate a listener that returns multiple fragments as an array.
+            $html .= is_array($fragment)
+                ? implode('', array_map(fn ($part) => (string) $part, $fragment))
+                : (string) $fragment;
+        }
+
+        return $html;
     }
 
     private function key(string $kind, string $name): string
