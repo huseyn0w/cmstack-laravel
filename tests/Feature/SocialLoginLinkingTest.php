@@ -33,6 +33,8 @@ class SocialLoginLinkingTest extends TestCase
         $socialUser->id = $id;
         $socialUser->email = $email;
         $socialUser->name = $name;
+        // Provider-verified email so linking onto an existing account is allowed.
+        $socialUser->user = ['email_verified' => true];
 
         $provider = Mockery::mock();
         $provider->shouldReceive('user')->andReturn($socialUser);

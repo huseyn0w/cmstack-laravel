@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Auth\SocialAuthService;
+use App\Services\Auth\SocialEmailNotVerifiedException;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
@@ -57,7 +58,12 @@ class LoginController extends Controller
     {
         $socialUser = Socialite::driver($provider)->user();
 
-        $authUser = $this->socialAuth->findOrLink($socialUser, $provider);
+        try {
+            $authUser = $this->socialAuth->findOrLink($socialUser, $provider);
+        } catch (SocialEmailNotVerifiedException $e) {
+            return redirect()->route('login')
+                ->with('status', trans('default/auth.social_email_unverified'));
+        }
 
         if ($authUser) {
             Auth::login($authUser, true);

@@ -24,13 +24,64 @@ class SocialAuthService
     public function __construct(private UserRepository $users) {}
 
     /**
-     * Resolve an existing account for the social user, linking by email when
-     * needed. Returns null when no account can be resolved (caller then
-     * validates + creates a fresh user).
+     * Resolve an existing account for the social user. Matches first on the
+     * social identity (provider_id, provider); otherwise links the identity onto
+     * an account that already owns the email — but ONLY when the provider has
+     * verified that email, to prevent an account takeover via an attacker's
+     * unverified provider email. Returns null when no account can be resolved
+     * (caller then validates + creates a fresh user).
+     *
+     * @throws SocialEmailNotVerifiedException when an account exists for the
+     *                                         email but the provider email is unverified.
      */
     public function findOrLink(object $socialUser, string $provider): ?User
     {
-        return $this->users->findOrLinkSocialIdentity($socialUser, $provider);
+        $linked = $this->users->findBySocialIdentity($socialUser, $provider);
+
+        if ($linked) {
+            return $linked;
+        }
+
+        if (empty($socialUser->email)) {
+            return null;
+        }
+
+        $existing = $this->users->findByEmail((string) $socialUser->email);
+
+        if (! $existing) {
+            return null;
+        }
+
+        if (! $this->providerEmailVerified($socialUser)) {
+            throw new SocialEmailNotVerifiedException;
+        }
+
+        return $this->users->linkSocialIdentity($existing, $socialUser, $provider);
+    }
+
+    /**
+     * Whether the provider asserts the social profile's email is verified. The
+     * flag lives in the provider's raw payload under one of a few common keys;
+     * when it is absent we treat the email as UNVERIFIED (secure default), so a
+     * provider that does not vouch for the address cannot link to an account.
+     */
+    private function providerEmailVerified(object $socialUser): bool
+    {
+        $raw = [];
+
+        if (method_exists($socialUser, 'getRaw')) {
+            $raw = (array) $socialUser->getRaw();
+        } elseif (isset($socialUser->user) && is_array($socialUser->user)) {
+            $raw = $socialUser->user;
+        }
+
+        foreach (['email_verified', 'verified_email'] as $key) {
+            if (array_key_exists($key, $raw)) {
+                return filter_var($raw[$key], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -72,7 +123,8 @@ class SocialAuthService
         return $this->users->createFromSocial(
             $socialUser,
             $provider,
-            $this->usernameFromEmail((string) $socialUser->email)
+            $this->usernameFromEmail((string) $socialUser->email),
+            $this->providerEmailVerified($socialUser)
         );
     }
 

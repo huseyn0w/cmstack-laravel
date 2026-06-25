@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Http\Models\User;
 use App\Services\Auth\SocialAuthService;
+use App\Services\Auth\SocialEmailNotVerifiedException;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,13 +26,14 @@ class SocialAuthServiceTest extends TestCase
         $this->seed(DatabaseSeeder::class);
     }
 
-    private function socialUser(string $email, string $id, string $name = 'Social User'): object
+    private function socialUser(string $email, string $id, string $name = 'Social User', bool $emailVerified = true): object
     {
         $user = Mockery::mock(\Laravel\Socialite\Contracts\User::class);
         $user->shouldReceive('getId')->andReturn($id);
         $user->id = $id;
         $user->email = $email;
         $user->name = $name;
+        $user->user = ['email_verified' => $emailVerified];
 
         return $user;
     }
@@ -80,6 +82,24 @@ class SocialAuthServiceTest extends TestCase
         $resolved = $service->findOrLink($this->socialUser('nobody@example.com', 'gh-3'), 'github');
 
         $this->assertNull($resolved);
+    }
+
+    public function test_find_or_link_refuses_to_link_when_provider_email_unverified(): void
+    {
+        $service = app(SocialAuthService::class);
+
+        $existing = User::factory()->create([
+            'email' => 'protected@example.com', 'provider' => null, 'provider_id' => null,
+        ]);
+
+        $this->expectException(SocialEmailNotVerifiedException::class);
+
+        try {
+            $service->findOrLink($this->socialUser('protected@example.com', 'gh-x', emailVerified: false), 'github');
+        } finally {
+            $existing->refresh();
+            $this->assertNull($existing->provider, 'Unverified social email must not link onto the account');
+        }
     }
 
     public function test_find_or_link_returns_null_when_email_is_empty(): void

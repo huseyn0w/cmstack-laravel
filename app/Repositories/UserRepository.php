@@ -98,56 +98,58 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Resolve an existing account for a social profile, linking by email when
-     * needed. Matches first on (provider_id, provider), then falls back to
-     * linking the social identity onto an account that already owns the
-     * provider-supplied email (so no duplicate account is created). The whole
-     * lookup + link runs in one transaction to avoid races. Returns null when
-     * no account can be resolved (the caller then validates + creates one).
+     * Find the account already linked to this social identity, matched on
+     * (provider_id, provider). Returns null when no linked account exists.
      *
-     * @param  object  $socialUser  Socialite user (id, email, name)
+     * @param  object  $socialUser  Socialite user (id)
      */
-    public function findOrLinkSocialIdentity(object $socialUser, string $provider): ?User
+    public function findBySocialIdentity(object $socialUser, string $provider): ?User
     {
-        return DB::transaction(function () use ($socialUser, $provider) {
-            $authUser = $this->model->where('provider_id', $socialUser->id)
-                ->where('provider', $provider)
-                ->first();
+        return $this->model->where('provider_id', $socialUser->id)
+            ->where('provider', $provider)
+            ->first();
+    }
 
-            if ($authUser) {
-                return $authUser;
-            }
+    /**
+     * Find an account by its email address (used to decide whether a social
+     * profile maps onto an existing account before linking).
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return $this->model->where('email', $email)->first();
+    }
 
-            if (empty($socialUser->email)) {
-                return null;
-            }
+    /**
+     * Link a social identity onto an existing account. Provider fields are set
+     * explicitly (they are not mass assignable). The caller is responsible for
+     * authorising the link (e.g. only when the provider email is verified).
+     *
+     * @param  object  $socialUser  Socialite user (id)
+     */
+    public function linkSocialIdentity(User $user, object $socialUser, string $provider): User
+    {
+        return DB::transaction(function () use ($user, $socialUser, $provider) {
+            $user->provider = $provider;
+            $user->provider_id = $socialUser->id;
+            $user->save();
 
-            $existing = $this->model->where('email', $socialUser->email)->first();
-
-            if ($existing) {
-                // Link the social identity to the existing account. Provider
-                // fields are set explicitly (they are not mass assignable).
-                $existing->provider = $provider;
-                $existing->provider_id = $socialUser->id;
-                $existing->save();
-
-                return $existing;
-            }
-
-            return null;
+            return $user;
         });
     }
 
     /**
      * Create a brand-new user from a social profile. Provider identity fields
      * are assigned explicitly (not mass assigned); privileged fields (role_id)
-     * are left to the database default.
+     * are left to the database default. The account is marked email-verified
+     * only when the provider vouched for the address ($emailVerified) — an
+     * unverified provider email must not forge verification (it would bypass the
+     * optional email-verification enforcement).
      *
      * @param  object  $socialUser  Socialite user (email, name)
      */
-    public function createFromSocial(object $socialUser, string $provider, string $username): User
+    public function createFromSocial(object $socialUser, string $provider, string $username, bool $emailVerified = false): User
     {
-        return DB::transaction(function () use ($socialUser, $provider, $username) {
+        return DB::transaction(function () use ($socialUser, $provider, $username, $emailVerified) {
             $newUser = $this->model->newInstance([
                 'name' => $socialUser->name,
                 'email' => $socialUser->email,
@@ -156,10 +158,7 @@ class UserRepository extends BaseRepository
 
             $newUser->provider = $provider;
             $newUser->provider_id = $socialUser->id;
-            // The provider has already verified this email address, so the
-            // account is created pre-verified (never blocked by the optional
-            // email-verification enforcement).
-            $newUser->email_verified_at = now();
+            $newUser->email_verified_at = $emailVerified ? now() : null;
             $newUser->save();
 
             return $newUser;

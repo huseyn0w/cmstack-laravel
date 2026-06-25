@@ -1,26 +1,29 @@
 # cmstack-laravel — HANDOFF
 
 > Living handoff for the canon-convergence effort. Read this + `REFACTOR_PLAN.md` +
-> `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-24.
+> `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-25.
 >
-> **Latest:** suite **245 green**, PHPStan + Pint clean. Architecture refactor complete;
+> **Latest:** suite **263 green**, PHPStan + Pint clean. Architecture refactor complete;
 > comment-notification + rate-limiting DONE; Tags taxonomy DONE; Revisions + restore UI DONE;
 > Soft-delete for pages DONE; Category tree admin UI DONE; Scheduled publishing DONE;
-> **RSS/Atom feeds DONE** (`/rss.xml` RSS 2.0 + `/atom.xml` Atom 1.0 of the 20 most recent
-> PUBLISHED posts via `Front\FeedService` + `PostRepository::feedEntries`; cached 1h like the
-> sitemap; routes before the catch-all; feed autodiscovery `<link>`s in `seo-meta`; drafts +
-> future-scheduled never leak) & adversarially verified (3 skeptics — found an `esc()` weakness
-> [`ENT_XML1` left `"` raw → Atom `href` attribute breakout, and C0 control chars broke
-> well-formedness]; FIXED [strip illegal XML chars + `ENT_QUOTES|ENT_XML1`] + regression test).
-> Resume at PENDING **Membership toggle + email-verification enforcement** (P8). Optional
-> leftovers: tags in search (§4) + admin tag-list/CRUD; revision storage pruning + morph map;
-> **front never filters plain drafts (status=0, no schedule) — they're publicly reachable by slug
-> (pre-existing)**; MCP post tools don't expose scheduled_at; per-category RSS not built (optional).
+> RSS/Atom feeds DONE; **Membership toggle + email-verification enforcement DONE** (`membership`
+> setting gates self-signup [`registration_enabled` middleware + social-signup gate + hidden
+> register link]; optional `email_verification` setting [new column] ENFORCES verification when on
+> via `verified_if_required` middleware on member routes + a conditional `Registered` listener;
+> `User implements MustVerifyEmail`; social accounts created pre-verified; seeded admin/founder
+> pre-verified). Adversarially verified (3 skeptics): correctness + architecture **cannot refute**;
+> security found a **pre-existing** social-login account-takeover (link-by-email without provider
+> verification) — **FIXED** per user decision [link only when provider email verified, else refuse;
+> `SocialEmailNotVerifiedException`] + tests. Resume at PENDING **Plugin/hook registry** (P9).
+> Optional leftovers: tags in search (§4) + admin tag-list/CRUD; revision storage pruning + morph
+> map; **front never filters plain drafts (status=0, no schedule) — publicly reachable by slug
+> (pre-existing)**; MCP post tools don't expose scheduled_at; per-category RSS (optional); MCP
+> `UpdateGeneralSettingsTool` doesn't expose `email_verification` (optional parity).
 
 ## Where things stand
 
 **Branch:** `refactor/canon-convergence` (off `master`). All work committed there.
-**Suite:** `php artisan test` → **245 passed (645 assertions)**, ~23s (in-memory SQLite).
+**Suite:** `php artisan test` → **263 passed (682 assertions)**, ~27s (in-memory SQLite).
 **Static analysis:** `composer analyse` (PHPStan/Larastan level 5 + baseline) → **green**.
 **Lint:** `composer lint` (Pint, Laravel preset) → clean on all touched files.
 
@@ -73,10 +76,11 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
 > skeptics → fix → commit → refresh this file. Keep services repo-only and side effects in
 > events/observers (with sync/async classification in `REFACTOR_PLAN.md`).
 
-> DONE since last handoff: **RSS/Atom feeds** (P7) — item 7 below; +7 tests
-> (suite 238 → 245), adversarially verified (esc() attribute-injection + control-char weakness
-> found and fixed). Earlier this effort: Scheduled publishing (P6), Category tree admin UI (§2),
-> Soft-delete for pages (§1), Revisions + restore UI (§1), comment-notification (§18/§3), Tags (§2).
+> DONE since last handoff: **Membership toggle + email-verification enforcement** (P8) — item 8
+> below; +16 tests (suite 245 → 263), adversarially verified (a pre-existing social-login
+> account-takeover was found and fixed). Earlier: RSS/Atom feeds (P7), Scheduled publishing (P6),
+> Category tree admin UI (§2), Soft-delete for pages (§1), Revisions + restore UI (§1),
+> comment-notification (§18/§3), Tags (§2).
 
 1. **Tags taxonomy** (P1) — **DONE end-to-end** (schema `tags`/`tag_translations`/`post_tag`;
    `Tag`/`TagTranslation`; `Post::tags()`; `TagRepository` find-or-create+sync + `postsForTag`;
@@ -125,8 +129,30 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
    through (broke XML well-formedness); FIXED in `FeedService::esc()` (strip
    `/[\x00-\x08\x0B\x0C\x0E-\x1F]/` then `ENT_QUOTES|ENT_XML1`) + a hostile-content regression test.
    **Optional leftover:** per-category RSS feed.
-8. **Membership toggle + email-verification enforcement** (P8, **resume here**): wire the dangling settings.
-9. **Plugin/hook registry** (P9): adopt django's action/filter/render-region model (largest).
+8. **Membership toggle + email-verification enforcement** (P8) — **DONE end-to-end**. Membership:
+   `EnsureRegistrationEnabled` middleware (alias `registration_enabled`) on `RegisterController`
+   blocks the register form+POST when `membership` is off (redirect to login + flash); the social
+   callback gates NEW-account creation by the same toggle (existing-account login still works);
+   header hides the register link. Email verification (optional + enforced): new
+   `general_settings.email_verification` column (migration + fillable + boolean casts + admin form
+   + `ValidateGeneralSettings` normalize/rule + seeder default 0); `User implements MustVerifyEmail`;
+   `Auth::routes(['verify'=>true])`; `SendVerificationNotificationIfEnabled` listener sends the
+   verification email only when on, and `EventServiceProvider::configureEmailVerification()` is
+   overridden empty so Laravel's unconditional listener never fires; `EnsureEmailIsVerifiedWhenRequired`
+   middleware (alias `verified_if_required`) on member routes (likes/comments/profile) enforces only
+   when on (409 for JSON, redirect to `verification.notice` otherwise); social accounts created
+   pre-verified; seeded admin/founder pre-verified. en/ru `default/auth` + `cpanel/settings` lang.
+   Adversarially verified (3 skeptics): correctness + architecture cannot refute (phpstan-baseline
+   SHRANK — `LoginController` return types fixed, not baselined). **Security found a PRE-EXISTING
+   social-login account-takeover** (`findOrLinkSocialIdentity` linked by email without provider
+   verification → takeover incl. admin, bypassing both toggles). **FIXED** (user chose "harden"):
+   repo split into `findBySocialIdentity`/`findByEmail`/`linkSocialIdentity`; `SocialAuthService::findOrLink`
+   links onto an email-matched account ONLY when the provider asserts the email is verified
+   (`email_verified`/`verified_email` in raw payload; absent ⇒ unverified = secure default), else
+   throws `SocialEmailNotVerifiedException` → controller redirects to login with a flash. 23 tests
+   (Membership/EmailVerification/SocialMembershipAndVerification + updated SocialAuthService/SocialLoginLinking).
+   **Optional leftover:** expose `email_verification` in MCP `UpdateGeneralSettingsTool` for parity.
+9. **Plugin/hook registry** (P9, **resume here**): adopt django's action/filter/render-region model (largest).
 10. **Coverage → ≥80% on services/repos + 100% critical paths**, and **CI pipeline**
     (lint → analyse → test → build → e2e). NOTE: this box has **no Xdebug/PCOV** installed,
     so `--coverage` cannot run here yet — install PCOV (or run in CI) before reporting numbers.
