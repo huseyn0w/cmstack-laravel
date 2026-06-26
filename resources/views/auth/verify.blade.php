@@ -1,24 +1,26 @@
 @extends(config('app.template_name').'/index')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">@lang('email.verify_page_headline')</div>
 
-                <div class="card-body">
-                    @if (session('resent'))
-                        <div class="alert alert-success" role="alert">
-                            @lang('email.fresh_link')
-                        </div>
-                    @endif
-
-                        @lang('email.check_email')
-                        @lang('email.not_receive_email'), <a href="{{ route('verification.resend') }}">@lang('email.request_other_email')</a>.
-                </div>
-            </div>
-        </div>
+<section class="mx-auto max-w-[440px] px-5 py-16 sm:py-20">
+    <div class="mb-8 text-center">
+        <h1 class="font-serif text-3xl font-semibold tracking-tight text-[var(--text)]">@lang('email.verify_page_headline')</h1>
     </div>
-</div>
+
+    <x-card>
+        @if (session('resent'))
+            <x-alert variant="success" class="mb-6">
+                @lang('email.fresh_link')
+            </x-alert>
+        @endif
+
+        <p class="text-sm text-[var(--text-muted)]">
+            @lang('email.check_email')
+            @lang('email.not_receive_email'),
+            <a href="{{ route('verification.resend') }}"
+               class="font-medium text-[var(--primary)] transition hover:text-[var(--primary-hover)]">@lang('email.request_other_email')</a>.
+        </p>
+    </x-card>
+</section>
+
 @endsection

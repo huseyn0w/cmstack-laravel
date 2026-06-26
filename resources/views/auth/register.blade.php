@@ -1,101 +1,112 @@
 @extends(config('app.template_name').'/index')
 
 @section('content')
-<section class="top-section-area section-gap">
-    <div class="container">
-        <div class="row justify-content-between align-items-center d-flex">
-            <div class="col-lg-8 top-left">
-                <h1 class="text-white mb-20">@lang('registration.register_page_headline')</h1>
-            </div>
-        </div>
+
+<section class="mx-auto max-w-[440px] px-5 py-16 sm:py-20">
+    <div class="mb-8 text-center">
+        <h1 class="font-serif text-3xl font-semibold tracking-tight text-[var(--text)]">@lang('registration.register_page_headline')</h1>
+        <p class="mt-2 text-sm text-[var(--text-muted)]">@lang('registration.register')</p>
     </div>
-</section>
-<section class="login-cover mb-30 mt-30">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">@lang('registration.register')</div>
 
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
-                            @csrf
-                            <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">@lang('registration.name')</label>
+    <x-card>
+        <form method="POST" action="{{ route('register') }}" class="space-y-5" novalidate>
+            @csrf
 
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+            <x-field
+                name="name"
+                :label="__('registration.name')"
+                :error="$errors->first('name')"
+                :required="true"
+            >
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    value="{{ old('name') }}"
+                    required
+                    autocomplete="name"
+                    autofocus
+                    @if($errors->has('name')) aria-invalid="true" aria-describedby="name-error" @endif
+                    class="field-input @error('name') border-[var(--error)] @enderror"
+                >
+            </x-field>
 
-                                    @error('name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
+            <x-field
+                name="email"
+                :label="__('registration.email')"
+                :error="$errors->first('email')"
+                :required="true"
+            >
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    required
+                    autocomplete="email"
+                    @if($errors->has('email')) aria-invalid="true" aria-describedby="email-error" @endif
+                    class="field-input @error('email') border-[var(--error)] @enderror"
+                >
+            </x-field>
 
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">@lang('registration.email')</label>
+            <x-field
+                name="username"
+                :label="__('registration.username')"
+                :error="$errors->first('username')"
+                :required="true"
+            >
+                <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    value="{{ old('username') }}"
+                    required
+                    @if($errors->has('username')) aria-invalid="true" aria-describedby="username-error" @endif
+                    class="field-input @error('username') border-[var(--error)] @enderror"
+                >
+            </x-field>
 
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+            <x-field
+                name="password"
+                :label="__('registration.password')"
+                :error="$errors->first('password')"
+                :required="true"
+            >
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="new-password"
+                    @if($errors->has('password')) aria-invalid="true" aria-describedby="password-error" @endif
+                    class="field-input @error('password') border-[var(--error)] @enderror"
+                >
+            </x-field>
 
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
+            <x-field
+                name="password_confirmation"
+                :label="__('registration.confirm_password')"
+                :required="true"
+            >
+                <input
+                    id="password-confirm"
+                    type="password"
+                    name="password_confirmation"
+                    required
+                    autocomplete="new-password"
+                    class="field-input"
+                >
+            </x-field>
 
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">@lang('registration.username')</label>
+            <x-button type="submit" variant="primary" class="w-full">
+                @lang('registration.register_btn')
+            </x-button>
+        </form>
 
-                                <div class="col-md-6">
-                                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required>
-
-                                    @error('username')
-                                    <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">@lang('registration.password')</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password-confirm" class="col-md-4 col-form-label text-md-right">@lang('registration.confirm_password')</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-12 offset-md-4 text-center">
-                                    <button type="submit" class="genric-btn primary e-large">
-                                        @lang('registration.register_btn')
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-6 text-center text-sm text-[var(--text-muted)]">
+            <a href="{{ route('login') }}" class="font-medium text-[var(--primary)] transition hover:text-[var(--primary-hover)]">@lang('login.login')</a>
         </div>
-    </div>
+    </x-card>
 </section>
+
 @endsection
