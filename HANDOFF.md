@@ -1,29 +1,39 @@
 # cmstack-laravel — HANDOFF
 
 > Living handoff for the canon-convergence effort. Read this + `REFACTOR_PLAN.md` +
-> `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-25.
+> `../FEATURE_MATRIX.md` + `../DESIGN_SYSTEM.md` before continuing. Last updated 2026-06-26.
 >
-> **Latest:** suite **290 green**, PHPStan + Pint clean. Architecture refactor complete;
-> comment-notification + rate-limiting DONE; Tags DONE; Revisions DONE; Soft-delete pages DONE;
-> Category tree admin UI DONE; Scheduled publishing DONE; RSS/Atom feeds DONE; Membership toggle +
-> email-verification enforcement DONE; **Plugin/hook registry DONE** (P9, Laravel-events engine:
-> `App\Support\Hooks` action/filter/region over the dispatcher + `@hook` Blade directive; in-repo
-> plugins implement `App\Plugins\Contracts\PluginInterface`, discovered by `PluginManager`, synced to
-> a `plugins` table, lazily booted enabled-only via `PluginServiceProvider`; reading-time sample
-> plugin filters `the_content`; admin manager toggles plugins under `manage_general_settings`).
-> Adversarially verified (3 skeptics): architecture **cannot refute**; fixed their findings —
-> HIGH null-content 500 (null-safe filter), MEDIUM region array-fatal + LOW falsy-drop (robust
-> `region()`), LOW arbitrary-slug junk rows (slug validated against `discover()` → 404). Resume at
-> PENDING **Coverage ≥80% + CI** (P10) or **UI redesign** (Task 3). Optional leftovers: tags in
-> search (§4) + admin tag-list/CRUD; revision storage pruning + morph map; **front never filters
-> plain drafts (status=0, no schedule) — publicly reachable by slug (pre-existing)**; MCP post tools
-> don't expose scheduled_at; per-category RSS (optional); MCP settings tool lacks `email_verification`
-> + plugin toggles (optional parity); filter priorities/plugin zip-upload out of scope (YAGNI).
+> **Latest:** **P10 testing/coverage/CI — implementation DONE (CI-measured parts pending a CI run).**
+> Suite **322 green** (791 assertions), PHPStan(level 5)+Pint clean. **Pest 4 is now the canonical
+> runner** (`./vendor/bin/pest`; PHPUnit bumped 11→12.5.30, Pest 4.7.4; `tests/Pest.php` hand-written,
+> NOT `--init`, so phpunit.xml force-pins intact). Added **`arch()` layering presets**
+> (`tests/Arch/LayeringTest.php`: controllers⊄ORM/DB, services⊄DB-facade/query-builder, repo
+> allow-list with `App\Http\Controllers` deliberately EXCLUDED) — they caught a **real leak** the
+> earlier review missed: `ResetPasswordController` injected `UserRepository` directly → extracted
+> `App\Services\Auth\PasswordResetService` (double-hash-safe path preserved), controllers now fully
+> repo-free. Added **per-layer test-status table** (`REFACTOR_PLAN.md`) + **direct gap-filling tests**
+> (CPanelPost/PageService, PostViewService, front CategoryRepository, ChangePasswordRequest, security
+> `WriteThemeFileTool` path-traversal). Authored **Pest 4 browser suite** (`pest-plugin-browser` 4.3.1,
+> 9 scenarios w/ `data-testid`+a11y+no-smoke+mobile, `->skip` unless `BROWSER_TESTS=1`; **Dusk kept**
+> until CI parity). Added **`.github/workflows/ci.yml`** (lint→analyse→test+coverage→build→browser-e2e
+> on MySQL+Playwright). Final Opus whole-branch review: **READY TO MERGE, 0 Critical/0 Important.**
+> **CI-GATED LEFTOVERS (cannot run in this sandbox — no PCOV, no MySQL, no browser):** (1) actual
+> coverage % — `--coverage --min=80` gate is in CI; first run measures the real baseline and may be
+> RED until more gap tests land (Phase 6); (2) the browser e2e must be proven green in the CI e2e job;
+> (3) only THEN retire Dusk (`laravel/dusk`, `DuskTestCase`, old `tests/Browser/*Test.php` Dusk classes,
+> `scripts/dusk.sh`, `make dusk`). NB: change-password DOES verify the current password
+> (`UserRepository::setPlainPassword`/guard at `UserRepository:88`), just not as a form-request rule.
+> Resume at **UI redesign** (Task 3) or close P10's CI-gated items by pushing + reading CI.
+> Pre-P10 optional leftovers still open: tags in search (§4) + admin tag-list/CRUD; revision storage
+> pruning + morph map; **front never filters plain drafts (status=0, no schedule) — publicly reachable
+> by slug (pre-existing)**; MCP post tools don't expose scheduled_at; per-category RSS; MCP settings
+> tool lacks `email_verification` + plugin toggles (optional parity).
 
 ## Where things stand
 
 **Branch:** `refactor/canon-convergence` (off `master`). All work committed there.
-**Suite:** `php artisan test` → **290 passed (720 assertions)**, ~27s (in-memory SQLite).
+**Runner:** **Pest 4** (`./vendor/bin/pest`) is canonical; `php artisan test` still proxies to it.
+**Suite:** **322 passed (791 assertions)**, ~33s (in-memory SQLite; browser tests excluded/skipped).
 **Static analysis:** `composer analyse` (PHPStan/Larastan level 5 + baseline) → **green**.
 **Lint:** `composer lint` (Pint, Laravel preset) → clean on all touched files.
 
@@ -169,26 +179,29 @@ Service -> Event -> Listener/Observer   (for side effects of writes)
    LOW falsy-drop (robust `region()`), LOW arbitrary-slug junk rows (toggle validates against
    `discover()` → 404). **Optional leftovers:** filter priorities, plugin zip-upload, Octane re-prime
    reset, expose plugin toggles via MCP (all YAGNI/out-of-scope).
-10. **Testing mandate + coverage + CI** (P10, **resume here**) — per the updated operating prompt
-    (`../prompts/cmstack-laravel.md`, the authoritative contract; read it first):
-    - **Migrate the suite to Pest 4** (`composer require pestphp/pest --dev` + init). Pest is the
-      canonical runner; run `./vendor/bin/pest --coverage` and SHOW output. Keep the existing
-      characterization tests (they run as-is under Pest/PHPUnit).
-    - **Add Pest `arch()` presets** enforcing the layering rules (controllers must not touch
-      Eloquent; services must not import `Illuminate\Support\Facades\DB` / query builder; chain
-      controller→service→repository→model).
-    - **Migrate Dusk → Pest 4 browser testing** (`pestphp/pest-plugin-browser` + Playwright),
-      preserving the scenarios in `tests/Browser/` (`AuthAndAdminTest`, `PublicSiteTest`,
-      `GeoSettingsBrowserTest`); use `data-testid` selectors, `assertNoAccessibilityIssues()`
-      (WCAG 2.1 AA), `assertNoSmoke()` (no console/JS errors), mobile device sim. Remove the
-      `laravel/dusk` dependency once parity is reached — don't lose coverage.
-    - **Per-layer test status table in `REFACTOR_PLAN.md`** (models, controllers, middleware, form
-      requests, policies, repositories, services, observers/events/listeners, jobs, console
-      commands, providers/bindings, Blade components, factories) — no layer at zero tests.
-    - **Coverage targets:** ≥80% line on services/repos + 100% of critical paths (auth, content
-      CRUD, publishing, media). **No Xdebug/PCOV in this sandbox** → `--coverage` can't run here;
-      install PCOV locally or measure in CI before reporting numbers (never assert a number unrun).
-    - **CI pipeline** (lint → analyse → test → build → e2e).
+10. **Testing mandate + coverage + CI** (P10) — **IMPLEMENTATION DONE; CI-measured items pending.**
+    Plan: `docs/superpowers/plans/2026-06-26-p10-testing-coverage-ci.md`. Commits `aff5a13`..`2208bde`.
+    - **Pest 4 = canonical runner** — DONE (`./vendor/bin/pest`; PHPUnit 11→12.5.30, Pest 4.7.4;
+      `tests/Pest.php` hand-written; phpunit.xml force-pins intact; composer `test`/`test:coverage`/
+      `check` repointed to pest). 290→322 tests green.
+    - **Pest `arch()` presets** — DONE (`tests/Arch/LayeringTest.php`; controllers⊄ORM/DB, services⊄
+      DB-facade/query-builder, repo `toOnlyBeUsedIn` allow-list with `App\Http\Controllers` EXCLUDED).
+      Caught + fixed a real controller→repository leak (`ResetPasswordController` → new
+      `App\Services\Auth\PasswordResetService`; double-hash-safe reset path preserved).
+    - **Dusk → Pest 4 browser** — AUTHORED (`pest-plugin-browser` 4.3.1; `tests/Browser/{Homepage,
+      AuthAdmin,GeoSettings}Test.php`; `data-testid` + a11y + no-smoke + mobile; `->skip` unless
+      `BROWSER_TESTS=1`; excluded from default testsuites). **Dusk NOT yet removed** — retire only
+      after the CI e2e job proves parity.
+    - **Per-layer test-status table** — DONE in `REFACTOR_PLAN.md`; no layer at zero (direct tests
+      added for previously transitive-only services/repos + security `WriteThemeFileTool`).
+    - **Coverage ≥80% services/repos + 100% critical paths** — **CI-GATED.** No PCOV/Xdebug here so
+      `--coverage` can't run locally; the `--min=80` gate lives in `ci.yml`. First CI run measures the
+      real baseline and may be RED until more gap tests land — close it then (never assert an unrun %).
+    - **CI pipeline** — DONE (`.github/workflows/ci.yml`: quality[lint→analyse→pest --coverage --min=80]
+      + build[vite] + e2e[MySQL 8 + Playwright Chromium, `pest tests/Browser` w/ `BROWSER_TESTS=1`]).
+      Final Opus whole-branch review: READY TO MERGE, 0 Critical/0 Important.
+    - **REMAINING (needs a real env, not this sandbox):** push → read CI coverage → add gap tests to
+      reach ≥80%/100%-critical (Phase 6); prove the browser e2e green; then retire Dusk in one commit.
 11. **UI redesign to `../DESIGN_SYSTEM.md`** (Task 3, biggest): tokens → self-hosted fonts
     (Newsreader/Inter/Geist Mono) → Blade components → perf budget → a11y. **Lighthouse ≥95
     mobile must be MEASURED** with a real run (needs served app + headless Chrome against
@@ -291,13 +304,14 @@ Operating rules (summary — the prompt above is authoritative):
   attribution trailer**. When context drops below ~50%, refresh HANDOFF.md (incl. this
   continuation prompt) and tell me in Russian to open a new window.
 
-Start with PENDING **Testing mandate + coverage + CI** (P10): migrate the suite to **Pest 4**
-(canonical runner), add `arch()` layering presets, migrate **Dusk → Pest browser**, record a
-per-layer test-status table in REFACTOR_PLAN.md, then chase ≥80%/100%-critical coverage (no
-PCOV here — flag it) + the CI pipeline. (Task 3 **UI redesign to ../DESIGN_SYSTEM.md** is the
-other large remaining track.) Already
+**P10 (Testing mandate + coverage + CI) implementation is DONE** (Pest 4 canonical runner, `arch()`
+presets, Pest browser suite authored, per-layer table, `ci.yml`; suite 322 green; Opus review READY
+TO MERGE). Its only REMAINING work needs a real CI env (no PCOV/MySQL/browser in this sandbox): push
+the branch, read the first CI coverage run, add gap tests until ≥80%/100%-critical (Phase 6), prove
+the browser e2e green, then retire `laravel/dusk` in one commit. The main remaining LOCAL track is
+**Task 3 — UI redesign to ../DESIGN_SYSTEM.md** (start there if not closing P10's CI items). Already
 DONE this effort: architecture refactor, comment-notification + rate-limiting (§18/§3), Tags (§2),
 Revisions + restore UI (§1), Soft-delete for pages (§1, P3), Category tree admin UI (§2, P4),
-Scheduled publishing (§1, P6), RSS/Atom feeds (P7), Membership + email-verification (P8), and
-Plugin/hook registry (P9).
+Scheduled publishing (§1, P6), RSS/Atom feeds (P7), Membership + email-verification (P8),
+Plugin/hook registry (P9), and **Pest 4 / arch / CI testing mandate (P10)**.
 ```
