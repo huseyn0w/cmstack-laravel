@@ -28,4 +28,9 @@ return [
     'gender_male' => 'Мужской',
     'gender_female' => 'Женский',
     'updated_profile' => 'Обновить данные пользователя',
+    'about_me' => 'О себе',
+    'details' => 'Информация',
+    'account' => 'Аккаунт',
+    'avatar' => 'Аватар',
+    'opens_in_new_tab' => 'открывается в новой вкладке',
 ];

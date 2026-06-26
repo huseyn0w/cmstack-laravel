@@ -4,7 +4,9 @@
  * File: change_password.blade.php
  * Created by Elman (https://linkedin.com/in/huseyn0w)
  * Date: 12.11.2019
- * Phase 4: rewritten from Bootstrap 4 to Tailwind CSS (editorial theme).
+ * Phase 5: redesigned to DESIGN_SYSTEM §5 using component library.
+ *          Form action, field names (current_password/password/password_confirmation),
+ *          and captcha widget preserved.
  */
 ?>
 
@@ -19,58 +21,104 @@
     @include(config('app.template_name').'.partials.banner', [
         'title'  => __('default/change_password.headline'),
         'crumbs' => [
-            ['label' => $home_page_data->title, 'url' => env('APP_URL')],
+            ['label' => $home_page_data->title, 'url' => config('app.url')],
             ['label' => __('default/change_password.edit_profile'), 'url' => route('get_user_info')],
             ['label' => __('default/change_password.change_password'), 'url' => null],
         ],
     ])
 
-    <section class="mx-auto max-w-xl px-5 py-16 sm:px-8 sm:py-20">
+    <section class="mx-auto max-w-[480px] px-5 py-16 sm:px-8 sm:py-24">
+
+        {{-- Validation errors --}}
         @if ($errors->any())
-            <div class="mb-6 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3.5 text-sm text-brand-800" role="alert">
+            <x-alert variant="error" class="mb-6">
                 <ul class="list-disc space-y-1 pl-5">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-            </div>
+            </x-alert>
         @endif
+
+        {{-- Session flash --}}
         @if (Session::has('message'))
             @if (Session::get('message'))
-                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 text-sm font-medium text-emerald-800" role="status">@lang('default/change_password.password_updated')</div>
+                <x-alert variant="success" class="mb-6">@lang('default/change_password.password_updated')</x-alert>
             @else
-                <div class="mb-6 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3.5 text-sm font-medium text-brand-800" role="alert">@lang('default/change_password.problem_occurred')</div>
+                <x-alert variant="error" class="mb-6">@lang('default/change_password.problem_occurred')</x-alert>
             @endif
         @endif
 
-        <form action="{{ route('change_password_action') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-            @method('PUT')
-            @csrf
+        <x-card>
+            <x-slot name="header">
+                <x-eyebrow>@lang('default/change_password.change_password')</x-eyebrow>
+            </x-slot>
 
-            <div>
-                <label for="current_password" class="field-label">@lang('default/change_password.current_password')</label>
-                <input type="password" required id="current_password" name="current_password" class="field-input" autocomplete="current-password">
-            </div>
+            <form action="{{ route('change_password_action') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                @method('PUT')
+                @csrf
 
-            <div class="grid gap-5 sm:grid-cols-2">
-                <div>
-                    <label for="password" class="field-label">@lang('default/change_password.new_password')</label>
-                    <input type="password" required id="password" name="password" class="field-input" autocomplete="new-password">
+                <x-field
+                    label="{{ __('default/change_password.current_password') }}"
+                    name="current_password"
+                    :error="$errors->first('current_password')"
+                >
+                    <input
+                        type="password"
+                        required
+                        id="current_password"
+                        name="current_password"
+                        autocomplete="current-password"
+                        class="w-full h-10 bg-[var(--surface)] border border-[var(--border-strong)] rounded-sm px-3 text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:outline-none focus:border-[var(--ring)] focus:ring-2 focus:ring-[var(--ring)]/30 transition-colors duration-[var(--dur-fast)]"
+                        @if($errors->has('current_password')) aria-invalid="true" aria-describedby="current_password-error" @endif
+                    />
+                </x-field>
+
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <x-field
+                        label="{{ __('default/change_password.new_password') }}"
+                        name="password"
+                        :error="$errors->first('password')"
+                    >
+                        <input
+                            type="password"
+                            required
+                            id="password"
+                            name="password"
+                            autocomplete="new-password"
+                            class="w-full h-10 bg-[var(--surface)] border border-[var(--border-strong)] rounded-sm px-3 text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:outline-none focus:border-[var(--ring)] focus:ring-2 focus:ring-[var(--ring)]/30 transition-colors duration-[var(--dur-fast)]"
+                            @if($errors->has('password')) aria-invalid="true" aria-describedby="password-error" @endif
+                        />
+                    </x-field>
+
+                    <x-field
+                        label="{{ __('default/change_password.confirm_new_password') }}"
+                        name="confirm_password"
+                        :error="$errors->first('password_confirmation')"
+                    >
+                        <input
+                            type="password"
+                            required
+                            id="confirm_password"
+                            name="password_confirmation"
+                            autocomplete="new-password"
+                            class="w-full h-10 bg-[var(--surface)] border border-[var(--border-strong)] rounded-sm px-3 text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:outline-none focus:border-[var(--ring)] focus:ring-2 focus:ring-[var(--ring)]/30 transition-colors duration-[var(--dur-fast)]"
+                            @if($errors->has('password_confirmation')) aria-invalid="true" aria-describedby="confirm_password-error" @endif
+                        />
+                    </x-field>
                 </div>
+
                 <div>
-                    <label for="confirm_password" class="field-label">@lang('default/change_password.confirm_new_password')</label>
-                    <input type="password" required id="confirm_password" name="password_confirmation" class="field-input" autocomplete="new-password">
+                    {!! app('captcha')->render(); !!}
                 </div>
-            </div>
 
-            <div>
-                {!! app('captcha')->render(); !!}
-            </div>
-
-            <div class="pt-2">
-                <button type="submit" class="btn-primary">@lang('default/change_password.change_password')</button>
-            </div>
-        </form>
+                <div class="pt-2 flex justify-end">
+                    <x-button type="submit" variant="primary" size="md">
+                        @lang('default/change_password.change_password')
+                    </x-button>
+                </div>
+            </form>
+        </x-card>
     </section>
 
 @endsection

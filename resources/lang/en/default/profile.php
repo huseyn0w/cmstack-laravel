@@ -28,4 +28,9 @@ return [
     'gender_male' => 'Male',
     'gender_female' => 'Female',
     'updated_profile' => 'Update profile',
+    'about_me' => 'About me',
+    'details' => 'Details',
+    'account' => 'Account',
+    'avatar' => 'Avatar',
+    'opens_in_new_tab' => 'opens in new tab',
 ];
