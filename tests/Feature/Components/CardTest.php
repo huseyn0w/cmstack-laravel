@@ -21,12 +21,17 @@ it('renders with base surface/border/rounded-lg classes', function () {
 });
 
 it('renders header slot when provided', function () {
-    $html = Blade::render('<x-card><x-slot:header>My Header</x-slot:header>Content</x-card>');
+    // Use @component/@slot syntax (not x-slot) to avoid output-buffer leakage in PHPUnit.
+    $html = Blade::render(
+        '@component("components.card") @slot("header") My Header @endslot Content @endcomponent'
+    );
     expect($html)->toContain('My Header')->toContain('Content');
 });
 
 it('renders footer slot when provided', function () {
-    $html = Blade::render('<x-card><x-slot:footer>Footer text</x-slot:footer>Main</x-card>');
+    $html = Blade::render(
+        '@component("components.card") @slot("footer") Footer text @endslot Main @endcomponent',
+    );
     expect($html)->toContain('Footer text')->toContain('Main');
 });
 
