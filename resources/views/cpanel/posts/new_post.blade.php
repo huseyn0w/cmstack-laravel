@@ -117,7 +117,7 @@
 @push('finalscripts')
     <script src="{{asset('admin')}}/js/post.js"></script>
     <script>
-        var site_url = "<?php echo env('APP_URL'); ?>/";
+        var site_url = "<?php echo config('app.url'); ?>/";
     </script>
     <script src="{{asset('admin')}}/js/thumbnail.js"></script>
 @endpush

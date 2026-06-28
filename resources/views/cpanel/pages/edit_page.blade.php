@@ -24,7 +24,7 @@
                 <h1 class="text-xl font-semibold text-fg">@lang('cpanel/pages.edit_page_headline')</h1>
                 <p class="mt-1 text-sm text-muted">
                     @lang('cpanel/pages.url_preview')
-                    <a href="{{env('APP_URL')}}/{{ old('slug',$page_slug) }}" class="font-medium text-primary hover:text-primary-hover">{{env('APP_URL')}}/{{ old('slug',$page_slug) }}</a>
+                    <a href="{{config('app.url')}}/{{ old('slug',$page_slug) }}" class="font-medium text-primary hover:text-primary-hover">{{config('app.url')}}/{{ old('slug',$page_slug) }}</a>
                 </p>
             </div>
             <x-button variant="ghost" href="{{ route('cpanel_page_revisions', ['id' => $entity->id, 'lang' => get_current_lang()]) }}">@lang('cpanel/revisions.revisions_link')</x-button>

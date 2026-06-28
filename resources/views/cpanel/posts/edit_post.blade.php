@@ -26,7 +26,7 @@
             <h1 class="text-xl font-semibold text-fg">@lang('cpanel/posts.edit_headline')</h1>
             <p class="mt-1 text-sm text-muted">
                 @lang('cpanel/posts.url_preview')
-                <a href="{{env('APP_URL')}}/posts/{{ old('slug',$entity->slug) }}" class="font-medium text-primary hover:text-primary-hover">{{env('APP_URL')}}/posts/{{ old('slug',$entity->slug) }}</a>
+                <a href="{{config('app.url')}}/posts/{{ old('slug',$entity->slug) }}" class="font-medium text-primary hover:text-primary-hover">{{config('app.url')}}/posts/{{ old('slug',$entity->slug) }}</a>
             </p>
             </div>
             <x-button variant="ghost" href="{{ route('cpanel_post_revisions', ['id' => $entity->id, 'lang' => get_current_lang()]) }}">@lang('cpanel/revisions.revisions_link')</x-button>
@@ -128,7 +128,7 @@
 @push('finalscripts')
     <script src="{{asset('admin')}}/js/post.js"></script>
     <script>
-        var site_url = "<?php echo env('APP_URL'); ?>/";
+        var site_url = "<?php echo config('app.url'); ?>/";
     </script>
     <script src="{{asset('admin')}}/js/thumbnail.js"></script>
 @endpush
