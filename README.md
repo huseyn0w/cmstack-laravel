@@ -17,6 +17,8 @@ Built and maintained by **[Elman Group](https://elman.group)**.
 
 - [Features](#features)
 - [Tech stack](#tech-stack)
+- [Architecture](#architecture)
+- [Design system](#design-system)
 - [Requirements](#requirements)
 - [Quick start (Docker + Makefile)](#quick-start-docker--makefile)
 - [Manual setup (no Docker)](#manual-setup-no-docker)
@@ -36,7 +38,15 @@ Built and maintained by **[Elman Group](https://elman.group)**.
 ## Features
 
 - **Full CMS**: pages, posts, categories, menus, comments, media / file manager
-- **Modern responsive UI** (Tailwind CSS 3 + Alpine.js) for both the public site and the admin panel
+- **Tags taxonomy** — posts carry many-to-many tags; `/tag/{slug}` archives with pagination
+- **Content revisions** — every page/post save snapshots a revision; diff view and one-click restore in the admin
+- **Soft-delete** — pages and posts use `SoftDeletes`; trashed items are recoverable from the admin
+- **Scheduled publishing** — set a future `scheduled_at` date on any post; the `posts:publish-due` scheduler command promotes it automatically (runs every minute; safe with `--without-overlapping`)
+- **RSS / Atom feeds** — `/rss.xml` and `/atom.xml` served by `SeoController`
+- **Plugin / hook system** — `App\Support\Hooks` provides `action / filter / region` hooks; in-repo plugins under `app/Plugins/` are auto-discovered by `PluginManager` and managed from the admin panel (`CPanelPluginController`); the `@hook` Blade directive renders hook regions in templates
+- **Membership toggle + email-verification enforcement** — public registration and email-verification requirements are both runtime settings, toggled from the admin panel (no code changes needed)
+- **Category tree admin UI** — nested category picker that excludes circular references
+- **Modern responsive UI** (Tailwind CSS 3 + Alpine.js) for both the public site and the admin panel, including **dark mode** (system-preference aware with an admin toggle)
 - **Built-in SEO/GEO** — Open Graph, Twitter cards, canonical + `hreflang`, JSON-LD structured data, dynamic `sitemap.xml`, `robots.txt`, and `llms.txt`
 - **Multilingual content** via `astrotomic/laravel-translatable` (en/ru out of the box, easily extended)
 - **Social-media authentication** (Facebook, GitHub, LinkedIn, and other Socialite providers)
@@ -46,18 +56,6 @@ Built and maintained by **[Elman Group](https://elman.group)**.
 - **Spam protection** via Google reCAPTCHA v3 (gracefully disabled when no keys are set)
 - **Database / model caching**
 - **AI / MCP connector** — manage the live site from Claude (posts, pages, users, settings, theme) over an authenticated MCP server (see [AI / MCP connector](#ai--mcp-connector-manage-your-site-from-claude))
-- **164 automated tests** (PHPUnit) running on isolated in-memory SQLite
-
-### Why it's easy to extend
-
-Written with Laravel best practices: thin controllers, dedicated Form Request validators,
-the repository pattern for all DB access, observers, policies, the TinyMCE editor, and the
-Laravel File Manager.
-
-### Planned
-
-- E-Commerce extension
-- REST API for posts and pages
 
 ---
 
@@ -66,9 +64,85 @@ Laravel File Manager.
 - **Laravel 11** (PHP 8.3)
 - **Tailwind CSS 3** + **Alpine.js**, bundled with **Vite** — lightweight front-end, no jQuery/plugin bloat
 - **MySQL 8** with `astrotomic/laravel-translatable` for multilingual content
-- Repository pattern, custom role/permission middleware, model caching
+- Repository pattern + service layer, custom role/permission middleware, model caching
 - Google reCAPTCHA (v3) for spam protection
 - Docker stack for local development (nginx + php-fpm + MySQL 8)
+- `ext-imagick` for image processing
+
+---
+
+## Architecture
+
+Cmstack-Laravel enforces **strict layering** throughout the codebase:
+
+```
+HTTP request → Controller → Service → Repository → Model
+```
+
+- **Controllers** are a pure HTTP boundary. They resolve request data and delegate to services; they never touch the ORM or the `DB` facade directly.
+- **Services** (`App\Services`) contain business logic. They call repositories for all data access and never query the database themselves.
+- **Repositories** (`App\Repositories`) are the single home for Eloquent query building. They are consumed by services, MCP tools, and model observers — nothing else.
+- **Models** (`App\Http\Models`) define Eloquent relationships, casts, and fillable attributes.
+
+These rules are **machine-enforced** by Pest `arch()` presets in `tests/Arch/LayeringTest.php` — a build failure, not a convention — so the layering can't silently erode as the codebase grows.
+
+### Why this structure?
+
+- Easy to test: services and repositories are injected via the container; controllers become thin and trivial to mock.
+- Easy to extend: the plugin/hook system, MCP tools, and observers can add behaviour without touching core controller or service logic.
+- Easy to read: every code path has a predictable home; no business logic hidden in views or models.
+
+---
+
+## Design system
+
+The UI implements a **canonical "quiet-luxury" editorial design system** shared across the cmstack multi-stack project (spec: `../DESIGN_SYSTEM.md`).
+
+### Tokens and theming
+
+All colors, spacing, and typography scale are expressed as **CSS custom properties** in `resources/css/tokens.css`. Tailwind utilities reference these vars. Two themes are defined:
+
+- **Light** (`:root`) — warm paper background (`#FBFAF7`), warm near-black ink, garnet/terracotta primary accent
+- **Dark** (`.dark`) — full dark-mode counterpart; toggled at runtime with no FOUC via an inline script that reads `localStorage` before first paint; also respects `prefers-color-scheme`
+
+### Self-hosted variable fonts
+
+No font CDN. Three variable fonts are self-hosted via `@fontsource-variable/*` packages, imported in `resources/css/fonts.css`:
+
+| Font | Role |
+| --- | --- |
+| **Newsreader** | Serif display / editorial headings |
+| **Inter** | UI body text, admin panel |
+| **Geist Mono** | Code, technical content |
+
+Font subsets are locked to Latin to minimize transfer size; `font-display: swap` is used throughout.
+
+### Blade component library
+
+A full set of token-driven Blade components lives in `resources/views/components/`:
+
+`alert`, `avatar`, `badge`, `breadcrumb`, `button`, `card`, `dropdown`, `empty-state`, `eyebrow`, `field`, `icon`, `modal`, `pagination`, `tabs`, `toast-region`
+
+All components flip correctly under `.dark` via token inheritance — no component has hard-coded colors.
+
+### Accessibility
+
+WCAG 2.1 AA is the enforced floor: semantic landmarks, visible focus rings, sufficient contrast at both light/dark tokens, `aria-*` attributes on interactive components, a skip-link, and single `<h1>` per page (including archive views). `prefers-reduced-motion` is respected in transitions.
+
+### Performance budget
+
+Lighthouse CI runs on every push (`.lighthouserc.json`, mobile preset):
+
+| Metric | Gate |
+| --- | --- |
+| Performance | ≥ 95 |
+| SEO | ≥ 95 |
+| Accessibility | ≥ 95 |
+| Best Practices | ≥ 95 |
+| LCP | < 2.0 s |
+| CLS | < 0.05 |
+
+A build that misses any threshold fails CI.
 
 ---
 
@@ -115,7 +189,7 @@ When it finishes:
 | `make up`    | Start the Docker stack                                      |
 | `make down`  | Stop the stack (keeps the DB volume)                        |
 | `make fresh` | `migrate:fresh --seed` (rebuild the database)               |
-| `make test`  | Run the PHPUnit suite inside the container                  |
+| `make test`  | Run the Pest suite inside the container                     |
 | `make build` | Build front-end assets (Vite production build)              |
 | `make shell` | Open a shell in the app container                           |
 | `make logs`  | Tail container logs                                         |
@@ -179,7 +253,7 @@ Requires a local PHP 8.3 + Composer + Node + a running MySQL 8 server.
 
    ```bash
    php artisan key:generate
-   composer setup            # = migrate --seed --force + storage:link (key:generate is idempotent)
+   composer setup            # = migrate --seed --force + storage:link
    npm run build             # or `npm run dev` for the Vite dev server with HMR
    ```
 
@@ -207,34 +281,88 @@ RECAPTCHA_SITE_KEY=your_site_key
 RECAPTCHA_SECRET_KEY=your_secret_key
 ```
 
+### Scheduled publishing
+
+The `posts:publish-due` command promotes future-dated posts once their `scheduled_at`
+timestamp is reached. In production, register it with the OS scheduler (cron or Supervisor)
+to run every minute:
+
+```bash
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+The command is already wired in `app/Console/Kernel.php` (`everyMinute()->withoutOverlapping()`).
+It is optional — posts simply stay in draft until the command runs.
+
 ---
 
 ## Testing
 
-```bash
-php artisan test                                # full suite (host)
-docker compose exec app php artisan test        # inside Docker
-make test                                       # inside Docker (shortcut)
-php artisan test --filter=SeoMetaTest           # a single test
-```
-
-The suite is **170 tests** and runs on an **isolated in-memory SQLite** database (pinned in
-`tests/CreatesApplication.php` and `phpunit.xml`) so it **never** touches your local MySQL /
-Docker data — no DB setup required to run tests.
-
-### Browser / e2e tests (Laravel Dusk)
-
-Real headless-Chrome tests that verify **functionality _and_ that styles are applied**
-(login form, admin sidebar contrast, language switch, link ports, GEO settings) — things
-the HTTP-level suite can't see:
+**Runner: [Pest 4](https://pestphp.com)** — the canonical test runner for this project.
 
 ```bash
-make dusk                              # one command: serves the app + runs the browser suite
-make dusk ARGS="--filter=AuthAndAdminTest"
+# Run the full suite (host)
+./vendor/bin/pest
+
+# Equivalent shorthands
+composer test
+php artisan test          # proxies to Pest via phpunit.xml
+
+# With coverage (80 % minimum enforced in CI)
+composer test:coverage    # = ./vendor/bin/pest --coverage --min=80
+
+# Run all quality checks (lint → analyse → test)
+composer check
+
+# Inside Docker
+docker compose exec app php artisan test
+make test
 ```
 
-Runs on the host against a **dedicated `cmstack_laravel_dusk`** database (never the dev DB).
-Full guide: [`docs/e2e-testing.md`](docs/e2e-testing.md).
+The suite runs on an **isolated in-memory SQLite** database — no MySQL / Docker setup
+needed to run tests.
+
+### Lint and static analysis
+
+```bash
+composer lint             # Pint (check only)
+composer lint:fix         # Pint (auto-fix)
+composer analyse          # Larastan level 5
+```
+
+### Architecture presets
+
+`tests/Arch/LayeringTest.php` contains Pest `arch()` rules that enforce the strict
+controller → service → repository → model layering at the test level. A violation is a
+build failure in CI.
+
+### CI pipeline (`.github/workflows/ci.yml`)
+
+Every push to `master` or `refactor/canon-convergence` runs four jobs in order:
+
+| Job | What it does |
+| --- | --- |
+| **Lint · Analyse · Test** | Pint → Larastan → `./vendor/bin/pest --coverage --min=80` on in-memory SQLite + PCOV |
+| **Build assets** | `npm ci && npm run build` (produces the Vite manifest for downstream jobs) |
+| **Browser e2e** | Pest 4 browser suite (`tests/Browser/`) via `pest-plugin-browser` + Playwright Chromium against a real MySQL 8 database |
+| **Lighthouse perf gate** | LHCI mobile against the served app; fails if any score < 95 or LCP ≥ 2 s / CLS ≥ 0.05 |
+
+### Browser / e2e tests (Pest 4 + Playwright)
+
+Real headless-Chromium tests that verify **functionality and rendered output** (login, admin
+sidebar, language switch, GEO settings, link ports) — things the HTTP-level suite can't see.
+
+```bash
+# In CI: automatically run as the "Browser e2e" job
+BROWSER_TESTS=1 ./vendor/bin/pest tests/Browser
+```
+
+Tests in `tests/Browser/` are guarded with `->skip()` unless `BROWSER_TESTS=1` is set,
+so the default `composer test` run stays fast.
+
+> **Dusk:** Laravel Dusk (`laravel/dusk ^8`) is still present in `composer.json` and the
+> `make dusk` target still works, but CI now runs the Pest 4 browser suite exclusively.
+> Dusk will be removed once full CI parity is confirmed.
 
 ---
 
@@ -251,6 +379,7 @@ analytics tag):
   `BlogPosting` + `BreadcrumbList` on posts, `CollectionPage` on categories, `ProfilePage` / `Person`
   on profiles — which also helps generative engines (GEO).
 - Dynamic **`/sitemap.xml`** (pages/posts/categories with `hreflang`), **`/robots.txt`**, and **`/llms.txt`**.
+- **RSS / Atom feeds** — `/rss.xml` and `/atom.xml` for post syndication.
 - Lazy-loaded images with width/height (CLS-safe), `preconnect` fonts with `display=swap`, deferred/module scripts.
 
 Configure global SEO defaults in the admin panel under **Settings → SEO** (title separator,
@@ -376,9 +505,11 @@ supported targets:
 
 **Shared-hosting friendliness:** the app needs no queue workers, no websockets, and no
 always-on processes (`QUEUE_CONNECTION=sync`). `robots.txt`/`sitemap.xml` are served
-dynamically by Laravel. The scheduler is **optional**. `php artisan config:cache` and
-`route:cache` are **safe** — the app reads no `env()` in views, so cached config does not
-break rendering (verified: home returns `200`, admin returns `302` with caches enabled).
+dynamically by Laravel. The `posts:publish-due` scheduler is **optional** — add a cron entry
+if you use scheduled publishing, otherwise posts stay draft until manually published.
+`php artisan config:cache` and `route:cache` are **safe** — the app reads no `env()` in views,
+so cached config does not break rendering (verified: home returns `200`, admin returns `302` with
+caches enabled).
 
 ### VPS (nginx + php-fpm + mysql)
 
@@ -441,9 +572,7 @@ server {
 }
 ```
 
-Make sure `storage/` and `bootstrap/cache/` are writable by the php-fpm user. **Queue
-workers, the scheduler, and Supervisor are all optional** — only add them if you start
-using queued jobs or scheduled tasks.
+Make sure `storage/` and `bootstrap/cache/` are writable by the php-fpm user.
 
 ### Is it ready to deploy?
 
@@ -462,6 +591,7 @@ returns `302`, and `/sitemap.xml` returns `200` — and these stay correct with
 - Ensure the **`imagick`** PHP extension is enabled on the target.
 - Run `php artisan storage:link` so public-disk media is served.
 - Change the seeded admin password.
+- If you use scheduled publishing, add a Laravel scheduler cron entry.
 
 ---
 
