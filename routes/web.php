@@ -110,6 +110,21 @@ Route::prefix('cmstack-laravel-admin')->middleware(['auth', 'see_admin_panel'])-
         Route::post('/new/{id?}', 'CPanelPageController@createPage')->name('cpanel_save_new_page')->where('id', '[0-9]+');
     });
 
+    Route::prefix('services')->middleware('manage_services')->group(function () {
+        Route::get('/', 'CPanelServiceController@index')->name('cpanel_services_list');
+        Route::get('/trashed', 'CPanelServiceController@trashedServices')->name('cpanel_trashed_services_list');
+        // Restore is GET /{id}/restore — registered BEFORE the greedy /{id}/{lang}
+        // editor route (and guarded by a numeric id) so it isn't shadowed.
+        Route::get('/{id}/restore', 'CPanelServiceController@restore')->name('cpanel_restore_service')->where('id', '[0-9]+');
+        Route::get('/{id}/{lang}', 'CPanelServiceController@editService')->name('cpanel_edit_service')->where('id', '[0-9]+');
+        Route::put('/{id}/update', 'CPanelServiceController@updateService')->name('cpanel_update_service')->where('id', '[0-9]+');
+        Route::post('/multiple', 'CPanelServiceController@multipleActions')->name('cpanel_services_bulk_action');
+        Route::delete('/{id}/destroy', 'CPanelServiceController@destroyAjax')->name('cpanel_destroy_service')->where('id', '[0-9]+');
+        Route::delete('/{id}/delete', 'CPanelServiceController@deleteAjax')->name('cpanel_ajax_soft_delete_service')->where('id', '[0-9]+');
+        Route::get('/new', 'CPanelServiceController@addService')->name('cpanel_add_new_service');
+        Route::post('/new/{id?}', 'CPanelServiceController@createService')->name('cpanel_save_new_service')->where('id', '[0-9]+');
+    });
+
     Route::prefix('categories')->middleware('manage_categories')->group(function () {
         Route::get('/', 'CPanelCategoryController@index')->name('cpanel_category_list');
         Route::get('/{id}/{lang}', 'CPanelCategoryController@edit')->name('cpanel_edit_category')->where('id', '[0-9]+');

@@ -22,6 +22,12 @@ class CPanelServiceRepository extends BaseRepository
         'updated_at',
     ];
 
+    /**
+     * Services have no author relation; clear the default eager-load list so
+     * the BaseRepository translatedOnly() path doesn't try to load 'author'.
+     */
+    protected $eager_relations = [];
+
     public function __construct(Service $model)
     {
         parent::__construct();

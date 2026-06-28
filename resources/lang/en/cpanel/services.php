@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * Cmstack-Laravel
+ * File: services.php
+ * Created by Elman (https://linkedin.com/in/huseyn0w)
+ */
+
+return [
+
+    'service_added' => 'Service has been created successfully',
+    'updated_success' => 'Service has been updated',
+    'updated_error' => 'Some problem has been occurred. Please try again later.',
+    'list_headline' => 'Services',
+    'new_service_headline' => 'New Service',
+    'edit_service_headline' => 'Edit Service',
+    'update_button_label' => 'Update service',
+    'publish_button_label' => 'Publish',
+    'add_new_service' => 'Add New Service',
+    'bulky_deleted_message' => 'Services have been deleted',
+    'bulky_deleted_error_message' => 'Some problem has been occurred. Please try again later.',
+    'bulky_restored_message' => 'Services have been restored',
+    'bulky_destroyed_message' => 'Services have been permanently destroyed',
+    'bulky_error_message' => 'Some problem has been occurred. Please try again later.',
+    'bulk_action_label' => 'Bulk actions',
+    'bulk_action_delete_label' => 'Delete',
+    'bulk_action_restore_label' => 'Restore',
+    'bulk_action_destroy_label' => 'Destroy',
+    'bulk_action_apply' => 'Apply',
+    'general_services' => 'All services',
+    'trashed_services' => 'Trashed services',
+    'not_found' => 'No services have been found',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'destroy' => 'Destroy',
+    'restore' => 'Restore',
+    'table_order' => 'Order',
+    'table_title' => 'Title',
+    'table_status' => 'Status',
+    'status_published' => 'Published',
+    'status_private' => 'Private',
+    'field_title' => 'Title',
+    'field_slug' => 'Slug',
+    'field_icon' => 'Icon',
+    'field_excerpt' => 'Excerpt',
+    'field_content' => 'Content',
+    'field_thumbnail' => 'Thumbnail URL',
+    'field_sort_order' => 'Sort Order',
+    'field_status' => 'Status',
+    'js_delete_confirmation' => 'Are you sure? The service will be deleted',
+    'js_delete_success' => 'Service has been successfully deleted',
+    'js_destroy_confirmation' => 'Are you sure? The service will be permanently destroyed',
+    'js_destroy_success' => 'Service has been successfully destroyed',
+    'js_restore_confirmation' => 'Are you sure? The service will be restored',
+    'js_restore_success' => 'Service has been successfully restored',
+    'js_error_message' => 'Some problem occurred',
+
+];

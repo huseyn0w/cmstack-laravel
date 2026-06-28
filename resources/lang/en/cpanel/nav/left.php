@@ -16,6 +16,7 @@ return [
     'edit_profile' => 'Edit Profile',
     'media' => 'Media',
     'pages' => 'Pages',
+    'services' => 'Services',
     'posts' => 'Posts',
     'categories' => 'Categories',
     'all_posts' => 'All Posts',

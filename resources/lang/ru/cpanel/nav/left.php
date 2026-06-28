@@ -16,6 +16,7 @@ return [
     'edit_profile' => 'Изменить профиль',
     'media' => 'Медиа',
     'pages' => 'Страницы',
+    'services' => 'Услуги',
     'posts' => 'Посты',
     'categories' => 'Категории',
     'all_posts' => 'Все посты',

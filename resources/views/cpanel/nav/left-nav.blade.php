@@ -11,23 +11,24 @@
  * data-toggle="collapse" / data-target kept — admin.js wireCollapse() drives them.
  * Permission-gated items are hidden, not disabled (@can checks).
  */
-
-$current_route = \Route::currentRouteName();
+$current_route = Route::currentRouteName();
 
 // Inline SVG paths — 24×24 filled icons, consistent stroke weight.
 $icons = [
-    'dashboard'  => '<path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/>',
-    'profile'    => '<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/>',
-    'media'      => '<path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 11 4-5 3 4 2-2 4 5H5Zm3-6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>',
-    'pages'      => '<path d="M6 2h8l4 4v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm7 1.5V7h3.5L13 3.5ZM8 11h8v1.5H8V11Zm0 4h8v1.5H8V15Z"/>',
-    'posts'      => '<path d="M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm2 4v2h10V7H7Zm0 4v2h10v-2H7Zm0 4v2h6v-2H7Z"/>',
-    'users'      => '<path d="M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20c0-3 3.1-5 7-5s7 2 7 5v1H2v-1Zm15-5c2.7.4 5 2.1 5 5v1h-4v-1c0-1.9-.4-3.5-1-5Z"/>',
-    'settings'   => '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2 .9.5 2.1-1.6 1.6-2.1-.5-.9 2H12l-.9-2-2.1.5L7.4 16.6 5.3 16 4.4 13.9 3 13v-2l2-.9-.5-2.1L6.1 6.4l2.1.5L9.1 5 11 4h2l.9 2 2.1-.5 1.6 1.6-.5 2.1 2 .9v2Z"/>',
+    'dashboard' => '<path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/>',
+    'profile' => '<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/>',
+    'media' => '<path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 11 4-5 3 4 2-2 4 5H5Zm3-6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>',
+    'pages' => '<path d="M6 2h8l4 4v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm7 1.5V7h3.5L13 3.5ZM8 11h8v1.5H8V11Zm0 4h8v1.5H8V15Z"/>',
+    'posts' => '<path d="M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm2 4v2h10V7H7Zm0 4v2h10v-2H7Zm0 4v2h6v-2H7Z"/>',
+    'services' => '<path d="M19.4 13a7.6 7.6 0 0 0 .1-1 7.6 7.6 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7.3 7.3 0 0 0-1.7-1l-.4-2.5H10.1l-.4 2.5a7.3 7.3 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.3 7.3 0 0 0 1.7 1l.4 2.5h3.8l.4-2.5a7.3 7.3 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>',
+    'users' => '<path d="M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20c0-3 3.1-5 7-5s7 2 7 5v1H2v-1Zm15-5c2.7.4 5 2.1 5 5v1h-4v-1c0-1.9-.4-3.5-1-5Z"/>',
+    'settings' => '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2 .9.5 2.1-1.6 1.6-2.1-.5-.9 2H12l-.9-2-2.1.5L7.4 16.6 5.3 16 4.4 13.9 3 13v-2l2-.9-.5-2.1L6.1 6.4l2.1.5L9.1 5 11 4h2l.9 2 2.1-.5 1.6 1.6-.5 2.1 2 .9v2Z"/>',
 ];
 
 $isActive = fn ($route) => $current_route === $route;
 
-$postsActive    = in_array($current_route, ['cpanel_category_list', 'cpanel_posts_list', 'cpanel_trashed_posts_list', 'cpanel_comments_list']);
+$postsActive = in_array($current_route, ['cpanel_category_list', 'cpanel_posts_list', 'cpanel_trashed_posts_list', 'cpanel_comments_list']);
+$servicesActive = in_array($current_route, ['cpanel_services_list', 'cpanel_trashed_services_list']);
 $settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_site_options', 'cpanel_seo_settings', 'cpanel_geo_settings', 'cpanel_plugins_list', 'cpanel_menu_list', 'cpanel_user_roles']);
 ?>
 <div class="flex h-full flex-col" data-testid="admin-sidebar">
@@ -79,6 +80,14 @@ $settingsActive = in_array($current_route, ['cpanel_general_settings', 'cpanel_s
                    class="{{ $linkBase }} {{ $isActive('cpanel_pages_list') ? $linkActive : $linkIdle }}">
                     <svg class="{{ $iconCls }}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{!! $icons['pages'] !!}</svg>
                     <span>@lang('cpanel/nav/left.pages')</span>
+                </a>
+            @endif
+
+            @if (Auth::user()->can('manage_services', 'App\Http\Models\UserRoles'))
+                <a href="{{route('cpanel_services_list')}}"
+                   class="{{ $linkBase }} {{ $servicesActive ? $linkActive : $linkIdle }}">
+                    <svg class="{{ $iconCls }}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{!! $icons['services'] !!}</svg>
+                    <span>@lang('cpanel/nav/left.services')</span>
                 </a>
             @endif
         </div>
