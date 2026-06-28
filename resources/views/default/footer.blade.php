@@ -92,7 +92,7 @@ $languages = get_translation_links();
                         <li>
                             @if($code === get_current_lang())
                                 <span class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.06em] text-[var(--primary)]">
-                                    <img src="{{$language['icon']}}" alt="" class="h-4 w-4 rounded-sm">
+                                    <img src="{{$language['icon']}}" alt="" width="16" height="16" decoding="async" class="h-4 w-4 rounded-sm">
                                     {{ strtoupper($code) }} — {{$language['title']}}
                                 </span>
                             @else
@@ -101,7 +101,7 @@ $languages = get_translation_links();
                                     class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.06em] text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
                                     data-testid="lang-{{ $code }}"
                                 >
-                                    <img src="{{$language['icon']}}" alt="{{$language['title']}}" class="h-4 w-4 rounded-sm">
+                                    <img src="{{$language['icon']}}" alt="{{$language['title']}}" width="16" height="16" decoding="async" class="h-4 w-4 rounded-sm">
                                     {{ strtoupper($code) }} — {{$language['title']}}
                                 </a>
                             @endif

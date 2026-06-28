@@ -63,6 +63,9 @@
                     :src="preview"
                     x-ref="preview"
                     alt="{{ $user->username }}"
+                    width="96"
+                    height="96"
+                    decoding="async"
                     class="h-24 w-24 rounded-2xl object-cover ring-1 ring-[var(--border-strong)] shadow-card"
                 />
                 <div class="flex flex-col gap-2">

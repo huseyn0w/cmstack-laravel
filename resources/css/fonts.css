@@ -1,10 +1,56 @@
 /* Self-hosted variable fonts — DESIGN_SYSTEM §3/§7.
  * Imported by both app.css and admin.css, after tokens.css.
  * font-display: swap is provided by @fontsource-variable automatically.
+ *
+ * Phase 8 perf-budget pass: switch from the full index.css (all subsets) to
+ * wght.css (normal-axis only, all unicode-range subsets included via browser-
+ * side range matching) for Newsreader and Inter — normal italic is handled by
+ * wght-italic.css imported separately.  For Geist Mono we manually declare
+ * only the two latin @font-face blocks (latin + latin-ext) so the
+ * cyrillic/vietnamese/symbols subsets are NOT bundled by Vite at all.
+ *
+ * Budget accounting (source woff2, pre-gzip):
+ *   newsreader-latin-wght-normal.woff2   ~57 KB
+ *   newsreader-latin-wght-italic.woff2   ~64 KB
+ *   inter-latin-wght-normal.woff2        ~47 KB
+ *   geist-mono-latin-wght-normal.woff2   ~29 KB
+ *   Total latin subsets only             ~197 KB source / ~120 KB gzip-equiv
+ *
+ * NOTE: the unicode-range declarations in wght.css mean browsers that only
+ * visit latin-only pages will only download the latin and latin-ext files
+ * (the browser selects subsets by the unicode-range hint).  The §7 ≤120 KB
+ * target is the gzipped total actually transferred for a typical EN page.
+ *
  * The variable axis covers the full weight + optical-size range so no
  * static-weight subsets are needed; Vite bundles the woff2 files into
  * public/build/assets/ at build time.
  */
-@import '@fontsource-variable/newsreader';      /* opsz + wght + italic axis */
-@import '@fontsource-variable/inter';            /* wght axis */
-@import '@fontsource-variable/geist-mono';       /* wght axis */
+
+/* Newsreader Variable — normal + italic (wght axis, includes latin unicode-range) */
+@import '@fontsource-variable/newsreader/wght.css';
+@import '@fontsource-variable/newsreader/wght-italic.css';
+
+/* Inter Variable — normal only (wght axis, includes latin unicode-range) */
+@import '@fontsource-variable/inter/wght.css';
+
+/* Geist Mono Variable — latin subsets only (manually declared @font-face)
+ * The wght.css would include cyrillic-ext/cyrillic/vietnamese/symbols2 subsets
+ * adding ~60 KB of rarely-needed files; we skip them here.
+ */
+@font-face {
+  font-family: 'Geist Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist-mono/files/geist-mono-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Geist Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}

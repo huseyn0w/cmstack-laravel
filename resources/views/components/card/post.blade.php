@@ -15,9 +15,10 @@
                 src="{{ $image }}"
                 alt="{{ $title }}"
                 loading="lazy"
+                decoding="async"
                 width="800"
                 height="450"
-                class="rounded-md w-full h-full object-cover transition group-hover:scale-[1.02]"
+                class="rounded-md w-full h-full object-cover transition group-hover:scale-[1.02] motion-reduce:transition-none"
             />
         </div>
     @endif

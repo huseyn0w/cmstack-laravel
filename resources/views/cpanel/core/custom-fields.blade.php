@@ -18,9 +18,9 @@ if(isset ($entity->custom_fields)  && !empty($entity->custom_fields)){
 }
 ?>
 
-<div class="mt-6 border-t border-ink-100 pt-5">
-    <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
-        <svg class="h-4 w-4 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h7" stroke-linecap="round"/></svg>
+<div class="mt-6 border-t border-[var(--border)] pt-5">
+    <h4 class="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--text)]">
+        <svg class="h-4 w-4 text-[var(--text-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h7" stroke-linecap="round"/></svg>
         @lang('cpanel/custom-fields.headline')
     </h4>
     <div class="flex flex-wrap gap-2">
@@ -78,7 +78,7 @@ if(isset ($entity->custom_fields)  && !empty($entity->custom_fields)){
                                         @if($row_item->type === "link")
                                             <div class="row inputRow" data-type="{{$row_item->type}}" data-key="{{$key}}" data-row="{{$checkbox_item_count}}" data-name="{{$row_item_key}}">
                                                 <div class="col-12">
-                                                    <p class="mb-2 text-sm font-medium text-ink-700">{{$row_item->admin_label}}</p>
+                                                    <p class="mb-2 text-sm font-medium text-[var(--text-muted)]">{{$row_item->admin_label}}</p>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group custom-form-group">
@@ -86,7 +86,7 @@ if(isset ($entity->custom_fields)  && !empty($entity->custom_fields)){
                                                         <input type="text" class="form-control form-label" name="custom_fields[{{$key}}][value][row-{{$checkbox_item_count}}][{{$row_item_key}}][value][label]" value="{{$row_item->value->label}}">
                                                         <label>@lang('cpanel/custom-fields.link_url')</label>
                                                         <input type="text" class="form-control form-url" name="custom_fields[{{$key}}][value][row-{{$checkbox_item_count}}][{{$row_item_key}}][value][url]" value="{{$row_item->value->url}}">
-                                                        <label class="mt-2 flex cursor-pointer items-center gap-2.5 text-sm text-ink-700" for="{{$key.'__'.$row_item_count}}">
+                                                        <label class="mt-2 flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-muted)]" for="{{$key.'__'.$row_item_count}}">
                                                             <input id="{{$key.'__'.$row_item_count}}" class="form-check-input pages-checkbox-input form-tab exist-input-checkbox pages-checkbox-input" {{$row_item->value->target === "1" ? "checked" : null}} type="checkbox">
                                                             @lang('cpanel/custom-fields.link_target')
                                                         </label>
@@ -122,7 +122,7 @@ if(isset ($entity->custom_fields)  && !empty($entity->custom_fields)){
                                         @elseif($row_item->type === "image")
                                             <div class="row inputRow" data-type="{{$row_item->type}}" data-key="{{$key}}" data-row="{{$row_count}}" data-name="{{$row_item_key}}">
                                                 <div class="col-12">
-                                                    <p class="mb-2 text-sm font-medium text-ink-700">{{$row_item->admin_label}}</p>
+                                                    <p class="mb-2 text-sm font-medium text-[var(--text-muted)]">{{$row_item->admin_label}}</p>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group custom-form-group">
@@ -188,7 +188,7 @@ if(isset ($entity->custom_fields)  && !empty($entity->custom_fields)){
                             <input type="text" class="form-control" name="custom_fields[{{$key}}][value][label]" value="{{$item->value->label}}">
                             <label>Link URL</label>
                             <input type="text" class="form-control" name="custom_fields[{{$key}}][value][url]" value="{{$item->value->url}}">
-                            <label class="mt-2 flex cursor-pointer items-center gap-2.5 text-sm text-ink-700" for="{{$key}}">
+                            <label class="mt-2 flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-muted)]" for="{{$key}}">
                                 <input type="checkbox" id="{{$key}}" class="form-check-input exist-input-checkbox pages-checkbox-input form-tab" {{$item->value->target === "1" ? "checked" : null}}>
                                 Open in new tab
                             </label>

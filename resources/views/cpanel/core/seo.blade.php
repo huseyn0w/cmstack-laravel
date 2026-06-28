@@ -7,9 +7,9 @@
  */
 ?>
 
-<div class="mt-6 border-t border-ink-100 pt-5">
-    <h4 class="mb-4 flex items-center gap-2 text-sm font-semibold text-ink-900">
-        <svg class="h-4 w-4 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+<div class="mt-6 border-t border-[var(--border)] pt-5">
+    <h4 class="mb-4 flex items-center gap-2 text-sm font-semibold text-[var(--text)]">
+        <svg class="h-4 w-4 text-[var(--text-muted)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
         @lang('cpanel/seo.seo_headline')
     </h4>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div class="field">
-        <label for="meta_noindex" class="flex cursor-pointer items-center gap-2.5 text-sm text-ink-700">
+        <label for="meta_noindex" class="flex cursor-pointer items-center gap-2.5 text-sm text-[var(--text-muted)]">
             <input class="form-check-input" id="meta_noindex" name="meta_noindex" type="checkbox" value="1" {{ old('meta_noindex', isset($entity) ? ($entity->meta_noindex ?? false) : false) ? 'checked' : '' }}>
             @lang('cpanel/seo.noindex_headline')
         </label>

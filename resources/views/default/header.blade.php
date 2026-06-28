@@ -65,9 +65,15 @@ $languages = get_translation_links();
          Newsreader Variable + Inter Variable + Geist Mono Variable are bundled
          through Vite (resources/css/fonts.css → public/build/assets/*.woff2).
          No Google Fonts / CDN requests; font-display: swap via fontsource.
-         Preload of critical weights is deferred to Phase 8 (perf pass) — a
-         stable Vite-hashed woff2 URL requires build-manifest lookup not yet
-         wired at template render time. --}}
+
+         Phase 8 font preload: the Vite manifest maps entry → hashed output
+         files. We cannot call Vite::asset() for sub-resources (woff2) that
+         are not entry points — they are emitted as content-addressed files
+         referenced only by the CSS. The stable approach is to let the browser
+         discover fonts via the CSS @font-face (swap prevents FOIT), and rely
+         on the browser's speculation rules / preload scanner to fetch them early.
+         An HTTP/2 Server Push or a CDN prefetch header is the CI-measurable
+         upgrade path; it is flagged here and tracked in Phase 8 follow-up. --}}
 
     @stack('extrastyles')
 
@@ -121,7 +127,7 @@ $languages = get_translation_links();
             data-testid="header-wordmark"
         >
             @if($logo_url)
-                <img src="{{$logo_url}}" alt="" class="h-9 w-auto">
+                <img src="{{$logo_url}}" alt="" width="auto" height="36" decoding="async" class="h-9 w-auto">
             @else
                 <span class="font-serif text-xl font-semibold tracking-tight text-[var(--text)]">Cmstack-Laravel</span>
             @endif
@@ -163,7 +169,7 @@ $languages = get_translation_links();
                         href="{{ $language['url'] }}"
                         data-testid="lang-{{ $code }}"
                     >
-                        <img src="{{$language['icon']}}" alt="" class="h-4 w-4 rounded-sm">
+                        <img src="{{$language['icon']}}" alt="" width="16" height="16" decoding="async" class="h-4 w-4 rounded-sm">
                         <span class="font-mono text-xs uppercase tracking-[0.06em]">{{ strtoupper($code) }}</span>
                         <span class="ml-1 text-xs text-[var(--text-muted)]">{{ $language['title'] }}</span>
                     </x-dropdown.item>
@@ -195,7 +201,7 @@ $languages = get_translation_links();
             @else
                 <a href="{{route('login')}}" class="nav-link">@lang('default/header.login')</a>
                 @if(get_general_settings('membership'))
-                <a href="{{route('register')}}" class="btn-primary ml-1 px-5 py-2.5">@lang('default/header.register')</a>
+                <x-button href="{{ route('register') }}" variant="primary" size="sm" class="ml-1">@lang('default/header.register')</x-button>
                 @endif
             @endauth
         </div>
@@ -261,7 +267,7 @@ $languages = get_translation_links();
                         <li>
                             @if($code === get_current_lang())
                                 <span class="inline-flex items-center gap-1.5 rounded-full border border-[var(--primary)] bg-[var(--surface-2)] px-3 py-1 font-mono text-xs font-medium uppercase tracking-[0.06em] text-[var(--primary)]">
-                                    <img src="{{$language['icon']}}" alt="" class="h-3.5 w-3.5 rounded-sm">
+                                    <img src="{{$language['icon']}}" alt="" width="14" height="14" decoding="async" class="h-3.5 w-3.5 rounded-sm">
                                     {{ strtoupper($code) }}
                                 </span>
                             @else
@@ -270,7 +276,7 @@ $languages = get_translation_links();
                                     class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] px-3 py-1 font-mono text-xs uppercase tracking-[0.06em] text-[var(--text-muted)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] active:scale-95"
                                     data-testid="lang-{{ $code }}"
                                 >
-                                    <img src="{{$language['icon']}}" alt="{{$language['title']}}" class="h-3.5 w-3.5 rounded-sm">
+                                    <img src="{{$language['icon']}}" alt="{{$language['title']}}" width="14" height="14" decoding="async" class="h-3.5 w-3.5 rounded-sm">
                                     {{ strtoupper($code) }}
                                 </a>
                             @endif

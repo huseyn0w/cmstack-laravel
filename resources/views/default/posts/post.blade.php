@@ -59,7 +59,8 @@
     @if(!empty($data->thumbnail))
         <figure class="mt-10 overflow-hidden rounded-xl bg-surface-2">
             <img src="{{ $data->thumbnail }}" {!! image_fallback() !!} alt="{{ $data->title }}"
-                 width="1280" height="720" loading="eager"
+                 width="1280" height="720" loading="eager" fetchpriority="high"
+                 decoding="async"
                  class="aspect-[16/9] w-full object-cover">
         </figure>
     @endif

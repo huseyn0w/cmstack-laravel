@@ -55,9 +55,9 @@
                 <span class="h-px w-8 bg-[var(--accent)]" aria-hidden="true"></span>
                 {{ $home_page_data->title ?? 'Cmstack-Laravel' }}
             </p>
-            <div class="font-serif text-5xl font-medium leading-[1.05] tracking-[-0.01em] text-white [text-wrap:balance] sm:text-6xl lg:text-[clamp(2.5rem,5vw,3.815rem)]">
+            <h1 class="font-serif text-5xl font-medium leading-[1.05] tracking-[-0.01em] text-white [text-wrap:balance] sm:text-6xl lg:text-[clamp(2.5rem,5vw,3.815rem)]">
                 {!! $headline !!}
-            </div>
+            </h1>
         </div>
     </div>
 </section>
