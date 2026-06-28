@@ -74,8 +74,11 @@ Ledger: `.git/sdd/progress.md` "Task 3" section. Commits `088419a`..`3b381f6`.
   `.admin-*` classes in admin.css, flash→`x-alert`; admin.js runtime (collapse/modal/toast/jQuery-shims)
   + permission-gating + language switcher + logout preserved.
 - **P7 admin section views DONE** — 30 views: lists (token tables + bulk bar + status tabs + badges +
-  row-action dropdowns), content forms (per-locale `x-tabs` + `x-field`, custom-field builder + editor
-  + parent picker hooks preserved), settings/media/dashboard/menus/revisions.
+  row-action dropdowns), content forms (`x-field` + custom-field builder + editor + parent picker
+  hooks preserved), settings/media/dashboard/menus/revisions. **CORRECTION:** content forms still edit
+  ONE locale at a time via the topbar language switcher (the existing pattern) — they do NOT yet use a
+  per-locale `x-tabs` strip. `x-tabs`/`x-modal`/`x-toast-region` are built+tested library components
+  but currently UNUSED in views (available for future wiring; e.g. per-locale tabs on content forms).
 - **P8 perf+a11y DONE** — font `wght`-subset + Geist latin-only, responsive images (width/height/lazy/
   fetchpriority), a11y sweep (one-h1 incl archives-via-banner, skip-link, landmarks), token cleanup;
   `.lighthouserc.json` + Lighthouse CI job (`ci.yml`, §7 budget — **CI-measured, never asserted unrun**).
@@ -89,6 +92,36 @@ Ledger: `.git/sdd/progress.md` "Task 3" section. Commits `088419a`..`3b381f6`.
   (`delete_post` etc.) are raw `<button>` not `<x-button>` (functional, minor styling); (5) tracked
   `public/build/*` assets are stale (rebuilt on deploy / in CI). **Visual fidelity + Lighthouse ≥95 +
   the Pest browser computed-style suite are MEASURED IN CI** (served app + Chrome + MySQL), not here.
+
+### Completeness audit (Opus critic, 2026-06-28) + fixes
+Suite now **486 passed** (Pest 4, `php artisan test`). README rewritten to current state (`ea6466c`).
+FIXED this pass:
+- **H1 (security) FIXED** (`a8a90c6`): plain DRAFTS (status=0) were publicly reachable by direct slug —
+  posts AND pages. Added `status=PUBLISHED` to the FRONT `applyFrontReadScope()` on `PostRepository`
+  (`post_translations.status`) + a NEW override on `PageRepository` (`page_translations.status`);
+  published+future-scheduled stays visible (status-aware scope). +7 regression tests; flipped the
+  characterization test that documented the leak. (This closes the long-standing HANDOFF "front never
+  filters plain drafts" item.)
+- **M3 FIXED** (`4685aa6`): `env('APP_URL')`→`config('app.url')` in 6 admin Blade views (config:cache-safe).
+- **L2 FIXED** (`ff18cec`): `public/build` untracked + added to `.gitignore` (Vite output, rebuilt on CI/deploy).
+- HANDOFF P7 `x-tabs` claim corrected (above).
+
+REMAINING audit findings (NEW roadmap — matrix-vs-reality, from `../FEATURE_MATRIX.md` canon):
+- **H3 — MCP tool surface below matrix §15.** 28 tools exist; matrix wants 1:1 parity incl. **Tags**,
+  **Comments-moderation**, **Media list/metadata**, **GEO/FAQ services**, and post **publish/revision**
+  tools (no `app/Mcp/Tools/{Tags,Comments,Media,Geo}/`). Delegate to existing `CPanel*Repository`
+  (auth/locale concerns already exist). Most-bounded next big item.
+- **M1 — "Service" GEO content type is a partial.** Matrix §1/§9 wants a first-class `Service` model
+  (+`/services` route + Service/FAQPage JSON-LD); reality = a textarea of strings on the `geo_settings`
+  singleton (`CPanelGeoSettings::servicesList()`), no `/services` route, no CRUD. Build the type OR
+  flag the matrix overstates it (FEATURE_MATRIX is read-only canon — don't edit; raise with owner).
+- **M2 — public search omits tags + services** (`PageRepository::getFilteredResult` switches
+  page/user/post/category only). Tags-in-search was already an optional leftover; services blocked on M1.
+- **L1 — CLAUDE.md stale** (REPORT-only, user's file): says e2e=Laravel Dusk (now also Pest browser),
+  "no local lint command" (now `composer lint`/`analyse`/`check` + `ci.yml`), StyleCI (superseded). Worth
+  the user updating CLAUDE.md §Commands.
+- Still-deferred (unchanged): jQuery-UI keyboard-sortable (menu builder); filemanager vendor BS3/FA4 CDN;
+  admin `x-field` `:error`/`aria-describedby` wiring; JS-hook list buttons as raw `<button>`.
 
 ### Architecture map (current)
 
