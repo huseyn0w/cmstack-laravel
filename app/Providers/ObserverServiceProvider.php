@@ -6,10 +6,12 @@ use App\Http\Models\Page;
 use App\Http\Models\PageTranslation;
 use App\Http\Models\Post;
 use App\Http\Models\PostTranslation;
+use App\Http\Models\ServiceTranslation;
 use App\Observers\PageObserver;
 use App\Observers\PageTranslationObserver;
 use App\Observers\PostObserver;
 use App\Observers\PostTranslationObserver;
+use App\Observers\ServiceTranslationObserver;
 use Illuminate\Support\ServiceProvider;
 
 class ObserverServiceProvider extends ServiceProvider
@@ -35,5 +37,6 @@ class ObserverServiceProvider extends ServiceProvider
         PostTranslation::observe(PostTranslationObserver::class);
         Page::observe(PageObserver::class);
         PageTranslation::observe(PageTranslationObserver::class);
+        ServiceTranslation::observe(ServiceTranslationObserver::class);
     }
 }
