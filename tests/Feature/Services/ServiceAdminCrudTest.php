@@ -74,7 +74,8 @@ it('rejects a service create with a missing required title', function () {
         ->post('/cmstack-laravel-admin/services/new', servicePayload(['title' => '']));
 
     $response->assertSessionHasErrors('title');
-    expect(Service::count())->toBe(0);
+    // The seeded sample services remain; the rejected create added nothing.
+    expect(ServiceTranslation::where('slug', 'seo-audit')->exists())->toBeFalse();
 });
 
 it('renders the admin services list', function () {

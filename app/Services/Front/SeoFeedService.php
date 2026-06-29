@@ -168,9 +168,9 @@ class SeoFeedService
         $geo = get_geo_settings();
         $emitGeo = $geo && $geo->include_in_llms;
 
-        // Real Service content-type records take precedence over the GEO
-        // settings' free-text services list — when present they are emitted as
-        // proper links to /services/{slug} (the GEO textarea is the fallback).
+        // Real Service content-type pages — emitted as links to /services/{slug}
+        // in an additive "## Service pages" section (separate from the GEO
+        // free-text business-services summary).
         $serviceRecords = $this->services->llmsEntries();
 
         $lines = [];
@@ -190,10 +190,10 @@ class SeoFeedService
                 $lines[] = '';
             }
 
-            // GEO free-text services are a fallback only when there are no
-            // real Service records (those are emitted as links further down).
+            // GEO free-text business-services summary (distinct from the real
+            // Service content-type pages, which are linked further down).
             $services = $geo->servicesList();
-            if (! empty($services) && $serviceRecords->isEmpty()) {
+            if (! empty($services)) {
                 $lines[] = '## Services';
                 $lines[] = '';
                 foreach ($services as $service) {
@@ -218,9 +218,10 @@ class SeoFeedService
             }
         }
 
-        // Real Service content-type records — linked, locale-aware.
+        // Real Service content-type pages — linked, locale-aware. Additive and
+        // distinct from the GEO free-text services summary above.
         if ($serviceRecords->isNotEmpty()) {
-            $lines[] = '## Services';
+            $lines[] = '## Service pages';
             $lines[] = '';
             foreach ($serviceRecords as $svc) {
                 $lines[] = '- ['.$svc->title.']('.$base.'/services/'.$svc->slug.')';

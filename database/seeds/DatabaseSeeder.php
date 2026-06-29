@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CPanelCategorySeeder::class,
             CPanelPostsSeeder::class,
             CPanelPostCategorySeeder::class,
+            CPanelServicesSeeder::class,
             CPanelMenusSeeder::class,
             SiteOptionsTableSeeder::class,
             SeoSettingsTableSeeder::class,
