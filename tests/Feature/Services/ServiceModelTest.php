@@ -1,4 +1,6 @@
-<?php // tests/Feature/Services/ServiceModelTest.php
+<?php
+
+// tests/Feature/Services/ServiceModelTest.php
 
 use App\Http\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
