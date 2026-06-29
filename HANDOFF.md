@@ -36,7 +36,7 @@
 `ShouldNotHappen: OutputInterface cannot be resolved` in SOME interactive shells (a Pest-binary
 DI quirk, not a code problem) — **use `php artisan test` (same engine) when that happens**; CI and
 fresh subagent shells run the binary fine.
-**Suite:** **554 passed**, ~73s (in-memory SQLite; browser tests excluded/skipped). 0 risky.
+**Suite:** **590 passed**, ~55s (in-memory SQLite; browser tests excluded/skipped). 0 risky. (554 → +~36 for the Service content type M1 build.)
 (479 after Task 3 → +H1 draft-leak fix +16 MCP tools +tags-in-search = 554.)
 **Static analysis:** `composer analyse` (PHPStan/Larastan level 5 + baseline) → **green**.
 **Lint:** `composer lint` (Pint, Laravel preset) → clean on all touched files.
@@ -118,10 +118,17 @@ REMAINING audit findings (NEW roadmap — matrix-vs-reality, from `../FEATURE_MA
   get/update (2), PublishPost (1), Post revisions list/restore (2) — all `manage_posts`/delegating to
   existing repos/services. Suite **551 green**, Pint+PHPStan clean. Still out of scope (noted): media
   upload/delete via MCP, `email_verification`/plugin-toggle MCP parity.
-- **M1 — "Service" GEO content type is a partial.** Matrix §1/§9 wants a first-class `Service` model
-  (+`/services` route + Service/FAQPage JSON-LD); reality = a textarea of strings on the `geo_settings`
-  singleton (`CPanelGeoSettings::servicesList()`), no `/services` route, no CRUD. Build the type OR
-  flag the matrix overstates it (FEATURE_MATRIX is read-only canon — don't edit; raise with owner).
+- **M1 — Service content type — DONE** (plan `docs/superpowers/plans/2026-06-28-service-content-type.md`,
+  14 tasks, commits 6535f75..c468d02). User chose "build the content type". Delivered: `Service`/`ServiceTranslation`
+  models+migrations, `manage_services` permission/policy/middleware, front+admin repositories & services,
+  `ServiceTranslationObserver` (sanitise), form requests, `CPanelServiceController` admin CRUD +
+  routes + nav + list/new/edit views + en/ru lang + `service.js`, public `ServiceController`
+  `/services` grid + `/{locale?}/services/{slug}` detail + views, sitemap + `## Service pages` in
+  llms.txt + `ItemList`/`Service` JSON-LD on index, 5 MCP tools (surface 44→49), `CPanelServicesSeeder`
+  (3 samples). ~30 new tests, full suite **590 green**, lint+analyse clean. The `geo_settings`
+  free-text business-services summary is intentionally LEFT as-is (distinct concern: GEO/business
+  identity → homepage Organization JSON-LD), and is now documented as such in CLAUDE.md. Note:
+  FEATURE_MATRIX is read-only canon — §1/§9 is now genuinely backed; no matrix edit made.
 - **M2 — tags in public search — DONE** (`6f748c8`): `PageRepository::filterByTag()` + `case 'tag'`,
   `tag` added to `SearchRequest` filter, `<option value="tag">` + `/tag/{slug}` result links in
   search.blade.php, en/ru `filter_tag` keys, 3 tests (554 green). Services-in-search still blocked on M1.
@@ -411,11 +418,10 @@ Tags/Comments/Media/GEO/Publish/Revisions)**. See the "Completeness audit" subse
 1. **CI-gated (needs the pushed branch's CI run):** read the first CI coverage report → add gap tests
    to ≥80% services/repos + 100% critical paths; prove the Pest browser e2e + Lighthouse jobs green;
    THEN retire `laravel/dusk` in one commit. (No PCOV/MySQL/Chrome locally — measured in CI only.)
-2. **M1 — Service content type (PRODUCT DECISION):** matrix §1/§9 marks a first-class `Service` model
-   (+`/services` route + Service/FAQPage JSON-LD) ✅, but reality = a textarea list on the `geo_settings`
-   singleton. Either BUILD the content type (model/migration/repo/service/CRUD/view/route/JSON-LD — a
-   large slice) or accept the GEO approach and have the matrix owner downgrade §1/§9. Awaiting the
-   operator's call.
+2. **M1 — Service content type — DONE** (commits 6535f75..c468d02, plan
+   `docs/superpowers/plans/2026-06-28-service-content-type.md`). Full first-class translatable Service
+   content type built end-to-end (models→repo→service→admin CRUD→front pages→sitemap/llms/JSON-LD→5 MCP
+   tools→seeder), suite 590 green. See the "Completeness audit" M1 entry above for the full breakdown.
 3. **Deferred polish (bounded, no decision needed):** self-host the menu-builder jQuery-UI + add a
    keyboard-accessible sortable; wire admin `x-field` `:error`/`aria-describedby` (~17 forms — needs a
    slot aria-describedby contract, not just the component); re-style/replace the
